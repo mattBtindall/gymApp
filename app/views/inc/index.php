@@ -4,8 +4,8 @@
     <h2><?= $data['title']; ?></h2>
     <p><?= $data['description']; ?></p>
     <div>
-        <a href="<?= URL_ROOT . '/' . AREA ?>/" class="btn btn-outline-dark btn-lg">Login</a>
-        <a href="<?= URL_ROOT . '/' . AREA ?>/" class="btn btn-outline-dark btn-lg">Register</a>
+        <a href="<?= URL_ROOT; ?>/users/login" class="btn btn-outline-dark btn-lg">Login</a>
+        <a href="<?= URL_ROOT; ?>/users/register" class="btn btn-outline-dark btn-lg">Register</a>
     </div>
 </div>
 

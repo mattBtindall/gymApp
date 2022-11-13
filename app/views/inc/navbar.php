@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg <?= (AREA === 'User') ? 'bg-light' : 'bg-secondary';  ?>">
   <div class="container">
 
-    <a class="navbar-brand" href="<?= URL_ROOT ?>">Navbar</a>
+    <a class="navbar-brand" href="<?= URL_ROOT ?>"><?= SITE_NAME; ?></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -13,10 +13,10 @@
       </div>
 
       <div class="navbar-nav ms-auto">
-        <a class="nav-link" href="#">Login</a>
-        <a class="nav-link" href="#">Register</a>
+        <small class="nav-link border-end"><?= AREA; ?></small>
+        <a class="nav-link" href="<?= URL_ROOT; ?>/users/login">Login</a>
+        <a class="nav-link" href="<?= URL_ROOT; ?>/users/register">Register</a>
       </div>
     </div>
-
   </div>
 </nav>
