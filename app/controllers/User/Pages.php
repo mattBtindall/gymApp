@@ -10,7 +10,7 @@
                 'description' => ''
             ];
 
-            $this->view('pages/index', $data);
+            $this->view(AREA . '/pages/index', $data);
         }
 
         public function about() {
@@ -18,6 +18,6 @@
                 'title' => 'About us User'
             ];
 
-            $this->view('pages/about', $data);
+            $this->view(AREA . '/pages/about', $data);
         }
     }

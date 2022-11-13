@@ -17,8 +17,10 @@
             if (isset($url[0]) && is_dir('../app/controllers/' . ucwords($url[0]))) {
                 $this->area = ucwords($url[0]);
             }
-            // set site wide area variable
+            
+            // set site wide variables
             define('AREA', $this->area);
+            define('URL_ROOT', URL_ROOT_BASE . '/' . AREA);
 
             // Look in controllers for second index of $url
             // Remember we route everything through index.php so we get files relative to that not this actual file

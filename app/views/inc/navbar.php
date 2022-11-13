@@ -8,8 +8,8 @@
 
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-link" href="<?= URL_ROOT ?>">Home</a>
-        <a class="nav-link" href="<? URL_ROOT; ?>/pages/about">About</a>
+        <a class="nav-link" href="<?= URL_ROOT; ?>">Home</a>
+        <a class="nav-link" href="<?= URL_ROOT; ?>/pages/about">About</a>
       </div>
 
       <div class="navbar-nav ms-auto">

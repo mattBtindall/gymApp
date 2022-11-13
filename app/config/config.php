@@ -7,8 +7,8 @@
 
     // App root
     define('APP_ROOT', dirname(dirname(__FILE__)));
-    // Url root
-    define('URL_ROOT', 'http://localhost/gymApp');
+    // URL root base
+    define('URL_ROOT_BASE', 'http://localhost/gymApp');
     // Sire name
     define('SITE_NAME', 'gymApp');
     // Version
