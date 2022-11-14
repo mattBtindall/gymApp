@@ -12,7 +12,7 @@
                 </div>
                 <div class="form-group mb-2">
                     <label for="password">Password: <sup class="text-danger">*</sup></label>
-                    <input type="text" name="password" class="form-control form-control-lg <?= (!empty($data['passwordErr'])) ? 'is-invalid' : ''; ?>" value="<?= $data['password']; ?>">
+                    <input type="password" name="password" class="form-control form-control-lg <?= (!empty($data['passwordErr'])) ? 'is-invalid' : ''; ?>" value="<?= $data['password']; ?>">
                     <span class="invalid-feedback"><?= $data['passwordErr']; ?></span>
                 </div>
 

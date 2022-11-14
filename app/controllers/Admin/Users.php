@@ -48,7 +48,7 @@
                 }
 
                 if (empty($data['password'])) {
-                    $data['passwordErr'] = 'Please enter a value for password';
+                    $data['passwordErr'] = 'Please enter a password';
                 } else if (strlen($data['password']) < 6) {
                     $data['passwordErr'] = 'Please enter 6 or more characters for the password';
                 }
@@ -62,7 +62,7 @@
                 }
 
                 if (empty($data['nameErr']) && empty($data['emailErr']) && empty($data['phoneNumberErr']) && empty($data['estErr']) && empty($data['descriptionErr']) && empty($data['passwordErr']) && empty($data['confirmPasswordErr'])) {
-                    die('its okay');
+                    die('register');
                 } else {
                     $this->view(AREA . '/users/register', $data);
                 }
@@ -91,7 +91,28 @@
 
         public function login() {
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
 
+                $data = [
+                    'email' => trim($_POST['email']),
+                    'password' => trim($_POST['password']),
+                    'emailErr' => '',
+                    'passwordErr' => '',
+                ];
+
+                if (empty($data['email'])) {
+                    $data['emailErr'] = 'Please enter an email';
+                }
+
+                if (empty($data['password'])) {
+                    $data['passwordErr'] = 'Please enter a password';
+                }
+
+                if (empty($data['emailErr']) && empty($data['passwordErr'])) {
+                    die('login');
+                } else {
+                    $this->view(AREA . '/users/login', $data);
+                }
             } else {
                 $data = [
                     'email' => '',
