@@ -1,6 +1,4 @@
 <?php
-    // *** within $this->view() check to see if the view exists in the AREA dir if it doesn't then see if the view exists in a joint dir so the dir without prepending AREA, obviously if it exists in there then load that *** // 
-
     class Pages extends Controller {
         public function __construct(){
 
