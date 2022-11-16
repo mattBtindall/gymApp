@@ -4,21 +4,21 @@
         <div class="card card-body bg-light mt-5">
             <h2>Create a business account</h2>
             <p>Please fill out this form to register with us:</p>
-            <form action="<?= URL_ROOT; ?>/users/register" method="POST">
+            <form action="<?= URL_ROOT; ?>/users/register" method="POST" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group mb-2">
                             <label for="name">Business Name: <sup class="text-danger">*</sup></label>
-                            <input type="text" name="name" class="form-control form-control-lg <?= (!empty($data['nameErr'])) ? 'is-invalid' : ''; ?>" value="<?= $data['name']; ?>">
-                            <span class="invalid-feedback"><?= $data['nameErr']; ?></span>
+                            <input type="text" name="name" class="form-control form-control-lg <?= (!empty($data['name_err'])) ? 'is-invalid' : ''; ?>" value="<?= $data['name']; ?>">
+                            <span class="invalid-feedback"><?= $data['name_err']; ?></span>
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="form-group mb-2">
                             <label for="email">Email Address: <sup class="text-danger">*</sup></label>
-                            <input type="email" name="email" class="form-control form-control-lg <?= (!empty($data['emailErr'])) ? 'is-invalid' : ''; ?>" value="<?= $data['email']; ?>">
-                            <span class="invalid-feedback"><?= $data['emailErr']; ?></span>
+                            <input type="email" name="email" class="form-control form-control-lg <?= (!empty($data['email_Err'])) ? 'is-invalid' : ''; ?>" value="<?= $data['email']; ?>">
+                            <span class="invalid-feedback"><?= $data['email_err']; ?></span>
                         </div>
                     </div>
                 </div>
@@ -26,17 +26,17 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group mb-2">
-                            <label for="phoneNumber">Phone Number: <sup class="text-danger">*</sup></label>
-                            <input type="tel" name="phoneNumber" class="form-control form-control-lg <?= (!empty($data['phoneNumberErr'])) ? 'is-invalid' : ''; ?>" value="<?= $data['phoneNumber']; ?>">
-                            <span class="invalid-feedback"><?= $data['phoneNumberErr']; ?></span>
+                            <label for="phone_number">Phone Number: <sup class="text-danger">*</sup></label>
+                            <input type="tel" name="phone_number" class="form-control form-control-lg <?= (!empty($data['phone_number_rr'])) ? 'is-invalid' : ''; ?>" value="<?= $data['phone_number']; ?>">
+                            <span class="invalid-feedback"><?= $data['phone_number_rr']; ?></span>
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="form-group mb-2">
                             <label for="est">Year Established: <sup class="text-danger">*</sup></label>
-                            <input type="number" name="est" class="form-control form-control-lg <?= (!empty($data['estErr'])) ? 'is-invalid' : ''; ?>" value="<?= $data['est']; ?>">
-                            <span class="invalid-feedback"><?= $data['estErr']; ?></span>
+                            <input type="number" name="est" class="form-control form-control-lg <?= (!empty($data['est_err'])) ? 'is-invalid' : ''; ?>" value="<?= $data['est']; ?>">
+                            <span class="invalid-feedback"><?= $data['est_err']; ?></span>
                         </div>
                     </div>
                 </div>
@@ -45,24 +45,24 @@
                     <div class="col-md-6">
                         <div class="form-group mb-2">
                             <label for="password">Password: <sup class="text-danger">*</sup></label>
-                            <input type="password" name="password" class="form-control form-control-lg <?= (!empty($data['passwordErr'])) ? 'is-invalid' : ''; ?>" value="<?= $data['password']; ?>">
-                            <span class="invalid-feedback"><?= $data['passwordErr']; ?></span>
+                            <input type="password" name="password" class="form-control form-control-lg <?= (!empty($data['password_err'])) ? 'is-invalid' : ''; ?>" value="<?= $data['password']; ?>">
+                            <span class="invalid-feedback"><?= $data['password_err']; ?></span>
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="form-group mb-2">
-                            <label for="confirmPassword">Confirm Password: <sup class="text-danger">*</sup></label>
-                            <input type="password" name="confirmPassword" class="form-control form-control-lg <?= (!empty($data['confirmPasswordErr'])) ? 'is-invalid' : ''; ?>" value="<?= $data['confirmPassword']; ?>">
-                            <span class="invalid-feedback"><?= $data['confirmPasswordErr']; ?></span>
+                            <label for="confirm_password">Confirm Password: <sup class="text-danger">*</sup></label>
+                            <input type="password" name="confirm_password" class="form-control form-control-lg <?= (!empty($data['confirm_password_err'])) ? 'is-invalid' : ''; ?>" value="<?= $data['confirm_password']; ?>">
+                            <span class="invalid-feedback"><?= $data['confirm_password_err']; ?></span>
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group mb-2">
                     <label for="description">Business Description: <sup class="text-danger">*</sup></label>
-                    <textArea name="description" class="form-control form-control-lg <?= (!empty($data['descriptionErr'])) ? 'is-invalid' : ''; ?>" value="<?= $data['description']; ?>" style="resize: none;"></textArea>
-                        <span class="invalid-feedback"><?= $data['descriptionErr']; ?></span>
+                    <textArea name="description" class="form-control form-control-lg <?= (!empty($data['description_err'])) ? 'is-invalid' : ''; ?>" value="<?= $data['description']; ?>" style="resize: none;"></textArea>
+                        <span class="invalid-feedback"><?= $data['description_err']; ?></span>
                 </div>
 
                 <div class="row mt-2">

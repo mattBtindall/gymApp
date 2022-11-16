@@ -1,7 +1,7 @@
 <?php
     class Users extends Controller {
         public function __construct() {
-
+            $this->userModel = $this->model('User');
         }
 
         public function register() {
@@ -11,18 +11,18 @@
                 $data = [
                     'name' => trim($_POST['name']),
                     'email' => trim($_POST['email']),
-                    'phoneNumber' => trim($_POST['phoneNumber']),
+                    'phone_number' => trim($_POST['phone_number']),
                     'est' => trim($_POST['est']),
                     'description' => trim($_POST['description']),
                     'password' => trim($_POST['password']),
-                    'confirmPassword' => trim($_POST['confirmPassword']),
-                    'nameErr' => '',
-                    'emailErr' => '',
-                    'phoneNumberErr' => '',
-                    'estErr' => '',
-                    'descriptionErr' => '',
-                    'passwordErr' => '',
-                    'confirmPasswordErr' => ''
+                    'confirm_password' => trim($_POST['confirm_password']),
+                    'name_err' => '',
+                    'email_err' => '',
+                    'phone_number_err' => '',
+                    'est_err' => '',
+                    'description_err' => '',
+                    'password_err' => '',
+                    'confirm_password_err' => ''
                 ];
 
                 if (empty($data['name'])) {
@@ -33,36 +33,46 @@
                     $data['emailErr'] = 'Please enter an email';
                 }
 
-                if (empty($data['phoneNumber'])) {
-                    $data['phoneNumberErr'] = 'Please enter a phone number';
+                if (empty($data['phone_number'])) {
+                    $data['phone_number_err'] = 'Please enter a phone number';
                 }
 
                 if (empty($data['est'])) {
-                    $data['estErr'] = 'Please enter the year established';
+                    $data['est_err'] = 'Please enter the year established';
                 } else if (strlen($data['est']) != 4) {
-                    $data['estErr'] = 'Please enter a valid year';
+                    $data['est_err'] = 'Please enter a valid year';
                 }
 
                 if (empty($data['description'])) {
-                    $data['descriptionErr'] = 'Please enter a business description';
+                    $data['description_err'] = 'Please enter a business description';
                 }
 
                 if (empty($data['password'])) {
-                    $data['passwordErr'] = 'Please enter a password';
+                    $data['password_err'] = 'Please enter a password';
                 } else if (strlen($data['password']) < 6) {
-                    $data['passwordErr'] = 'Please enter 6 or more characters for the password';
+                    $data['password_err'] = 'Please enter 6 or more characters for the password';
                 }
 
-                if (empty($data['confirmPassword'])) {
-                    $data['confirmPasswordErr'] = 'Please enter a value for confirm password';
+                if (empty($data['confirm_password'])) {
+                    $data['confirm_password_err'] = 'Please enter a value for confirm password';
                 } else {
-                    if ($data['password'] !== $data['confirmPassword']) {
-                        $data['confirmPasswordErr'] = 'Passwords do not match';
+                    if ($data['password'] !== $data['confirm_password']) {
+                        $data['confirm_password_err'] = 'Passwords do not match';
                     }
                 }
 
-                if (empty($data['nameErr']) && empty($data['emailErr']) && empty($data['phoneNumberErr']) && empty($data['estErr']) && empty($data['descriptionErr']) && empty($data['passwordErr']) && empty($data['confirmPasswordErr'])) {
-                    die('register');
+                if (empty($data['name_err']) && empty($data['email_err']) && empty($data['phone_number_err']) && empty($data['est_err']) && empty($data['description_err']) && empty($data['password_err']) && empty($data['confirm_password_err'])) {
+                    $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+
+                    // Remove errors + 'confirmPassword'
+                    array_splice($data, 6, count($data) - 1);
+
+                    if ($this->userModel->register($data)) {
+                        flash('register_success', 'You are registered and can login');
+                        redirect('/users/login');
+                    } else {
+
+                    }
                 } else {
                     $this->view(AREA . '/users/register', $data);
                 }
@@ -71,18 +81,18 @@
                 $data = [
                     'name' => '',
                     'email' => '',
-                    'phoneNumber' => '',
+                    'phone_number' => '',
                     'est' => '',
                     'description' => '',
                     'password' => '',
-                    'confirmPassword' => '',
-                    'nameErr' => '',
-                    'emailErr' => '',
-                    'phoneNumberErr' => '',
-                    'estErr' => '',
-                    'descriptionErr' => '',
-                    'passwordErr' => '',
-                    'confirmPasswordErr' => ''
+                    'confirm_password' => '',
+                    'name_err' => '',
+                    'email_err' => '',
+                    'phone_number_err' => '',
+                    'est_err' => '',
+                    'description_err' => '',
+                    'password_err' => '',
+                    'confirm_password_err' => ''
                 ];
 
                 $this->view(AREA . '/users/register', $data);
@@ -96,19 +106,19 @@
                 $data = [
                     'email' => trim($_POST['email']),
                     'password' => trim($_POST['password']),
-                    'emailErr' => '',
-                    'passwordErr' => '',
+                    'email_err' => '',
+                    'password_err' => '',
                 ];
 
                 if (empty($data['email'])) {
-                    $data['emailErr'] = 'Please enter an email';
+                    $data['email_err'] = 'Please enter an email';
                 }
 
                 if (empty($data['password'])) {
-                    $data['passwordErr'] = 'Please enter a password';
+                    $data['password_err'] = 'Please enter a password';
                 }
 
-                if (empty($data['emailErr']) && empty($data['passwordErr'])) {
+                if (empty($data['email_err']) && empty($data['password_err'])) {
                     die('login');
                 } else {
                     $this->view(AREA . '/users/login', $data);
@@ -117,11 +127,60 @@
                 $data = [
                     'email' => '',
                     'password' => '',
-                    'emailErr' => '',
-                    'passwordErr' => ''
+                    'email_err' => '',
+                    'password_err' => ''
                 ];
 
                 $this->view(AREA . '/users/login', $data);
+            }
+        }
+
+        // *** this needs testing *** //
+        public function uploadImg() {
+            $target_dir = "uploads/";
+            $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+            $uploadOk = 1;
+            $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+
+            // Check if image file is a actual image or fake image
+            $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+            if($check !== false) {
+                echo "File is an image - " . $check["mime"] . ".";
+                $uploadOk = 1;
+            } else {
+                echo "File is not an image.";
+                $uploadOk = 0;
+            }
+
+            // Check if file already exists
+            if (file_exists($target_file)) {
+                echo "Sorry, file already exists.";
+                $uploadOk = 0;
+            }
+
+            // Check file size
+            if ($_FILES["fileToUpload"]["size"] > 500000) {
+                echo "Sorry, your file is too large.";
+                $uploadOk = 0;
+            }
+
+            // Allow certain file formats
+            if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+            && $imageFileType != "gif" ) {
+                echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+                $uploadOk = 0;
+            }
+
+            // Check if $uploadOk is set to 0 by an error
+            if ($uploadOk == 0) {
+                echo "Sorry, your file was not uploaded.";
+            // if everything is ok, try to upload file
+            } else {
+            if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+                echo "The file ". htmlspecialchars( basename( $_FILES["fileToUpload"]["name"])). " has been uploaded.";
+            } else {
+                echo "Sorry, there was an error uploading your file.";
+            }
             }
         }
     }
