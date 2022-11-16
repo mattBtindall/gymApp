@@ -13,7 +13,7 @@
       </div>
 
       <div class="navbar-nav ms-auto">
-        <small class="nav-link border-end"><?= AREA; ?></small>
+        <small class="nav-link text-dark font-weight-bold border-end"><?= AREA; ?></small>
         <a class="nav-link" href="<?= URL_ROOT; ?>/users/login">Login</a>
         <a class="nav-link" href="<?= URL_ROOT; ?>/users/register">Register</a>
       </div>
