@@ -2,6 +2,7 @@
 <div class="row">
     <div class="col-md-6 mx-auto">
         <div class="card card-body bg-light mt-5">
+            <?php flash('register_failed'); ?>
             <h2>Create a business account</h2>
             <p>Please fill out this form to register with us:</p>
             <form action="<?= URL_ROOT; ?>/users/register" method="POST" enctype="multipart/form-data">
