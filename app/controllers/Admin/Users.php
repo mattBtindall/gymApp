@@ -62,16 +62,17 @@
                 }
 
                 if (empty($data['name_err']) && empty($data['email_err']) && empty($data['phone_number_err']) && empty($data['est_err']) && empty($data['description_err']) && empty($data['password_err']) && empty($data['confirm_password_err'])) {
-                    $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
-
-                    // Remove errors + 'confirmPassword'
+                    // Remove errors & 'confirmPassword'
                     array_splice($data, 6, count($data) - 1);
+
+                    $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
                     if ($this->userModel->register($data)) {
                         flash('register_success', 'You are registered and can login');
                         redirect('/users/login');
                     } else {
-
+                        flash('register_failed', 'For some reason the registration failed, please try register again');
+                        redirect('/users/register');
                     }
                 } else {
                     $this->view(AREA . '/users/register', $data);
@@ -112,14 +113,22 @@
 
                 if (empty($data['email'])) {
                     $data['email_err'] = 'Please enter an email';
+                } else if (!$this->userModel->userExists($data['email'])) {
+                    $data['email_err'] = 'User does not exist';
                 }
 
                 if (empty($data['password'])) {
                     $data['password_err'] = 'Please enter a password';
                 }
 
-                if (empty($data['email_err']) && empty($data['password_err'])) {
-                    die('login');
+                if (empty($data['email_err']) && empty($data['password_err'])) {#
+                    $user = $this->userModel->login($data['email'], $data['password']);
+                    if ($user) {
+                        $this->createUserSession($user);
+                    } else {
+                        $data['password_err'] = 'Incorrect password';
+                        $this->view(AREA . '/users/login', $data);
+                    }
                 } else {
                     $this->view(AREA . '/users/login', $data);
                 }
@@ -133,6 +142,21 @@
 
                 $this->view(AREA . '/users/login', $data);
             }
+        }
+
+        public function createUserSession($user) {
+            $_SESSION['user_id'] = $user->id;
+            $_SESSION['user_name'] = $user->name;
+            $_SESSION['user_email'] = $user->email;
+            redirect('pages/index');
+        }
+
+        public function logout() {
+            unset($_SESSION['user_id']);
+            unset($_SESSION['user_name']);
+            unset($_SESSION['user_email']);
+            session_destroy();
+            redirect('users/login');
         }
 
         // *** this needs testing *** //

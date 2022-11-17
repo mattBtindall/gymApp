@@ -8,13 +8,13 @@
             <form action="<?= URL_ROOT; ?>/users/login" method='POST'>
                 <div class="form-group mb-2">
                     <label for="email">Email Address: <sup class="text-danger">*</sup></label>
-                    <input type="email" name="email" class="form-control form-control-lg <?= (!empty($data['emailErr'])) ? 'is-invalid' : ''; ?>" value="<?= $data['email']; ?>">
-                    <span class="invalid-feedback"><?= $data['emailErr']; ?></span>
+                    <input type="email" name="email" class="form-control form-control-lg <?= (!empty($data['email_err'])) ? 'is-invalid' : ''; ?>" value="<?= $data['email']; ?>">
+                    <span class="invalid-feedback"><?= $data['email_err']; ?></span>
                 </div>
                 <div class="form-group mb-2">
                     <label for="password">Password: <sup class="text-danger">*</sup></label>
-                    <input type="password" name="password" class="form-control form-control-lg <?= (!empty($data['passwordErr'])) ? 'is-invalid' : ''; ?>" value="<?= $data['password']; ?>">
-                    <span class="invalid-feedback"><?= $data['passwordErr']; ?></span>
+                    <input type="password" name="password" class="form-control form-control-lg <?= (!empty($data['password_err'])) ? 'is-invalid' : ''; ?>" value="<?= $data['password']; ?>">
+                    <span class="invalid-feedback"><?= $data['password_err']; ?></span>
                 </div>
 
                 <div class="row mt-2">

@@ -28,4 +28,20 @@
 
             return $this->db->execute() ? true : false;
         }
+
+        public function login($email, $password) {
+            $this->db->query('SELECT * FROM ' . strtolower(AREA) . '_users WHERE email = :email');
+            $this->db->bind(':email', $email);
+            $row = $this->db->single();
+
+            $hashed_password = $row->password;
+
+            return (password_verify($password, $hashed_password)) ? $row : false;
+        }
+
+        public function userExists($email) {
+            $this->db->query('SELECT * FROM ' . strtolower(AREA) . '_users WHERE email = :email');
+            $this->db->bind(':email', $email);
+            return $this->db->single() ? true : false;
+        }
     }

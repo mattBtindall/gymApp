@@ -32,3 +32,7 @@
             unset($_SESSION[$name . '_class']);
         }
     }
+
+    function isLoggedIn() {
+        return isset($_SESSION['user_id']);
+    }
