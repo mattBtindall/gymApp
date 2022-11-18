@@ -14,7 +14,7 @@
 
       <div class="navbar-nav ms-auto">
         <?php if (isLoggedIn()) : ?>
-					<span class="nav-link text-dark font-weight-bold"><?= isLoggedIn() ? $_SESSION['user_name'] . ' - ' . AREA : ''; ?></span>
+					<a href="<?= URL_ROOT; ?>/users/profile" class="nav-link text-dark font-weight-bold"><?= isLoggedIn() ? $_SESSION['user_name'] . ' - ' . AREA : ''; ?></a>
 					<a href="<?= URL_ROOT; ?>/users/logout" class="nav-link">Logout</a>
         <?php else : ?>
 					<small class="nav-link text-dark border-end"><?= AREA; ?></small>
