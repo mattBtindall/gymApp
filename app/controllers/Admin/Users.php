@@ -148,7 +148,7 @@
             $_SESSION['user_id'] = $user->id;
             $_SESSION['user_name'] = $user->name;
             $_SESSION['user_email'] = $user->email;
-            redirect('pages/index');
+            redirect('users/profile');
         }
 
         public function logout() {
@@ -157,6 +157,16 @@
             unset($_SESSION['user_email']);
             session_destroy();
             redirect('users/login');
+        }
+
+        public function profile() {
+            if (!isLoggedIn() || !$this->userModel->isAdmin()) {
+                return;
+            }
+
+            $data = $this->userModel->selectUserById($_SESSION['user_id']);
+
+            $this->view(AREA . '/users/profile', $data);
         }
 
         // *** this needs testing *** //
