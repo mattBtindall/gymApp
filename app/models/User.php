@@ -44,4 +44,14 @@
             $this->db->bind(':email', $email);
             return $this->db->single() ? true : false;
         }
+
+        public function selectUserById($id, $area = AREA) { // can pass area in so it can be use with is admin below
+            $this->db->query('SELECT * FROM ' . strtolower($area) . '_users WHERE id = :id');
+            $this->db->bind(':id', $id);
+            return $this->db->single();
+        }
+
+        public function isAdmin() {
+            return $this->selectUserById($_SESSION['user_id'], 'admin') ? true : false;
+        }
     }
