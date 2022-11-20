@@ -5,7 +5,7 @@
             <h3>Account Information</h3>
             <br>
             <h4>Contact Information</h4>
-            <?php flash('profile_update_fail'); ?> 
+            <?php flash('profile_update_fail'); ?>
             <form action="<?= URL_ROOT; ?>/users/profile_edit/<?= $data->id; ?>" method="POST">
                 <div class="form-group mb-2">
                     <label for="name">Name:</label>

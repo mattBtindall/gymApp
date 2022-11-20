@@ -16,8 +16,9 @@
 
             if (isset($url[0]) && is_dir('../app/controllers/' . ucwords($url[0]))) {
                 $this->area = ucwords($url[0]);
+                unset($url[0]);
             }
-            
+
             // set site wide variables
             define('AREA', $this->area);
             define('URL_ROOT', URL_ROOT_BASE . '/' . AREA);
