@@ -14,6 +14,7 @@ class Users extends Controller {
                 'phone_number' => trim($_POST['phone_number']),
                 'est' => trim($_POST['est']),
                 'description' => trim($_POST['description']),
+                'img_url' => URL_ROOT_BASE . '/img/default_img.png',
                 'password' => trim($_POST['password']),
                 'confirm_password' => trim($_POST['confirm_password']),
                 'name_err' => '',
@@ -63,7 +64,7 @@ class Users extends Controller {
 
             if (empty($data['name_err']) && empty($data['email_err']) && empty($data['phone_number_err']) && empty($data['est_err']) && empty($data['description_err']) && empty($data['password_err']) && empty($data['confirm_password_err'])) {
                 // Remove errors & 'confirmPassword'
-                array_splice($data, 6, count($data) - 1);
+                array_splice($data, 7, count($data) - 1);
 
                 $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
@@ -158,14 +159,35 @@ class Users extends Controller {
             $fileSize    = $_FILES['file']['size'];
             $fileErr     = $_FILES['file']['error'];
             $fileType    = $_FILES['file']['type'];
+            $err         = null;
 
             $fileExt = explode('.', $fileName); // 'image.png' -> ['image','png']
             $fileActualExt = strtolower(end($fileExt));
             $allowed = ['jpg', 'jpeg', 'png'];
 
-            if (in_array($fileActualExt, $allowed)) {
-                
+            $data = $this->userModel->selectUserById($_SESSION['user_id']);
+            
+            if (!in_array($fileActualExt, $allowed)) { // check for correct file type
+                // flash('img_upload_failed', 'Please upload a jpg or png file', 'alert alert-danger');
+                // $this->view(AREA. '/users/profile', $data);
+                $err = 'Please upload a jpg or png file';
+            } elseif ($fileErr !== 0) {
+                $err = 'There was an error uploading your file';
+            } elseif ($fileSize > MAX_IMG_SIZE) {
+                $err = 'File size too large'; 
             }
+
+            if ($err) {
+                flash('img_upload_failed', $err, 'alert alert-danger');
+                $this->view(AREA. '/users/profile', $data);
+            } 
+
+            $fileNameNew = uniqid('', true) . '.' . $fileActualExt;
+            // $fileDestination = URL_ROOT_BASE . '/img/' . $fileNameNew;
+            $fileDestination = PUB_ROOT . '/img/' . $fileNameNew;
+            move_uploaded_file($fileTmpName, $fileDestination);
+            // Create a link in the DB
+            // $this->userModel->uploadImg($fileDestination);
 
         } else {
             if (!isLoggedIn() || !$this->userModel->isAdmin()) {

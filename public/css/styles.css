@@ -1,7 +1,19 @@
 .img-container {
-    width: 100%
+    width: 100%;
 }
 
 .img-container img {
     max-width: 100%;
+}
+
+.profile-right-container {
+    width: 75%;
+    max-width: 300px;
+}
+
+@media (min-width: 992px) {
+    .profile-right-container {
+        width: 60%;
+        max-width: initial;
+    }
 }
