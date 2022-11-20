@@ -151,7 +151,10 @@ class Users extends Controller {
     }
 
     public function profile() {
+        $data = $this->userModel->selectUserById($_SESSION['user_id']);
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Uploading an image
             $file = $_FILES['file'];
 
             $fileName    = $_FILES['file']['name'];
@@ -165,38 +168,64 @@ class Users extends Controller {
             $fileActualExt = strtolower(end($fileExt));
             $allowed = ['jpg', 'jpeg', 'png'];
 
-            $data = $this->userModel->selectUserById($_SESSION['user_id']);
-            
             if (!in_array($fileActualExt, $allowed)) { // check for correct file type
-                // flash('img_upload_failed', 'Please upload a jpg or png file', 'alert alert-danger');
-                // $this->view(AREA. '/users/profile', $data);
                 $err = 'Please upload a jpg or png file';
-            } elseif ($fileErr !== 0) {
+            } elseif ($fileErr !== 0) { // check for err during upload
                 $err = 'There was an error uploading your file';
-            } elseif ($fileSize > MAX_IMG_SIZE) {
-                $err = 'File size too large'; 
+            } elseif ($fileSize > MAX_IMG_SIZE) { // check for img size
+                $err = 'File size too large';
             }
 
             if ($err) {
                 flash('img_upload_failed', $err, 'alert alert-danger');
                 $this->view(AREA. '/users/profile', $data);
-            } 
+            }
 
-            $fileNameNew = uniqid('', true) . '.' . $fileActualExt;
-            // $fileDestination = URL_ROOT_BASE . '/img/' . $fileNameNew;
+            $fileNameNew = uniqid('', true) . '.' . $fileActualExt; // create unique id for photo based on time of upload
             $fileDestination = PUB_ROOT . '/img/' . $fileNameNew;
+            $fileLocation = URL_ROOT_BASE . '/img/' . $fileNameNew;
             move_uploaded_file($fileTmpName, $fileDestination);
-            // Create a link in the DB
-            // $this->userModel->uploadImg($fileDestination);
-
+            if ($this->userModel->uploadImg($fileLocation, $_SESSION['user_id'])) {
+                flash('img_upload_success', 'Image uploaded successfully');
+                redirect('users/profile');
+            }
         } else {
             if (!isLoggedIn() || !$this->userModel->isAdmin()) {
                 return;
             }
 
-            $data = $this->userModel->selectUserById($_SESSION['user_id']);
-
             $this->view(AREA . '/users/profile', $data);
+        }
+    }
+
+    public function profile_edit($id) {
+        $data = $this->userModel->selectUserById($id);
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
+
+            $updateData = [
+                'name' => trim($_POST['name']),
+                'email' => trim($_POST['email']),
+                'est' => trim($_POST['est']),
+                'phone_number' => trim($_POST['phone_number']),
+                'description' => trim($_POST['description']),
+            ];
+
+            // if value is blank or hasn't changed don't update
+            $updateData = array_filter($updateData, function($val, $key) use ($data) {
+                return $val && $val != $data->$key;
+            }, ARRAY_FILTER_USE_BOTH);
+
+            if ($this->userModel->updateUser($updateData, $id)) {
+                // get fresh data here
+                flash('profile_update_success', 'Updated profile details');
+                $this->view(AREA . '/users/profile', $this->userModel->selectUserById($id));
+            } else {
+                flash('profile_update_fail', 'Failed to update profile', 'alert alert-danger');
+                $this->view(AREA . '/users/profile_edit', $data);
+            }
+        } else {
+            $this->view(AREA . '/users/profile_edit', $data);
         }
     }
 
@@ -204,7 +233,7 @@ class Users extends Controller {
         $_SESSION['user_id'] = $user->id;
         $_SESSION['user_name'] = $user->name;
         $_SESSION['user_email'] = $user->email;
-        redirect('users/profile');
+        $this->view(AREA . '/users/profile', $user);
     }
 
     public function logout() {
@@ -217,6 +246,6 @@ class Users extends Controller {
 
     // *** this needs testing *** //
     public function uploadImg() {
-         
+
     }
 }

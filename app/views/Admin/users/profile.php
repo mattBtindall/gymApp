@@ -5,21 +5,29 @@
             <h3>Account Information</h3>
             <br>
             <h4>Contact Information</h4>
+            <?php flash('profile_update_success'); ?>
             <p><strong>Name: </strong><?= $data->name; ?></p>
             <p><strong>Email: </strong> <?= $data->email; ?></p>
+            <p><strong>EST: </strong><?=$data->est; ?></p>
             <p><strong>Phone Number: </strong><?= $data->phone_number; ?></p>
+            <strong>Description:</strong><br>
+            <p><?= $data->description; ?></p>
+            <a href="<?= URL_ROOT; ?>/users/profile_edit/<?= $data->id; ?>" class="btn btn-secondary">Edit profile details</a>
         </div>
 
         <div class="col-lg-6 d-flex justify-content-lg-center">
             <div class="profile-right-container d-flex flex-column justify-content-center align-items-lg-center">
                 <h3>Profile Picture</h3>
-                <div class="img-container"> <!-- w-s-100 w-md-50 -->
-                    <img src="<?= $data->img_url; ?>" alt="">
+                <div class="img-container">
+                    <img class="rounded" src="<?= $data->img_url; ?>" alt="">
                 </div>
-                <form action="<?= URL_ROOT; ?>/users/profile" method="POST" enctype="multipart/form-data">
-                    <div class="form-group text-center"> <!-- w-s-100 w-md-50 -->
+                <form class="mt-2" action="<?= URL_ROOT; ?>/users/profile" method="POST" enctype="multipart/form-data">
+                    <div class="form-group text-center">
                         <label class="mb-2" for="file">Upload a new image</label>
-                        <?php flash('img_upload_failed'); ?>
+                        <?php
+                            flash('img_upload_failed');
+                            flash('img_upload_success');
+                        ?>
                         <input class="form-control mb-2" type="file" name="file">
                         <button class="btn btn-secondary w-100" type="submit" name="submit">Upload</button>
                     </div>
