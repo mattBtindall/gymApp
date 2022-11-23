@@ -27,11 +27,11 @@ class Users extends Controller {
             ];
 
             if (empty($data['name'])) {
-                $data['nameErr'] = 'Please enter a name';
+                $data['name_err'] = 'Please enter a name';
             }
 
             if (empty($data['email'])) {
-                $data['emailErr'] = 'Please enter an email';
+                $data['email_err'] = 'Please enter an email';
             }
 
             if (empty($data['phone_number'])) {
