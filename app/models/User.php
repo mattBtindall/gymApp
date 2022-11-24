@@ -27,7 +27,6 @@
             $this->db->query('SELECT * FROM ' . strtolower(AREA) . '_users WHERE email = :email');
             $this->db->bind(':email', $email);
             $row = $this->db->single();
-
             $hashed_password = $row->password;
 
             return (password_verify($password, $hashed_password)) ? $row : false;
@@ -81,7 +80,7 @@
         public function selectUserById($id, $area = AREA) { // can pass area in so it can be use with is admin below
             $this->db->query('SELECT * FROM ' . strtolower($area) . '_users WHERE id = :id');
             $this->db->bind(':id', $id);
-            return $this->db->single();
+            return $this->db->single(PDO::FETCH_ASSOC);
         }
 
         public function isAdmin() {

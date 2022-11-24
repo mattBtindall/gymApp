@@ -71,9 +71,9 @@
         }
 
         // Get a single record as object
-        public function single() {
+        public function single($return_type = PDO::FETCH_OBJ) {
             $this->execute();
-            return $this->stmt->fetch(PDO::FETCH_OBJ);
+            return $this->stmt->fetch($return_type);
         }
 
         public function rowCount() {
