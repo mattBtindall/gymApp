@@ -67,12 +67,22 @@ class Users extends Users_base {
             }
 
             if (empty($data['name_err']) && empty($data['email_err']) && empty($data['phone_number_err']) && empty($data['est_err']) && empty($data['description_err']) && empty($data['password_err']) && empty($data['confirm_password_err'])) {
-                // Remove errors & 'confirmPassword'
-                array_splice($data, 7, count($data) - 1);
+                $userDbValues = [
+                    'name',
+                    'email',
+                    'phone_number',
+                    'dob',
+                    'gender',
+                    'img_url',
+                    'password'
+                ];
 
-                $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+                $insertIntoDb = array_filter($data, function($key) use ($userDbValues) {
+                    if (in_array($key, $userDbValues)) return true;
+                }, ARRAY_FILTER_USE_KEY);
+                $insertIntoDb['password'] = password_hash($insertIntoDb['password'], PASSWORD_DEFAULT);
 
-                if ($this->userModel->register($data)) {
+                if ($this->userModel->register($insertIntoDb)) {
                     flash('register_success', 'You are registered and can login');
                     redirect('/users/login');
                 } else {
