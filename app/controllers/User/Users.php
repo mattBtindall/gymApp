@@ -1,7 +1,16 @@
 <?php
 class Users extends Users_base {
     public function __construct() {
-        parent::__construct();
+        // Used to filter through the whole data array when displaying account detials in profile
+        $profileValuesToShow = [
+            'name',
+            'email',
+            'dob',
+            'phone_number',
+            'gender'
+        ];
+
+        parent::__construct($profileValuesToShow);
     }
 
     public function register() {
