@@ -10,7 +10,7 @@
                 'description' =>'Welcome to the gymApp admin area, from here you can login to your business account, or register a new account. Got the wrong area? <a href="' . URL_ROOT_BASE . '/User">Click here for the user area</a>.'
             ];
 
-            $this->view(AREA .'/pages/index', $data);
+            $this->view('/pages/index', $data);
         }
 
         public function about() {
@@ -18,6 +18,6 @@
                 'title' => 'About us Admin'
             ];
 
-            $this->view(AREA . '/pages/about', $data);
+            $this->view('/pages/about', $data);
         }
     }
