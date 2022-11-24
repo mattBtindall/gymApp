@@ -44,14 +44,16 @@
 
                 <div class="row">
                     <div class="col-md-6">
-                        <label for="gender">Gender: <sup class="text-danger">*</sup></label>
-                        <select class="form-control form-control-lg" name="gender">
-                            <option value="please_select">Please select</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                            <option value="neither_of_the_above">Neither of the above</option>
-                            <option value="prefer_not_to_say">Prefer not to say</option>
-                        </select>
+                        <div class="form-group mb-2">
+                            <label for="gender">Gender: <sup class="text-danger">*</sup></label>
+                            <select class="form-control form-control-lg" name="gender">
+                                <option value="please_select">Please select</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="neither_of_the_above">Neither of the above</option>
+                                <option value="prefer_not_to_say">Prefer not to say</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
