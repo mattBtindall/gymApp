@@ -1,7 +1,7 @@
 <?php
-class Users extends Controller {
+class Users extends Users_base {
     public function __construct() {
-        $this->userModel = $this->model('User');
+        parent::__construct();
     }
 
     public function register() {
@@ -64,11 +64,22 @@ class Users extends Controller {
 
             if (empty($data['name_err']) && empty($data['email_err']) && empty($data['phone_number_err']) && empty($data['est_err']) && empty($data['description_err']) && empty($data['password_err']) && empty($data['confirm_password_err'])) {
                 // Remove errors & 'confirmPassword'
-                array_splice($data, 7, count($data) - 1);
+                $userDbAttributes = [
+                    'name',
+                    'email',
+                    'phone_number',
+                    'est',
+                    'description',
+                    'password',
+                    'img_url'
+                ];
 
-                $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+                $insertIntoDb = array_filter($data, function($key) use ($userDbAttributes) {
+                    if (in_array($key, $userDbAttributes)) return true;
+                }, ARRAY_FILTER_USE_KEY);
+                $insertIntoDb['password'] = password_hash($insertIntoDb['password'], PASSWORD_DEFAULT);
 
-                if ($this->userModel->register($data)) {
+                if ($this->userModel->register($insertIntoDb)) {
                     flash('register_success', 'You are registered and can login');
                     redirect('/users/login');
                 } else {
@@ -77,13 +88,12 @@ class Users extends Controller {
                 }
             } else {
                 // Maybe remove this?
-                $this->view(AREA . '/users/register', $data);
+                $this->view('/users/register', $data);
                 // add return here to make sure the method ends here
                 // rule of thumb return as fast as possible
                 // make less indented
                 // further to the left is better
             }
-
         } else {
             $data = [
                 'name' => '',
@@ -102,53 +112,53 @@ class Users extends Controller {
                 'confirm_password_err' => ''
             ];
 
-            $this->view(AREA . '/users/register', $data);
+            $this->view('/users/register', $data);
         }
     }
 
-    public function login() {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
+    // public function login() {
+    //     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    //         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
 
-            $data = [
-                'email' => trim($_POST['email']),
-                'password' => trim($_POST['password']),
-                'email_err' => '',
-                'password_err' => '',
-            ];
+    //         $data = [
+    //             'email' => trim($_POST['email']),
+    //             'password' => trim($_POST['password']),
+    //             'email_err' => '',
+    //             'password_err' => '',
+    //         ];
 
-            if (empty($data['email'])) {
-                $data['email_err'] = 'Please enter an email';
-            } else if (!$this->userModel->userExists($data['email'])) {
-                $data['email_err'] = 'User does not exist';
-            }
+    //         if (empty($data['email'])) {
+    //             $data['email_err'] = 'Please enter an email';
+    //         } else if (!$this->userModel->userExists($data['email'])) {
+    //             $data['email_err'] = 'User does not exist';
+    //         }
 
-            if (empty($data['password'])) {
-                $data['password_err'] = 'Please enter a password';
-            }
+    //         if (empty($data['password'])) {
+    //             $data['password_err'] = 'Please enter a password';
+    //         }
 
-            if (empty($data['email_err']) && empty($data['password_err'])) {#
-                $user = $this->userModel->login($data['email'], $data['password']);
-                if ($user) {
-                    $this->createUserSession($user);
-                } else {
-                    $data['password_err'] = 'Incorrect password';
-                    $this->view(AREA . '/users/login', $data);
-                }
-            } else {
-                $this->view(AREA . '/users/login', $data);
-            }
-        } else {
-            $data = [
-                'email' => '',
-                'password' => '',
-                'email_err' => '',
-                'password_err' => ''
-            ];
+    //         if (empty($data['email_err']) && empty($data['password_err'])) {#
+    //             $user = $this->userModel->login($data['email'], $data['password']);
+    //             if ($user) {
+    //                 $this->createUserSession($user);
+    //             } else {
+    //                 $data['password_err'] = 'Incorrect password';
+    //                 $this->view(AREA . '/users/login', $data);
+    //             }
+    //         } else {
+    //             $this->view(AREA . '/users/login', $data);
+    //         }
+    //     } else {
+    //         $data = [
+    //             'email' => '',
+    //             'password' => '',
+    //             'email_err' => '',
+    //             'password_err' => ''
+    //         ];
 
-            $this->view(AREA . '/users/login', $data);
-        }
-    }
+    //         $this->view(AREA . '/users/login', $data);
+    //     }
+    // }
 
     public function profile() {
         $data = $this->userModel->selectUserById($_SESSION['user_id']);
@@ -178,7 +188,7 @@ class Users extends Controller {
 
             if ($err) {
                 flash('img_upload_failed', $err, 'alert alert-danger');
-                $this->view(AREA. '/users/profile', $data);
+                $this->view('/users/profile', $data);
             }
 
             $fileNameNew = uniqid('', true) . '.' . $fileActualExt; // create unique id for photo based on time of upload
@@ -194,7 +204,7 @@ class Users extends Controller {
                 return;
             }
 
-            $this->view(AREA . '/users/profile', $data);
+            $this->view('/users/profile', $data);
         }
     }
 
@@ -219,29 +229,14 @@ class Users extends Controller {
             if ($this->userModel->updateUser($updateData, $id)) {
                 // get fresh data here
                 flash('profile_update_success', 'Updated profile details');
-                $this->view(AREA . '/users/profile', $this->userModel->selectUserById($id));
+                $this->view('/users/profile', $this->userModel->selectUserById($id));
             } else {
                 flash('profile_update_fail', 'Failed to update profile', 'alert alert-danger');
-                $this->view(AREA . '/users/profile_edit', $data);
+                $this->view('/users/profile_edit', $data);
             }
         } else {
-            $this->view(AREA . '/users/profile_edit', $data);
+            $this->view('/users/profile_edit', $data);
         }
-    }
-
-    public function createUserSession($user) {
-        $_SESSION['user_id'] = $user->id;
-        $_SESSION['user_name'] = $user->name;
-        $_SESSION['user_email'] = $user->email;
-        $this->view(AREA . '/users/profile', $user);
-    }
-
-    public function logout() {
-        unset($_SESSION['user_id']);
-        unset($_SESSION['user_name']);
-        unset($_SESSION['user_email']);
-        session_destroy();
-        redirect('users/login');
     }
 
     // *** this needs testing *** //

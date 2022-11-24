@@ -1,8 +1,7 @@
 <?php
-
-class Users extends Controller {
+class Users extends Users_base {
     public function __construct() {
-        $this->userModel = $this->model('User');
+        parent::__construct();
     }
 
     public function register() {
@@ -81,7 +80,7 @@ class Users extends Controller {
                     redirect('/users/register');
                 }
             } else {
-                $this->view(AREA . '/users/register', $data);
+                $this->view('/users/register', $data);
             }
         } else {
             $data = [
@@ -101,15 +100,7 @@ class Users extends Controller {
                 'confirm_password_err' => '',
             ];
 
-            $this->view(AREA . '/users/register', $data);
+            $this->view('/users/register', $data);
         }
-    }
-
-    public function login() {
-        $data = [
-
-        ];
-
-        $this->view(AREA. '/users/login');
     }
 }
