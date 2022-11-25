@@ -1,6 +1,8 @@
 <?php
 class Users_base extends Controller {
     public function __construct($profileValuesToShow) {
+        parent::__construct();
+
         $this->userModel = $this->model('User');
         $this->profileValuesToShow = $profileValuesToShow;
     }
@@ -55,7 +57,7 @@ class Users_base extends Controller {
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Uploading an image
-            $file = $_FILES['file'];
+            if (!$_FILES['file']['name']) return;
 
             $fileName    = $_FILES['file']['name'];
             $fileTmpName = $_FILES['file']['tmp_name']; // temporary location of the file
@@ -78,16 +80,23 @@ class Users_base extends Controller {
 
             if ($err) {
                 flash('img_upload_failed', $err, 'alert alert-danger');
+                $data = $this->seperateProfileData($data);
                 $this->view('/users/profile', $data);
+                return;
             }
 
             $fileNameNew = uniqid('', true) . '.' . $fileActualExt; // create unique id for photo based on time of upload
             $fileDestination = PUB_ROOT . '/img/' . $fileNameNew;
             $fileLocation = URL_ROOT_BASE . '/img/' . $fileNameNew;
             move_uploaded_file($fileTmpName, $fileDestination);
+            $oldImgUrl = PUB_ROOT . '/img' . explode('img', $data['img_url'])[1]; // converts from url to location
+
             if ($this->userModel->uploadImg($fileLocation, $_SESSION['user_id'])) {
                 flash('img_upload_success', 'Image uploaded successfully');
-                redirect('users/profile');
+                if (!str_contains($oldImgUrl, 'default_img')) {
+                    unlink($oldImgUrl);
+                }
+                redirect('/users/profile');
             }
         } else {
             if (!isLoggedIn()) {
@@ -96,7 +105,6 @@ class Users_base extends Controller {
             }
 
             $data = $this->seperateProfileData($data);
-
             $this->view('/users/profile', $data);
         }
     }
@@ -104,30 +112,28 @@ class Users_base extends Controller {
     public function profile_edit($id) {
         $data = $this->userModel->selectUserById($id);
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
-            var_dump($_POST);
+            $formData = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
 
-            // $updateData = [
-            //     'name' => trim($_POST['name']),
-            //     'email' => trim($_POST['email']),
-            //     'est' => trim($_POST['est']),
-            //     'phone_number' => trim($_POST['phone_number']),
-            //     'description' => trim($_POST['description']),
-            // ];
+            $formData = array_map(fn($val) => trim($val), $formData);
 
-            // // if value is blank or hasn't changed don't update
-            // $updateData = array_filter($updateData, function($val, $key) use ($data) {
-            //     return $val && $val != $data[$key];
-            // }, ARRAY_FILTER_USE_BOTH);
+            // if blank or hasn't changed filter out
+            $updateData = array_filter($formData, function($val, $key) use ($data) {
+                return $val && $val != $data[$key];
+            }, ARRAY_FILTER_USE_BOTH);
 
-            // if ($this->userModel->updateUser($updateData, $id)) {
-            //     // get fresh data here
-            //     flash('profile_update_success', 'Updated profile details');
-            //     $this->view('/users/profile', $this->userModel->selectUserById($id));
-            // } else {
-            //     flash('profile_update_fail', 'Failed to update profile', 'alert alert-danger');
-            //     $this->view('/users/profile_edit', $data);
-            // }
+            if (!$updateData) {
+                // reload profile_edit with flash message
+                flash('profile_update_no_values', 'Please change the values that you would like to update', 'alert alert-danger');
+                redirect('/users/profile_edit/' . $id);
+            }
+
+            if ($this->userModel->updateUser($updateData, $id)) {
+                flash('profile_update_success', 'Updated profile details');
+                redirect('/users/profile');
+            } else {
+                flash('profile_update_fail', 'Failed to update profile', 'alert alert-danger');
+                $this->view('/users/profile_edit', $data);
+            }
         } else {
             $data = $this->seperateProfileData($data);
             $this->view('/users/profile_edit', $data);
@@ -136,7 +142,8 @@ class Users_base extends Controller {
 
     public function seperateProfileData($data) {
         // used to seperate values that will be displayed
-        $dataToShow = array_filter($data,
+        $dataToShow = array_filter(
+            $data,
             fn($key) => in_array($key, $this->profileValuesToShow),
             ARRAY_FILTER_USE_KEY
         );
