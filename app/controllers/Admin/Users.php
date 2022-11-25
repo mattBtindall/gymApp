@@ -12,11 +12,11 @@ class Users extends Users_base {
 
         parent::__construct($profileValuesToShow);
 
-        if (isLoggedIn() && !$this->userModel->isAdmin()) {
-            // prevent users from user area accessing admin area
-            // flash('', 'To access the admin area please log out', 'alert alert-danger');
-            header('location: '. URL_ROOT_BASE);
-        }
+        // if (isLoggedIn() && !$this->userModel->isAdmin()) {
+        //     // prevent users from user area accessing admin area
+        //     // flash('', 'To access the admin area please log out', 'alert alert-danger');
+        //     header('location: '. URL_ROOT_BASE);
+        // }
     }
 
     public function register() {
@@ -47,6 +47,10 @@ class Users extends Users_base {
 
             if (empty($data['email'])) {
                 $data['email_err'] = 'Please enter an email';
+            } else {
+                if ($this->userModel->emailExists($data['email'])) {
+                    $data['email_err'] = 'Account already exists with this email, either login or create an account with a different email';
+                }
             }
 
             if (empty($data['phone_number'])) {
@@ -130,35 +134,4 @@ class Users extends Users_base {
             $this->view('/users/register', $data);
         }
     }
-
-    // public function profile_edit($id) {
-    //     $data = $this->userModel->selectUserById($id);
-    //     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    //         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
-
-    //         $updateData = [
-    //             'name' => trim($_POST['name']),
-    //             'email' => trim($_POST['email']),
-    //             'est' => trim($_POST['est']),
-    //             'phone_number' => trim($_POST['phone_number']),
-    //             'description' => trim($_POST['description']),
-    //         ];
-
-    //         // if value is blank or hasn't changed don't update
-    //         $updateData = array_filter($updateData, function($val, $key) use ($data) {
-    //             return $val && $val != $data[$key];
-    //         }, ARRAY_FILTER_USE_BOTH);
-
-    //         if ($this->userModel->updateUser($updateData, $id)) {
-    //             // get fresh data here
-    //             flash('profile_update_success', 'Updated profile details');
-    //             $this->view('/users/profile', $this->userModel->selectUserById($id));
-    //         } else {
-    //             flash('profile_update_fail', 'Failed to update profile', 'alert alert-danger');
-    //             $this->view('/users/profile_edit', $data);
-    //         }
-    //     } else {
-    //         $this->view('/users/profile_edit', $data);
-    //     }
-    // }
 }

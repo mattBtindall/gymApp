@@ -45,6 +45,10 @@ class Users extends Users_base {
 
             if (empty($data['email'])) {
                 $data['email_err'] = 'Please enter an email';
+            } else {
+                if ($this->userModel->emailExists($data['email'])) {
+                    $data['email_err'] = 'Account already exists with this email, either login or create an account with a different email';
+                }
             }
 
             if (empty($data['phone_number'])) {
