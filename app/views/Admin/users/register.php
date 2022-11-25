@@ -18,7 +18,7 @@
                     <div class="col-md-6">
                         <div class="form-group mb-2">
                             <label for="email">Email Address: <sup class="text-danger">*</sup></label>
-                            <input type="email" name="email" class="form-control form-control-lg <?= (!empty($data['email_Err'])) ? 'is-invalid' : ''; ?>" value="<?= $data['email']; ?>">
+                            <input type="email" name="email" class="form-control form-control-lg <?= (!empty($data['email_err'])) ? 'is-invalid' : ''; ?>" value="<?= $data['email']; ?>">
                             <span class="invalid-feedback"><?= $data['email_err']; ?></span>
                         </div>
                     </div>
@@ -28,8 +28,8 @@
                     <div class="col-md-6">
                         <div class="form-group mb-2">
                             <label for="phone_number">Phone Number: <sup class="text-danger">*</sup></label>
-                            <input type="tel" name="phone_number" class="form-control form-control-lg <?= (!empty($data['phone_number_rr'])) ? 'is-invalid' : ''; ?>" value="<?= $data['phone_number']; ?>">
-                            <span class="invalid-feedback"><?= $data['phone_number_rr']; ?></span>
+                            <input type="tel" name="phone_number" class="form-control form-control-lg <?= (!empty($data['phone_number_err'])) ? 'is-invalid' : ''; ?>" value="<?= $data['phone_number']; ?>">
+                            <span class="invalid-feedback"><?= $data['phone_number_err']; ?></span>
                         </div>
                     </div>
 
