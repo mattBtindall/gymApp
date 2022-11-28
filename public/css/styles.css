@@ -1,5 +1,9 @@
 :root {
     --nav-height: 60px;
+    --box-shadow: 0 .5rem 1rem rgba(black, .15);
+    --box-shadow-lg: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);;
+    --z-index-overlay: 5;
+    --z-index-above-overlay: 10;
 }
 
 body.overlay-active::after {
@@ -9,13 +13,20 @@ body.overlay-active::after {
     height: 100%;
     content: "";
     top: 0;
+    z-index: 5;
 }
 
 .navbar {
     min-height: var(--nav-height);
 }
 
-/* Search pop over */
+/* Search & pop over */
+
+.search-bar,
+.search-bar:focus,
+.search-bar-form {
+    z-index: var(--z-index-above-overlay);
+}
 
 .search-bar-popover {
     position: absolute;
@@ -24,11 +35,41 @@ body.overlay-active::after {
     padding: 2rem;
     background-color: white;
     overflow-x: hidden;
-    border: 1px solid black;
+    box-shadow: var(--box-shadow-lg);
+    display: none;
+    visibility: hidden;
+    z-index: var(--z-index-above-overlay);
+}
+
+.search-bar-popover.active {
+    display: block;
+    visibility: visible;
 }
 
 .search-bar-popover .container {
     width: 50vw;
+}
+
+.search-bar-popover__header {
+    border-bottom: 1px solid #cecece;
+}
+
+.search-bar-popover ul {
+    list-style: none;
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    gap: 2rem;
+    margin-left: auto;
+}
+
+.search-bar-popover li {
+    cursor: pointer;
+}
+
+.search-bar-popover__output {
+    min-height: 6rem;
+    border-bottom: 1px solid #cecece;
 }
 
 .img-container {
