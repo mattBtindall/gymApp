@@ -11,12 +11,6 @@ class Users extends Users_base {
         ];
 
         parent::__construct($profileValuesToShow);
-
-        // if (isLoggedIn() && !$this->userModel->isAdmin()) {
-        //     // prevent users from user area accessing admin area
-        //     // flash('', 'To access the admin area please log out', 'alert alert-danger');
-        //     header('location: '. URL_ROOT_BASE);
-        // }
     }
 
     public function register() {
