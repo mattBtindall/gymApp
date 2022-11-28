@@ -140,6 +140,12 @@ class Users_base extends Controller {
         }
     }
 
+    public function searchDb($searchQuery) {
+        // this is called via an ajax call when an admin user types in the search bar
+        $results = $this->userModel->selectUserBySearchQuery($searchQuery);
+        echo $results ? json_encode($results) : 'No user found';
+    }
+
     public function seperateProfileData($data) {
         // used to seperate values that will be displayed
         $dataToShow = array_filter(

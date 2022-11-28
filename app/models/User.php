@@ -89,6 +89,13 @@ class User {
         return $this->userExists($email, 'admin') || $this->userExists($email, 'user');
     }
 
+    public function selectUserBySearchQuery($searchQuery) {
+        // select everything but password
+        $this->db->query('SELECT id, name, email, dob, phone_number, gender, img_url FROM user_users WHERE name LIKE :searchQuery');
+        $this->db->bind(':searchQuery', $searchQuery . '%');
+        return $this->db->resultSet(PDO::FETCH_ASSOC);
+    }
+
     public function isAdmin() {
         return $this->selectUserById($_SESSION['user_id'], 'admin') ? true : false;
     }

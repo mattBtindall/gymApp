@@ -30,14 +30,12 @@
 						<div class="container">
 							<header class="search-bar-popover__header">
 								<ul>
-									<li>All</li>
+									<li class="active">All</li>
 									<li>Clients</li>
 									<li>Active Members</li>
 								</ul>
 							</header>
-							<div class="search-bar-popover__output">
-
-							</div>
+							<div class="search-bar-popover__output"></div>
 						</div>
 					</div>
 

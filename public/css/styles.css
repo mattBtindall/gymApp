@@ -1,8 +1,9 @@
 :root {
+    --body-color:  #2f2f2f ;
     --nav-height: 60px;
     --box-shadow: 0 .5rem 1rem rgba(black, .15);
     --box-shadow-lg: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);;
-    --z-index-overlay: 5;
+    --z-index-overlay:        5;
     --z-index-above-overlay: 10;
 }
 
@@ -22,8 +23,8 @@ body.overlay-active::after {
 
 /* Search & pop over */
 
-.search-bar,
-.search-bar:focus,
+/* .search-bar,
+.search-bar:focus, */
 .search-bar-form {
     z-index: var(--z-index-above-overlay);
 }
@@ -65,11 +66,20 @@ body.overlay-active::after {
 
 .search-bar-popover li {
     cursor: pointer;
+    color: #cecece;
+}
+
+.search-bar-popover li.active {
+    color: var(--body-color);
 }
 
 .search-bar-popover__output {
+    width: 100%;
     min-height: 6rem;
     border-bottom: 1px solid #cecece;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
 }
 
 .img-container {
