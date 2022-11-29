@@ -89,9 +89,9 @@ class User {
         return $this->userExists($email, 'admin') || $this->userExists($email, 'user');
     }
 
-    public function selectUserBySearchQuery($searchQuery) {
+    public function selectUserBySearchQuery($searchQuery, $area) {
         // select everything but password
-        $this->db->query('SELECT id, name, email, dob, phone_number, gender, img_url FROM user_users WHERE name LIKE :searchQuery');
+        $this->db->query('SELECT id, name, email, phone_number, img_url FROM ' . $area . '_users WHERE name LIKE :searchQuery');
         $this->db->bind(':searchQuery', $searchQuery . '%');
         return $this->db->resultSet(PDO::FETCH_ASSOC);
     }
