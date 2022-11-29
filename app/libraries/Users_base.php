@@ -53,6 +53,7 @@ class Users_base extends Controller {
     }
 
     public function profile() {
+        $this->validateUser();
         $data = $this->userModel->selectUserById($_SESSION['user_id']);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -110,6 +111,7 @@ class Users_base extends Controller {
     }
 
     public function profile_edit($id) {
+        $this->validateUser();
         $data = $this->userModel->selectUserById($id);
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $formData = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
@@ -142,7 +144,9 @@ class Users_base extends Controller {
 
     public function searchDb($searchQuery) {
         // this is called via an ajax call when an admin user types in the search bar
-        $results = $this->userModel->selectUserBySearchQuery($searchQuery);
+        // data is sent back to javascript
+        $oppositeArea = strtolower(getOppositeArea());
+        $results = $this->userModel->selectUserBySearchQuery($searchQuery, $oppositeArea);
         echo $results ? json_encode($results) : 'No user found';
     }
 
@@ -161,6 +165,12 @@ class Users_base extends Controller {
                 'img_url' => $data['img_url']
             ]
         ];
+    }
+
+    public function validateUser () {
+        if (!isLoggedIn()) {
+            redirect('/users/login');
+        }
     }
 
     public function createUserSession($user) {
