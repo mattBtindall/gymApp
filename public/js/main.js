@@ -11,65 +11,89 @@ function init() {
     const isDescendant = (child, parent) => parent.contains(child);
     let popoverOpen = false;
 
-    // Toggle btn for image upload in profile
-    if (fileInput) {
-        const imgTypes = ['jpg', 'jpeg', 'png'];
+    const displaySearchResults = data => {
+        popoverOutput.innerHTML = "";
 
-        fileInput.addEventListener('change', () => {
-            if (!fileInput.files) {
+        const createRow = (rowData) => {
+            const rowTemplate = document.getElementById('row');
+            const rowBody = document.importNode(rowTemplate.content, true);
+            rowBody.querySelector('.row-img').src = rowData['img_url'];
+            rowBody.querySelector('.name').textContent = rowData['name'];
+            rowBody.querySelector('.email').textContent = rowData['email'];
+            rowBody.querySelector('.phone_number').textContent = rowData['phone_number'];
+            popoverOutput.appendChild(rowBody);
+        }
+
+        data.forEach(rowData => createRow(rowData));
+    }
+
+    if (!searchBar || !fileInput) {
+        return;
+    }
+
+    // Toggle btn for image upload in profile
+    const imgTypes = ['jpg', 'jpeg', 'png'];
+    fileInput.addEventListener('change', () => {
+        if (!fileInput.files) {
+            return;
+        }
+
+        for (const imgType of imgTypes) {
+            if (fileInput.files[0].type.includes(imgType)) {
+                uploadbtn.disabled = false;
                 return;
             }
-
-            for (const imgType of imgTypes) {
-                if (fileInput.files[0].type.includes(imgType)) {
-                    uploadbtn.disabled = false;
-                    return;
-                }
-            }
-        });
-    }
+        }
+    });
 
     // Search bar popover
-    if (searchBar) {
-        document.body.addEventListener('click', e => {
-            if (!popoverOpen) {
-                return;
+    document.body.addEventListener('click', e => {
+        if (!popoverOpen) {
+            return;
+        }
+
+        if (e.target !== searchBar && e.target !== popover && !isDescendant(e.target, popover)) {
+            popoverOpen = false;
+            popover.classList.remove('active');
+            document.body.classList.remove('overlay-active');
+            popoverOutput.innerHTML = "";
+            searchBar.value = "";
+        }
+    });
+
+    searchBar.addEventListener('focus', () => {
+        popoverOpen = true;
+        popover.classList.add('active');
+        document.body.classList.add('overlay-active');
+    });
+
+    // Search for user
+    searchBar.addEventListener('keyup', e => {
+        if (!e.target.value.length) {
+            // display "Type name in search bar" if not already showing
+            return;
+        }
+
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) { // data from db
+                displaySearchResults(JSON.parse(this.responseText));
             }
+        };
 
-            if (e.target !== searchBar && e.target !== popover && !isDescendant(e.target, popover)) {
-                popoverOpen = false;
-                popover.classList.remove('active');
-                document.body.classList.remove('overlay-active');
-                searchBar.value = "";
+        // truncate string after /Admin/ or /admin/ or /User/ or /user/
+        // below gets base url in javascript
+        const url = window.location.href;
+        const areas = ['/Admin/', '/admin/', '/User/', '/user/'];
+        let baseUrl = '';
+
+        for (const area of areas) {
+            if (url.indexOf(area) > 0) { // gets correct area
+                baseUrl = url.slice(0, url.indexOf(area) + area.length);
+                break;
             }
-        });
+        }
 
-        searchBar.addEventListener('focus', () => {
-            popoverOpen = true;
-            popover.classList.add('active');
-            document.body.classList.add('overlay-active');
-        });
-
-        // Search for user
-        searchBar.addEventListener('keyup', e => {
-            if (!e.target.value.length) {
-                // display "Type name in search bar" if not already showing
-                return;
-            }
-
-            xhr.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    // popoverOutput.innerHTML = this.responseText;
-                    // console.dir(JSON.parse(this.responseText));
-                    console.dir(this.responseText);
-                }
-            };
-
-            // truncate string after /Admin/ or /admin/ or /User/ /user/
-            // below gets base url in javascript
-            console.log(window.location.href.slice(0, window.location.href.indexOf('Admin') + 'Admin'.length));
-            xhr.open("GET", "http://localhost/gymApp/Admin/Users/searchDb/" + e.target.value, true);
-            xhr.send();
-        });
-    }
+        xhr.open("GET", baseUrl + "Users/searchDb/" + e.target.value, true);
+        xhr.send();
+    });
 }

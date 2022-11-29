@@ -51,10 +51,6 @@ body.overlay-active::after {
     width: 50vw;
 }
 
-.search-bar-popover__header {
-    border-bottom: 1px solid #cecece;
-}
-
 .search-bar-popover ul {
     list-style: none;
     display: flex;
@@ -76,11 +72,16 @@ body.overlay-active::after {
 .search-bar-popover__output {
     width: 100%;
     min-height: 6rem;
-    border-bottom: 1px solid #cecece;
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
 }
+
+/* .search-bar-popover__output img {
+    max-width: 60px;
+} */
+
+/*  */
 
 .img-container {
     width: 100%;
