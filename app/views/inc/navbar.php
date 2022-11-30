@@ -49,34 +49,43 @@
 			</div>
 		</div>
 	</div>
-	<!-- Template for searchbar results -->
-	<template id="row">
-		<div class="search-bar-popover__row row align-items-center py-3 border-bottom">
-			<div class="col-5 border-end">
-				<div class="row">
-					<div class="col-4">
-						<div class="img-container">
-							<img class="row-img rounded" src="" alt="">
-						</div>
-					</div>
-					<div class="col-8">
-						<div class="d-flex flex-column justify-content-center h-100">
-							<span class="name fw-bold"></span>
-							<span class="email"></span>
-							<span class="phone_number"></span>
-						</div>
+</nav>
+
+<div class="account-modal">
+	<div class="container">
+		<header>
+			
+		</header>
+	</div>
+</div>
+
+<!-- Template for searchbar results -->
+<template id="row">
+	<div class="search-bar-popover__row row align-items-center py-3 border-bottom">
+		<div class="col-5 border-end">
+			<div class="row">
+				<div class="col-4 d-flex justify-content-center align-items-center">
+					<div class="img-container w-75 account-link">
+						<img class="row-img rounded" src="" alt="">
 					</div>
 				</div>
-			</div>
-			<div class="col-7">
-				<div class="d-flex justify-content-between">
-					<p class="membership-details">No Membership</p>
-					<div class="btn-container">
-						<div class="btn btn-outline-secondary">Log</div>
-						<div class="btn btn-secondary">Sign Up</div>
+				<div class="col-8">
+					<div class="d-flex flex-column justify-content-center h-100">
+						<span class="name fw-bold account-link"></span>
+						<span><i class="bi bi-envelope-fill me-1"></i><span class="email"></span></span>
+						<div class="overflow-hidden"><span><i class="bi bi-telephone-fill me-1"></i><span class="phone_number"></span></span></div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</template>
-</nav>
+		<div class="col-7">
+			<div class="d-flex justify-content-between align-items-center">
+				<p class="membership-details m-0">No Membership</p>
+				<div class="btn-container">
+					<div class="btn btn-outline-secondary">Log</div>
+					<div class="btn btn-secondary">Sign Up</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>

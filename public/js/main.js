@@ -7,21 +7,29 @@ function init() {
     const searchBar = document.querySelector('.search-bar');
     const popover = document.querySelector('.search-bar-popover');
     const popoverOutput = popover.querySelector('.search-bar-popover__output');
-    const xhr = new XMLHttpRequest();
-    const isDescendant = (child, parent) => parent.contains(child);
-    let popoverOpen = false;
+    // const accountLink = document.querySelector('.account-link');
 
+    const xhr = new XMLHttpRequest();
+    let popoverOpen = false;
+    const isDescendant = (child, parent) => parent.contains(child);
+
+    // Outputs rows from db using the template in navbar.php
     const displaySearchResults = data => {
         popoverOutput.innerHTML = "";
+
+
 
         const createRow = (rowData) => {
             const rowTemplate = document.getElementById('row');
             const rowBody = document.importNode(rowTemplate.content, true);
+            const nameOutput = rowBody.querySelector('.name');
             rowBody.querySelector('.row-img').src = rowData['img_url'];
-            rowBody.querySelector('.name').textContent = rowData['name'];
+            nameOutput.textContent = rowData['name'];
             rowBody.querySelector('.email').textContent = rowData['email'];
             rowBody.querySelector('.phone_number').textContent = rowData['phone_number'];
             popoverOutput.appendChild(rowBody);
+
+            // nameOutput.addEventListener('click', showAccountModal);
         }
 
         data.forEach(rowData => createRow(rowData));
@@ -67,7 +75,7 @@ function init() {
         document.body.classList.add('overlay-active');
     });
 
-    // Search for user
+    // Search for user using XHR
     searchBar.addEventListener('keyup', e => {
         if (!e.target.value.length) {
             // display "Type name in search bar" if not already showing

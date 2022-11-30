@@ -77,6 +77,10 @@ body.overlay-active::after {
     align-items: center;
 }
 
+.account-link {
+    cursor: pointer;
+}
+
 /* .search-bar-popover__output img {
     max-width: 60px;
 } */
