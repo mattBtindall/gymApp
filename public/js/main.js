@@ -5,15 +5,18 @@ function init() {
     const fileInput = document.getElementsByName('file')[0];
     const uploadbtn = document.querySelector('.upload');
     const searchBar = document.querySelector('.search-bar');
-    const popover = document.querySelector('.search-bar-popover');
-    const popoverOutput = popover.querySelector('.search-bar-popover__output');
+    const searchModal = document.querySelector('.search-bar-modal');
+    const searchModalOutput = searchModal.querySelector('.search-bar-modal__output');
+    const userModal = document.querySelector('.user-modal');
     const xhr = new XMLHttpRequest();
-    let popoverOpen = false;
+    let modalOpen = false;
+    // store ajax results in variable
+    // make sure you don't store all
     const isDescendant = (child, parent) => parent.contains(child);
 
     // Outputs rows from db using the template in navbar.php
     const displaySearchResults = (data) => {
-        popoverOutput.innerHTML = "";
+        searchModalOutput.innerHTML = "";
 
         const createRow = (rowData) => {
             const rowTemplate = document.getElementById('row');
@@ -23,33 +26,53 @@ function init() {
             nameOutput.textContent = rowData['name'];
             rowBody.querySelector('.email').textContent = rowData['email'];
             rowBody.querySelector('.phone_number').textContent = rowData['phone_number'];
-            popoverOutput.appendChild(rowBody);
+            searchModalOutput.appendChild(rowBody);
         }
 
         data.forEach(rowData => createRow(rowData));
-    }
+    };
 
     // Outputs a message in search bar
-    const displayEmptySearchBarMessage = (message) => {
-        popoverOutput.innerHTML = "";
+    const displayEmptySearchModalMessage = (message) => {
+        searchModalOutput.innerHTML = "";
         const emptySearchTemplate = document.getElementById('empty-searchbar-msg');
         const emptySearchContainer = document.importNode(emptySearchTemplate.content, true);
         emptySearchContainer.querySelector('span').textContent = message;
-        popoverOutput.appendChild(emptySearchContainer);
-    }
+        searchModalOutput.appendChild(emptySearchContainer);
+    };
+
+    // Closes the searchbar searchModal
+    const closeSearchModal = () => {
+        modalOpen = false;
+        searchModal.classList.remove('active');
+        document.body.classList.remove('overlay-active');
+        displayEmptySearchModalMessage('Type a name in the search bar');
+        searchBar.value = "";
+    };
+
 
     // Opens user profile modal
-    const openUserProfileModal = (e) => {
+    const openUserModal = (e) => {
         if (e.target.classList.contains('account-link')) {
-            console.log('opening profile');
+            closeSearchModal();
+            modalOpen = true;
+            document.body.classList.add('overlay-active');
+            userModal.classList.add('active');
         }
     }
 
-    if (!searchBar || !fileInput || !popoverOutput) {
+    const closeUserModal = (e) => {
+        modalOpen = false;
+        userModal.classList.remove('active');
+        document.body.classList.remove('overlay-active');
+    }
+
+    if (!searchBar || !fileInput || !searchModalOutput) {
         return;
     }
 
-    popoverOutput.addEventListener('click', openUserProfileModal);
+    searchModalOutput.addEventListener('click', openUserModal);
+    document.querySelector('.exit-modal-container i').addEventListener('click', closeUserModal);
 
     // Toggle btn for image upload in profile
     const imgTypes = ['jpg', 'jpeg', 'png'];
@@ -66,44 +89,39 @@ function init() {
         }
     });
 
-    // Search bar popover
+    // Search bar searchModal
     document.body.addEventListener('click', e => {
-        if (!popoverOpen) {
+        if (!modalOpen) {
             return;
         }
 
-        if (e.target !== searchBar && e.target !== popover && !isDescendant(e.target, popover)) {
-            popoverOpen = false;
-            popover.classList.remove('active');
-            document.body.classList.remove('overlay-active');
-            displayEmptySearchBarMessage('Type a name in the search bar');
-            searchBar.value = "";
+        if (e.target === document.body) {
+            closeSearchModal();
+            closeUserModal();
         }
     });
 
     searchBar.addEventListener('focus', () => {
-        popoverOpen = true;
-        popover.classList.add('active');
+        modalOpen = true;
+        searchModal.classList.add('active');
         document.body.classList.add('overlay-active');
     });
 
     // Search for user using XHR
     searchBar.addEventListener('keyup', e => {
         if (!e.target.value.length) {
-            displayEmptySearchBarMessage('Type a name in the search bar');
+            displayEmptySearchModalMessage('Type a name in the search bar');
             return;
         }
 
         xhr.onreadystatechange = function() {
-            if (this.readyState !== 4 && this.status !== 200) {
-                return;
-            }
-
-            // Output data from db
-            if (this.responseText) {
-                displaySearchResults(JSON.parse(this.responseText));
-            } else {
-                displayEmptySearchBarMessage('No user found with this name');
+            if (this.readyState == 4 && this.status == 200) {
+                // Output data from db
+                if (this.responseText) {
+                    displaySearchResults(JSON.parse(this.responseText));
+                } else {
+                    displayEmptySearchModalMessage('No user found with this name');
+                }
             }
         };
 

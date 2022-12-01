@@ -7,10 +7,9 @@
     --z-index-above-overlay: 10;
 }
 
-.text-overflow-ellipsis {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+html, body {
+    margin: 0;
+    height: 100%;
 }
 
 body.overlay-active::after {
@@ -23,8 +22,27 @@ body.overlay-active::after {
     z-index: 5;
 }
 
+.text-overflow-ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .navbar {
     min-height: var(--nav-height);
+}
+
+/* All icons */
+i {
+    margin-right: .25rem;
+}
+
+.img-container {
+    width: 100%;
+}
+
+img {
+    max-width: 100%;
 }
 
 /* Search & pop over */
@@ -33,7 +51,7 @@ body.overlay-active::after {
     z-index: var(--z-index-above-overlay);
 }
 
-.search-bar-popover {
+.search-bar-modal {
     position: absolute;
     top: var(--nav-height);
     right: 0;
@@ -46,16 +64,16 @@ body.overlay-active::after {
     z-index: var(--z-index-above-overlay);
 }
 
-.search-bar-popover.active {
+.search-bar-modal.active {
     display: block;
     visibility: visible;
 }
 
-.search-bar-popover .container {
+.search-bar-modal .container {
     width: 50vw;
 }
 
-.search-bar-popover ul {
+.search-bar-modal ul {
     list-style: none;
     display: flex;
     width: 100%;
@@ -64,16 +82,16 @@ body.overlay-active::after {
     margin-left: auto;
 }
 
-.search-bar-popover li {
+.search-bar-modal li {
     cursor: pointer;
     color: #cecece;
 }
 
-.search-bar-popover li.active {
+.search-bar-modal li.active {
     color: var(--body-color);
 }
 
-.search-bar-popover__output {
+.search-bar-modal__output {
     width: 100%;
     min-height: 6rem;
     display: flex;
@@ -86,18 +104,38 @@ body.overlay-active::after {
     cursor: pointer;
 }
 
-/* .search-bar-popover__output img {
-    max-width: 60px;
-} */
+/* Account modal */
+.user-modal {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: white;
+    overflow-x: hidden;
+    box-shadow: var(--box-shadow-lg);
+    z-index: var(--z-index-above-overlay);
+    height: 100%;
 
-/*  */
-
-.img-container {
-    width: 100%;
+    transform: translateX(110%);
+    transition: transform .2s ease-in-out;
 }
 
-img {
-    max-width: 100%;
+.user-modal.active {
+    display: block;
+    visibility: visible;
+    transform: translateX(0%);
+}
+
+.exit-modal-container {
+    position: absolute;
+    right: 1rem;
+}
+
+.exit-modal-container i {
+    cursor: pointer;
+}
+
+.user-modal .img-container{
+    max-width: 240px;
 }
 
 /* Profile */
