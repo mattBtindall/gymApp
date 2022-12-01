@@ -7,8 +7,6 @@ function init() {
     const searchBar = document.querySelector('.search-bar');
     const popover = document.querySelector('.search-bar-popover');
     const popoverOutput = popover.querySelector('.search-bar-popover__output');
-    // const accountLink = document.querySelector('.account-link');
-
     const xhr = new XMLHttpRequest();
     let popoverOpen = false;
     const isDescendant = (child, parent) => parent.contains(child);
@@ -16,8 +14,6 @@ function init() {
     // Outputs rows from db using the template in navbar.php
     const displaySearchResults = data => {
         popoverOutput.innerHTML = "";
-
-
 
         const createRow = (rowData) => {
             const rowTemplate = document.getElementById('row');
@@ -28,11 +24,19 @@ function init() {
             rowBody.querySelector('.email').textContent = rowData['email'];
             rowBody.querySelector('.phone_number').textContent = rowData['phone_number'];
             popoverOutput.appendChild(rowBody);
-
-            // nameOutput.addEventListener('click', showAccountModal);
         }
 
         data.forEach(rowData => createRow(rowData));
+    }
+
+    // Outputs a message in search bar
+    const displayEmptySearchBarMessage = (message) => {
+        popoverOutput.innerHTML = "";
+        const emptySearchTemplate = document.getElementById('empty-searchbar-msg');
+        const emptySearchContainer = document.importNode(emptySearchTemplate.content, true);
+        console.log(emptySearchContainer);
+        emptySearchContainer.querySelector('span').textContent = message;
+        popoverOutput.appendChild(emptySearchContainer);
     }
 
     if (!searchBar || !fileInput) {
@@ -64,7 +68,7 @@ function init() {
             popoverOpen = false;
             popover.classList.remove('active');
             document.body.classList.remove('overlay-active');
-            popoverOutput.innerHTML = "";
+            displayEmptySearchBarMessage('Type a name in the search bar');
             searchBar.value = "";
         }
     });
@@ -78,13 +82,20 @@ function init() {
     // Search for user using XHR
     searchBar.addEventListener('keyup', e => {
         if (!e.target.value.length) {
-            // display "Type name in search bar" if not already showing
+            displayEmptySearchBarMessage('Type a name in the search bar');
             return;
         }
 
         xhr.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) { // data from db
+            if (this.readyState !== 4 && this.status !== 200) {
+                return;
+            }
+
+            // Output data from db
+            if (this.responseText) {
                 displaySearchResults(JSON.parse(this.responseText));
+            } else {
+                displayEmptySearchBarMessage('No user found with this name');
             }
         };
 

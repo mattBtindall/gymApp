@@ -147,7 +147,7 @@ class Users_base extends Controller {
         // data is sent back to javascript
         $oppositeArea = strtolower(getOppositeArea());
         $results = $this->userModel->selectUserBySearchQuery($searchQuery, $oppositeArea);
-        echo $results ? json_encode($results) : 'No user found';
+        echo $results ? json_encode($results) : '';
     }
 
     public function seperateProfileData($data) {

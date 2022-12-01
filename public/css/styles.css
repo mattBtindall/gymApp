@@ -7,6 +7,12 @@
     --z-index-above-overlay: 10;
 }
 
+.text-overflow-ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 body.overlay-active::after {
     position: absolute;
     background: rgba(0,0,0,.4);
@@ -23,8 +29,6 @@ body.overlay-active::after {
 
 /* Search & pop over */
 
-/* .search-bar,
-.search-bar:focus, */
 .search-bar-form {
     z-index: var(--z-index-above-overlay);
 }
@@ -75,6 +79,7 @@ body.overlay-active::after {
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
+    justify-content: center;
 }
 
 .account-link {

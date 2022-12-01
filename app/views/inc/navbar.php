@@ -35,7 +35,11 @@
 									<li>Active Members</li>
 								</ul>
 							</header>
-							<div class="search-bar-popover__output"></div>
+							<div class="search-bar-popover__output">
+								<div class="empty-searchbar-msg__container">
+									<span>Type a name in the search bar</span>
+								</div>
+							</div>
 						</div>
 					</div>
 
@@ -54,10 +58,17 @@
 <div class="account-modal">
 	<div class="container">
 		<header>
-			
+
 		</header>
 	</div>
 </div>
+
+<!-- Template for empty searchbar -->
+<template id="empty-searchbar-msg">
+	<div class="empty-searchbar-msg__container">
+		<span>Type a name in the search bar</span>
+	</div>
+</template>
 
 <!-- Template for searchbar results -->
 <template id="row">
@@ -72,8 +83,8 @@
 				<div class="col-8">
 					<div class="d-flex flex-column justify-content-center h-100">
 						<span class="name fw-bold account-link"></span>
-						<span><i class="bi bi-envelope-fill me-1"></i><span class="email"></span></span>
-						<div class="overflow-hidden"><span><i class="bi bi-telephone-fill me-1"></i><span class="phone_number"></span></span></div>
+						<span class="text-overflow-ellipsis"><i class="bi bi-envelope-fill me-1"></i><span class="email"></span></span>
+						<span class="text-overflow-ellipsis"><i class="bi bi-telephone-fill me-1"></i><span class="phone_number"></span></span>
 					</div>
 				</div>
 			</div>
