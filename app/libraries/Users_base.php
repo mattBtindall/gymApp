@@ -8,6 +8,10 @@ class Users_base extends Controller {
     }
 
     public function login() {
+        if (isLoggedIn()) {
+            redirect('/users/profile');
+        }
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
 
@@ -145,6 +149,7 @@ class Users_base extends Controller {
     public function searchDb($searchQuery) {
         // this is called via an ajax call when an admin user types in the search bar
         // data is sent back to javascript
+        // strip searchQuery maybe use specailChars
         $oppositeArea = strtolower(getOppositeArea());
         $results = $this->userModel->selectUserBySearchQuery($searchQuery, $oppositeArea);
         echo $results ? json_encode($results) : '';
