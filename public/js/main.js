@@ -12,7 +12,7 @@ function init() {
     const isDescendant = (child, parent) => parent.contains(child);
 
     // Outputs rows from db using the template in navbar.php
-    const displaySearchResults = data => {
+    const displaySearchResults = (data) => {
         popoverOutput.innerHTML = "";
 
         const createRow = (rowData) => {
@@ -34,14 +34,22 @@ function init() {
         popoverOutput.innerHTML = "";
         const emptySearchTemplate = document.getElementById('empty-searchbar-msg');
         const emptySearchContainer = document.importNode(emptySearchTemplate.content, true);
-        console.log(emptySearchContainer);
         emptySearchContainer.querySelector('span').textContent = message;
         popoverOutput.appendChild(emptySearchContainer);
     }
 
-    if (!searchBar || !fileInput) {
+    // Opens user profile modal
+    const openUserProfileModal = (e) => {
+        if (e.target.classList.contains('account-link')) {
+            console.log('opening profile');
+        }
+    }
+
+    if (!searchBar || !fileInput || !popoverOutput) {
         return;
     }
+
+    popoverOutput.addEventListener('click', openUserProfileModal);
 
     // Toggle btn for image upload in profile
     const imgTypes = ['jpg', 'jpeg', 'png'];

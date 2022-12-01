@@ -76,8 +76,8 @@
 		<div class="col-5 border-end">
 			<div class="row">
 				<div class="col-4 d-flex justify-content-center align-items-center">
-					<div class="img-container w-75 account-link">
-						<img class="row-img rounded" src="" alt="">
+					<div class="img-container w-75">
+						<img class="row-img rounded account-link" src="" alt="">
 					</div>
 				</div>
 				<div class="col-8">
