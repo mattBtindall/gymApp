@@ -63,7 +63,7 @@
 				<div class="img-container"><img src="http://localhost/gymApp/public/img/default_img.png" alt=""></div>
 			</div>
 			<div class="col-md-10">
-				<h3 class="mb-1">False Name Here </h3>
+				<h3 class="name mb-1">False Name Here</h3>
 				<div class="d-flex flex-wrap">
 					<span class="py-1 px-2 border rounded m-1"><i class="bi bi-envelope-fill"></i><span class="email">test@test.com</span></span>
 					<span class="py-1 px-2 border rounded m-1"><i class="bi bi-phone"></i><span class="phone_number">01484650980</span></span>
@@ -93,7 +93,7 @@
 
 <!-- Template for searchbar results -->
 <template id="row">
-	<div class="search-bar-popover__row row align-items-center py-3 border-bottom">
+	<div class="search-modal__row row align-items-center py-3 border-bottom">
 		<div class="col-5 border-end">
 			<div class="row">
 				<div class="col-4 d-flex justify-content-center align-items-center">
@@ -106,6 +106,8 @@
 						<span class="name fw-bold account-link"></span>
 						<span class="text-overflow-ellipsis"><i class="bi bi-envelope-fill me-1"></i><span class="email"></span></span>
 						<span class="text-overflow-ellipsis"><i class="bi bi-telephone-fill me-1"></i><span class="phone_number"></span></span>
+						<!-- id is for js purposes [displaying user modal] -->
+						<span class="id d-none"></span>
 					</div>
 				</div>
 			</div>
