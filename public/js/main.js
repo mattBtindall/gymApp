@@ -90,6 +90,23 @@ function init() {
         userModalElements.dob.textContent = currentUser.dob;
     };
 
+    // https://stackoverflow.com/questions/13459866/javascript-change-date-into-format-of-dd-mm-yyyy
+    const convertDate = (inputFormat) => {
+        function pad(s) { return (s < 10) ? '0' + s : s; }
+        var d = new Date(inputFormat);
+        return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('/');
+    };
+
+    // https://stackoverflow.com/questions/2706125/javascript-function-to-add-x-months-to-a-date
+    const addMonths = (date, months) => {
+        var d = date.getDate();
+        date.setMonth(date.getMonth() + +months);
+        if (date.getDate() != d) {
+          date.setDate(0);
+        }
+        return convertDate(date);
+    };
+
     if (!searchBar || !fileInput || !searchModalOutput) {
         return;
     }
