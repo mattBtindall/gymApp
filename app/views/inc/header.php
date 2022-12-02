@@ -11,4 +11,6 @@
 </head>
 <body>
     <?php require APP_ROOT . '/views/inc/navbar.php';?>
+    <?php require APP_ROOT . '/views/inc/modals.php';?>
+    <?php require APP_ROOT . '/views/inc/templates.php';?>
     <div class="container">
