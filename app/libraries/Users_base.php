@@ -57,7 +57,6 @@ class Users_base extends Controller {
     }
 
     public function profile() {
-        $this->validateUser();
         $data = $this->userModel->selectUserById($_SESSION['user_id']);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -104,18 +103,12 @@ class Users_base extends Controller {
                 redirect('/users/profile');
             }
         } else {
-            if (!isLoggedIn()) {
-                // in here check for admin when trying to access admin
-                return;
-            }
-
             $data = $this->seperateProfileData($data);
             $this->view('/users/profile', $data);
         }
     }
 
     public function profile_edit($id) {
-        $this->validateUser();
         $data = $this->userModel->selectUserById($id);
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $formData = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
@@ -155,7 +148,7 @@ class Users_base extends Controller {
         echo $results ? json_encode($results) : '';
     }
 
-    public function seperateProfileData($data) {
+    protected function seperateProfileData($data) {
         // used to seperate values that will be displayed
         $dataToShow = array_filter(
             $data,
@@ -172,13 +165,7 @@ class Users_base extends Controller {
         ];
     }
 
-    public function validateUser () {
-        if (!isLoggedIn()) {
-            redirect('/users/login');
-        }
-    }
-
-    public function createUserSession($user) {
+    protected function createUserSession($user) {
         $_SESSION['user_id'] = $user->id;
         $_SESSION['user_name'] = $user->name;
         $_SESSION['user_email'] = $user->email;

@@ -10,10 +10,16 @@
         protected $currentController = 'Pages'; // sets default to pages - if there's no other controllers this is what's going to load
         protected $currentMethod = 'index';
         protected $params = [];
+        protected $restricted_paths = [
+            '/users/profile',
+            '/users/profile_edit',
+            '/users/searchDb'
+        ];
 
         public function __construct() {
             $url = $this->getUrl();
 
+            // Sets area
             if (isset($url[0]) && is_dir('../app/controllers/' . ucwords($url[0]))) {
                 $this->area = ucwords($url[0]);
                 unset($url[0]);
@@ -22,6 +28,9 @@
             // set site wide variables
             define('AREA', $this->area);
             define('URL_ROOT', URL_ROOT_BASE . '/' . AREA);
+
+            // Checks to see if users are logged in when accessing specific pages [$restricted_paths]
+            $this->validate();
 
             // Look in controllers for second index of $url
             // Remember we route everything through index.php so we get files relative to that not this actual file
@@ -62,6 +71,19 @@
                 // splits into array on '/' e.g. url = localhost/brad-trav-php-mvc/post/edit/1 $url = [post,edit,1]
                 $url = explode('/', $url);
                 return $url;
+            }
+        }
+
+        public function validate() {
+            $url = $_GET['url'];
+            if (!isset($url) || isLoggedIn()) {
+                return;
+            }
+
+            foreach ($this->restricted_paths as $path) {
+                if (str_contains($url, $path)) {
+                    redirect('/users/login');
+                }
             }
         }
     }
