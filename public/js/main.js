@@ -2,8 +2,6 @@
 window.onload = init();
 
 function init() {
-    const fileInput = document.getElementsByName('file')[0];
-    const uploadbtn = document.querySelector('.upload');
     const searchBar = document.querySelector('.search-bar');
     const searchModal = document.querySelector('.search-bar-modal');
     const searchModalOutput = searchModal.querySelector('.search-bar-modal__output');
@@ -107,27 +105,8 @@ function init() {
         return convertDate(date);
     };
 
-    if (!searchBar || !fileInput || !searchModalOutput) {
-        return;
-    }
-
     searchModalOutput.addEventListener('click', openUserModal);
     document.querySelector('.exit-modal-container i').addEventListener('click', closeUserModal);
-
-    // Toggle btn for image upload in profile
-    const imgTypes = ['jpg', 'jpeg', 'png'];
-    fileInput.addEventListener('change', () => {
-        if (!fileInput.files) {
-            return;
-        }
-
-        for (const imgType of imgTypes) {
-            if (fileInput.files[0].type.includes(imgType)) {
-                uploadbtn.disabled = false;
-                return;
-            }
-        }
-    });
 
     // Search bar searchModal
     document.body.addEventListener('click', e => {

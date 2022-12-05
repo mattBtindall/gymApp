@@ -17,7 +17,7 @@
         ];
 
         public function __construct() {
-            $url = $this->getUrl();
+            $url = getUrl();
 
             // Sets area
             if (isset($url[0]) && is_dir('../app/controllers/' . ucwords($url[0]))) {
@@ -62,26 +62,13 @@
             call_user_func_array([$this->currentController, $this->currentMethod], $this->params);
         }
 
-        public function getUrl() {
-            if (isset($_GET['url'])) {
-                // remove ending '/' if there is one
-                $url = rtrim($_GET['url'], '/');
-                // make sure it doesn't contain any characters that a url shouldn't have
-                $url = filter_var($url, FILTER_SANITIZE_URL);
-                // splits into array on '/' e.g. url = localhost/brad-trav-php-mvc/post/edit/1 $url = [post,edit,1]
-                $url = explode('/', $url);
-                return $url;
-            }
-        }
-
         public function validate() {
-            $url = $_GET['url'];
-            if (!isset($url) || isLoggedIn()) {
+            if (!isset($_GET['url']) || isLoggedIn()) {
                 return;
             }
 
             foreach ($this->restricted_paths as $path) {
-                if (str_contains($url, $path)) {
+                if (str_contains($_GET['url'], $path)) {
                     redirect('/users/login');
                 }
             }

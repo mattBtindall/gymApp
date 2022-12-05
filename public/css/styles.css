@@ -114,6 +114,7 @@ img {
     box-shadow: var(--box-shadow-lg);
     z-index: var(--z-index-above-overlay);
     height: 100%;
+    display: none;
 
     transform: translateX(110%);
     transition: transform .2s ease-in-out;
