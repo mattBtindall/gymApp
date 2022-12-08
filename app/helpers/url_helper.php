@@ -18,3 +18,22 @@ function getUrl() {
         return $url;
     }
 }
+
+function loadPageSpecificJavaScript() {
+    // Get the URL of the current page
+    $url = getUrl();
+
+    // If the URL is empty, return without doing anything
+    if (empty($url[2])) {
+        return;
+    }
+
+    // Get the name of the current page/method from the URL
+    $currentMethod = $url[2];
+
+    // Check if a JavaScript file for the current page/method exists
+    if (file_exists(PUB_ROOT . '/js/' . $currentMethod . '.js')) {
+        // If the file exists, include it in the page
+        echo '<script src="' . URL_ROOT_BASE . '/js/' . $currentMethod . '.js"></script>';
+    }
+}
