@@ -5,7 +5,7 @@ class Member {
     }
 
     public function getMembers($admin_id) {
-        $this->db->query('SELECT name, email, phone_number, term, expiry_date, img_url
+        $this->db->query('SELECT memberships.id, name, email, phone_number, term, expiry_date, img_url
                           FROM user_users
                           INNER JOIN memberships
                           ON memberships.user_id = user_users.id

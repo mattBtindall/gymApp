@@ -146,6 +146,34 @@ img {
     max-width: 300px;
 }
 
+/* Mebership table */
+
+.membership-table table {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.membership-table tr {
+    cursor: pointer;
+}
+
+.membership-table .img-container {
+    max-width: 60px;
+}
+
+.membership-table td, 
+.membership-table th {
+    margin: .75rem 0;
+}
+
+.membership-table table td:first-child {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-weight: bold;
+}
+
+
 @media (min-width: 992px) {
     .profile-right-container {
         width: 60%;
