@@ -28,10 +28,10 @@ function loadPageSpecificJavaScript() {
         return;
     }
 
-    // Get the name of the current page/method from the URL
+    // Get the name of the current method from the URL
     $currentMethod = $url[2];
 
-    // Check if a JavaScript file for the current page/method exists
+    // Check if a JavaScript file for the current method exists
     if (file_exists(PUB_ROOT . '/js/' . $currentMethod . '.js')) {
         // If the file exists, include it in the page
         echo '<script src="' . URL_ROOT_BASE . '/js/' . $currentMethod . '.js"></script>';

@@ -114,15 +114,12 @@ img {
     box-shadow: var(--box-shadow-lg);
     z-index: var(--z-index-above-overlay);
     height: 100%;
-    display: none;
 
     transform: translateX(110%);
-    transition: transform .2s ease-in-out;
+    transition: transform .3s ease-in-out;
 }
 
 .user-modal.active {
-    display: block;
-    visibility: visible;
     transform: translateX(0%);
 }
 
@@ -163,7 +160,7 @@ img {
 
 .membership-table td, 
 .membership-table th {
-    margin: .75rem 0;
+    margin: 1rem 0;
 }
 
 .membership-table table td:first-child {
