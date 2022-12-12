@@ -9,7 +9,7 @@
                 <th>Membership</th>
                 <th>Expiry Date</th>
             </tr>
-            <?php foreach($data as $row): ?>
+            <?php foreach($data['members'] as $row): ?>
                 <tr class="border-bottom border-top account-link">
                     <td>
                         <div class="img-container"><img src="<?= $row['img_url']; ?>"></div>

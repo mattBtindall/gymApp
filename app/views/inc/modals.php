@@ -1,4 +1,3 @@
-
 <!-- Pop up for search bar -->
 <div class="search-bar-modal">
 	<div class="container">
@@ -49,24 +48,26 @@
 				<div class="col-6">
 					<div class="form-group">
 						<label for="term" class="mb-1 text-bold">Term</label>
-						<select class="form-control form-control-lg" name="term">
-							<option value="please_select">Please select</option>
-							<option value="1">1 Month</option>
-							<option value="3">3 Months</option>
-							<option value="6">6 Months</option>
-							<option value="12">12 Months</option>
-							<option value="custom">Custom</option>
+						<select class="form-control form-control-lg <?= !empty($data['modal']['term_err']) ? 'is-invalid' : ''; ?>" name="term">
+							<option <?= $data['modal']['term'] === 'please_select' ? 'select' : ''; ?> value="please_select">Please select</option>
+							<option <?= $data['modal']['term'] == '1' ? 'selected' : ''; ?> value="1">1 Month</option>
+							<option <?= $data['modal']['term'] === '3' ? 'selected' : ''; ?> value="3">3 Months</option>
+							<option <?= $data['modal']['term'] === '6' ? 'selected' : ''; ?> value="6">6 Months</option>
+							<option <?= $data['modal']['term'] === '12' ? 'selected' : ''; ?> value="12">12 Months</option>
+							<option <?= $data['modal']['term'] === 'custom' ? 'selected' : ''; ?> value="custom">Custom</option>
 						</select>
+						<span class="invalid-feedback"><?= $data['modal']['term_err']; ?></span>
 					</div>
 				</div>
 				<div class="col-6">
 					<div class="form-group">
-						<label for="start" class="mb-1 text-bold">Start Date</label>
-						<input type="date" class="form-control form-control-lg">
+						<label for="start" class="mb-1 text-bold ">Start Date</label>
+						<input type="date" class="form-control form-control-lg <?= !empty($data['modal']['start_date_err']) ? 'is-invalid' : '';?>" name="start_date" value="<?= $data['modal']['start_date']; ?>">
+						<span class="invalid-feedback"><?= $data['modal']['start_date_err']; ?></span>
 					</div>
 					<div class="form-group expiry-date">
 						<label for="start" class="mb-1 text-bold">Expiry Date</label>
-						<input type="date" class="form-control form-control-lg">
+						<input type="date" class="form-control form-control-lg" name="expiry_date" value="<?= $data['modal']['expiry_date']; ?>">
 					</div>
 				</div>
 			</div>
