@@ -43,18 +43,19 @@
 		</div>
 	</div>
 	<div class="user-modal__content px-3 py-2">
-		<form action="">
-			<div class="row">
+		<!-- Add membership -->
+		<form action="<?= URL_ROOT; ?>/members" method="POST" class="add-membership d-flex flex-column justify-content-between">
+			<div class="row flex-shrink-0">
 				<div class="col-6">
 					<div class="form-group">
 						<label for="term" class="mb-1 text-bold">Term</label>
 						<select class="form-control form-control-lg" name="term">
 							<option value="please_select">Please select</option>
-							<option value="male">1 Month</option>
-							<option value="female">3 Months</option>
-							<option value="neither_of_the_above">6 Months</option>
-							<option value="prefer_not_to_say">12 Months</option>
-							<option value="prefer_not_to_say">Custom</option>
+							<option value="1">1 Month</option>
+							<option value="3">3 Months</option>
+							<option value="6">6 Months</option>
+							<option value="12">12 Months</option>
+							<option value="custom">Custom</option>
 						</select>
 					</div>
 				</div>
@@ -63,10 +64,15 @@
 						<label for="start" class="mb-1 text-bold">Start Date</label>
 						<input type="date" class="form-control form-control-lg">
 					</div>
-					<div class="form-group d-none">
+					<div class="form-group expiry-date">
 						<label for="start" class="mb-1 text-bold">Expiry Date</label>
 						<input type="date" class="form-control form-control-lg">
 					</div>
+				</div>
+			</div>
+			<div class="row justify-content-end">
+				<div class="col-6">
+				<input type="submit" value="Add Membership" class="btn btn-success btn-block w-100">
 				</div>
 			</div>
 		</form>
