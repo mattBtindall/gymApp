@@ -5,9 +5,11 @@ class Members extends Controller {
     }
 
     public function index() {
-        // var_dump($this->membersModel->getMembers($_SESSION['user_id']));
-        $data = $this->membersModel->getMembers($_SESSION['user_id']);
+        $members = $this->membersModel->getMembers($_SESSION['user_id']);
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-        $this->view('/members/index', $data);
+        } else {
+            $this->view('members/index', $members);
+        }
     }
 }
