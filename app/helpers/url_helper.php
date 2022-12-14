@@ -24,16 +24,19 @@ function loadPageSpecificJavaScript() {
     $url = getUrl();
 
     // If the URL is empty, return without doing anything
-    if (empty($url[2])) {
+    if (empty($url[1])) {
         return;
     }
 
-    // Get the name of the current method from the URL
-    $currentMethod = $url[2];
+    // removes the area as i don't load area specific js
+    unset($url[0]);
 
-    // Check if a JavaScript file for the current method exists
-    if (file_exists(PUB_ROOT . '/js/' . $currentMethod . '.js')) {
-        // If the file exists, include it in the page
-        echo '<script src="' . URL_ROOT_BASE . '/js/' . $currentMethod . '.js"></script>';
+    // loops through the controller and the method
+    foreach($url as $property) {
+        // Check if a JavaScript file for the current method exists
+        if (file_exists(PUB_ROOT . '/js/' . $property . '.js')) {
+            // If the file exists, include it in the page
+            echo '<script src="' . URL_ROOT_BASE . '/js/' . $property . '.js"></script>';
+        }
     }
 }
