@@ -1,5 +1,4 @@
 'use strict';
-let userData = [];
 
 window.onload = function () {
     let modalOpen = false;
@@ -19,10 +18,10 @@ window.onload = function () {
         const currentUserId = searchElement.closest(parentSelector).querySelector('.id').textContent;
         const currentUser = userData.filter(user => user.id == currentUserId)[0];
         console.log(userData);
-        // userModalElements.name.textContent = currentUser.name;
-        // userModalElements.email.textContent = currentUser.email;
-        // userModalElements.phone_number.textContent = currentUser.phone_number;
-        // userModalElements.dob.textContent = currentUser.dob;
+        userModalElements.name.textContent = currentUser.name;
+        userModalElements.email.textContent = currentUser.email;
+        userModalElements.phone_number.textContent = currentUser.phone_number;
+        userModalElements.dob.textContent = currentUser.dob;
     };
 
     const openUserModal = (element, parentSelector) => {
@@ -132,17 +131,6 @@ window.onload = function () {
         url = baseUrl + phpMethod + query,
         getUserData(url, displaySearchResults);
     });
-}
-
-function getUserData(url, callback) {
-    fetch(url)
-    .then(response => response.json())
-    .then(data => {
-        userData = data;
-        if (callback) callback(data);
-        return data;
-    })
-    .catch(e => console.log(e));
 }
 
 function getMembershipDates() {
