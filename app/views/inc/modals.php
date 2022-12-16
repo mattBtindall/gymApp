@@ -65,13 +65,14 @@
 						<input type="date" class="form-control form-control-lg <?= !empty($data['modal']['start_date_err']) ? 'is-invalid' : '';?>" name="start_date" value="<?= $data['modal']['start_date']; ?>">
 						<span class="invalid-feedback"><?= $data['modal']['start_date_err']; ?></span>
 					</div>
-					<div class="form-group expiry-date">
+					<div class="form-group expiry-date <?= $data['modal']['term'] === 'custom' ? 'active' : ''; ?>">
 						<label for="start" class="mb-1 text-bold">Expiry Date</label>
-						<input type="date" class="form-control form-control-lg" name="expiry_date" value="<?= $data['modal']['expiry_date']; ?>">
+						<input type="date" class="form-control form-control-lg <?= !empty($data['modal']['expiry_date_err']) ? 'is-invalid' : '';?>" name="expiry_date" value="<?= $data['modal']['expiry_date']; ?>">
+						<span class="invalid-feedback"><?= $data['modal']['expiry_date_err']; ?></span>
 					</div>
 				</div>
 			</div>
-			<div class="row justify-content-end">
+			<div class="row justify-content-end mt-3">
 				<div class="col-6">
 				<input type="submit" value="Add Membership" class="btn btn-success btn-block w-100">
 				</div>

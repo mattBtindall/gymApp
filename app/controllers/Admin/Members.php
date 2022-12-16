@@ -29,7 +29,7 @@ class Members extends Controller {
             }
 
             if ($modal['term'] === 'custom' && empty($modal['expiry_date'])) {
-                $modal['expiry_date_er'] = 'Please select an expiry date.';
+                $modal['expiry_date_err'] = 'Please select an expiry date.';
             }
             
             // if ($this->membersModel->addMembership()) {
