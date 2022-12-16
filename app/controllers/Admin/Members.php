@@ -2,6 +2,8 @@
 class Members extends Controller {
     public function __construct() {
         $this->membersModel = $this->model('Member');
+        $this->members = $this->membersModel->getMembers($_SESSION['user_id']);
+        var_dump($this->members);
     }
 
     public function index() {
@@ -12,7 +14,7 @@ class Members extends Controller {
             } else {
                 // flash message here
             }
-            
+
             $this->view('members/index', $members);
         } else {
             $this->view('members/index', $members);
