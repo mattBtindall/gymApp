@@ -10,18 +10,19 @@ window.onload = function () {
         name: document.querySelector('.user-modal .name'),
         email: document.querySelector('.user-modal .email'),
         phone_number: document.querySelector('.user-modal .phone_number'),
-        dob: document.querySelector('.user-modal .dob')
+        dob: document.querySelector('.user-modal .dob'),
+        id: document.querySelector('.user-modal .id')
     }
 
     // User modal functions
     const setUserModal = (searchElement, parentSelector) => {
         const currentUserId = searchElement.closest(parentSelector).querySelector('.id').textContent;
-        console.log(userData);
         const currentUser = userData.filter(user => user.id == currentUserId)[0];
         userModalElements.name.textContent = currentUser.name;
         userModalElements.email.textContent = currentUser.email;
         userModalElements.phone_number.textContent = currentUser.phone_number;
         userModalElements.dob.textContent = currentUser.dob;
+        userModalElements.id.textContent = currentUserId;
     };
 
     const openUserModal = (element, parentSelector) => {
@@ -133,25 +134,6 @@ window.onload = function () {
     });
 }
 
-function getMembershipDates() {
-    // https://stackoverflow.com/questions/13459866/javascript-change-date-into-format-of-dd-mm-yyyy
-    const convertDate = (inputFormat) => {
-        function pad(s) { return (s < 10) ? '0' + s : s; }
-        var d = new Date(inputFormat);
-        return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('/');
-    };
-
-    // https://stackoverflow.com/questions/2706125/javascript-function-to-add-x-months-to-a-date
-    const addMonths = (date, months) => {
-        var d = date.getDate();
-        date.setMonth(date.getMonth() + +months);
-        if (date.getDate() != d) {
-          date.setDate(0);
-        }
-        return convertDate(date);
-    };
-}
-
 function setMembershipTab() {
     const term = document.getElementsByName('term')[0];
     const expiryDate = document.querySelector('.expiry-date');
@@ -165,9 +147,5 @@ function setMembershipTab() {
         }
     });
 
-
-}
-
-function addMembership() {
 
 }
