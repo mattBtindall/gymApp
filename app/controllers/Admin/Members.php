@@ -7,7 +7,6 @@ class Members extends Controller {
     }
 
     public function index() {
-        $members = $this->membersModel->getMembers($_SESSION['user_id']);
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($this->membersModel->addMembership()) {
                 // flash message here

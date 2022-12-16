@@ -16,8 +16,8 @@ window.onload = function () {
     // User modal functions
     const setUserModal = (searchElement, parentSelector) => {
         const currentUserId = searchElement.closest(parentSelector).querySelector('.id').textContent;
-        const currentUser = userData.filter(user => user.id == currentUserId)[0];
         console.log(userData);
+        const currentUser = userData.filter(user => user.id == currentUserId)[0];
         userModalElements.name.textContent = currentUser.name;
         userModalElements.email.textContent = currentUser.email;
         userModalElements.phone_number.textContent = currentUser.phone_number;
