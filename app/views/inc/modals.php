@@ -72,9 +72,11 @@
 					</div>
 				</div>
 			</div>
+			<!-- Passes the id of the current user when adding membership -->
+			<input type="hidden" class="id" name="user_id">
 			<div class="row justify-content-end mt-3">
 				<div class="col-6">
-				<input type="submit" value="Add Membership" class="btn btn-success btn-block w-100">
+					<input type="submit" value="Add Membership" class="btn btn-success btn-block w-100">
 				</div>
 			</div>
 		</form>

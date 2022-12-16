@@ -29,7 +29,6 @@
                 <div class="form-group mb-2">
                     <label for="gender">Gender: <sup class="text-danger">*</sup></label>
                         <select class="form-control form-control-lg" name="gender">
-                            <!-- TO DO - SET DEFAULT HERE -->
                             <option <?= $data['to_show']['gender'] === 'please_select' ? 'selected' : '';  ?> value="please_select">Please select</option>
                             <option <?= $data['to_show']['gender'] === 'male' ? 'selected' : '';  ?> value="male">Male</option>
                             <option <?= $data['to_show']['gender'] === 'female' ? 'selected' : '';  ?> value="female">Female</option>

@@ -22,7 +22,7 @@ window.onload = function () {
         userModalElements.email.textContent = currentUser.email;
         userModalElements.phone_number.textContent = currentUser.phone_number;
         userModalElements.dob.textContent = currentUser.dob;
-        userModalElements.id.textContent = currentUserId;
+        userModalElements.id.value = currentUserId;
     };
 
     const openUserModal = (element, parentSelector) => {
