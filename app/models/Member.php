@@ -15,4 +15,8 @@ class Member {
         $results = $this->db->resultSet(PDO::FETCH_ASSOC);
         return $results ? $results : '';
     }
+
+    public function addMembership() {
+        // $this->db->query('');
+    }
 }
