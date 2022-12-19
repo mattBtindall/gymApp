@@ -84,7 +84,6 @@ window.onload = function () {
         searchBar.value = "";
     };
 
-    // Search bar searchModal
     document.body.addEventListener('click', e => {
         if (!modalOpen) {
             return;
@@ -146,6 +145,4 @@ function setMembershipTab() {
             expiryDate.classList.remove('active');
         }
     });
-
-
 }
