@@ -14,17 +14,22 @@ class UserModal extends Modal {
     }
 
     setEventListeners() {
-        document.querySelector('.membership-table').addEventListener('click', () => this.openModal());
+        document.querySelector('.membership-table').addEventListener('click', (e) => this.setModal(e.target, '.account-link'));
         document.querySelector('.search-bar-modal__output').addEventListener('click', (e) => {
             if (e.target.classList.contains('account-link')) {
-                this.openModal();
+                this.setModal(e.target, '.search-modal__row');
             }
         });
 
         document.querySelector('.exit-modal-container i').addEventListener('click', () => this.closeModal());
     }
-}
 
-window.onload = function() {
-    const userModal = new UserModal();
+    setModal(element, parentSelector) {
+        const user = this.getCurrentUser(element, parentSelector);
+        this.elements.name.textContent = user.name;
+        this.elements.email.textContent = user.email;
+        this.elements.phone_number.textContent = user.phone_number;
+        this.elements.dob.textContent = user.dob;
+        this.openModal();
+    }
 }

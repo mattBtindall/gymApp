@@ -15,12 +15,6 @@ class Modal {
         }
     }
 
-    setModal(elements, user) {
-        for (const key in elements) {
-            elements[key].textContent = user[key];
-        }
-    }
-
     openModal() {
         this.elements.modal.classList.add('active');
         document.body.classList.add('overlay-active');
@@ -32,14 +26,9 @@ class Modal {
         document.body.classList.remove('overlay-active');
         this.modalOpen = false;
     }
+
+    getCurrentUser(searchElement, parentSelector) {
+        const currentUserId = searchElement.closest(parentSelector).querySelector('.id').textContent;
+        return userData.filter(user => user.id == currentUserId)[0];
+    }
 }
-
-// const userMdodal = new Modal({
-//     modal: '.user-modal',
-//     name: '.name',
-//     email: '.email',
-//     phone_number: '.phone_number',
-//     dob: '.dob',
-//     id: '.id'
-// }, '.user-modal');
-
