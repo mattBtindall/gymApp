@@ -14,9 +14,15 @@ function getUserData(url, callback) {
 }
 
 window.onload = function() {
-    modals.searchModal = new SearchModal();
-    modals.userModal = new UserModal();
+    modals.search = new SearchModal();
+    modals.user = new UserModal();
 
+    if (openModal) {
+        // get user
+        console.log(userData);
+        // open modal
+        modals.user.setModal(user);
+    }
 
     document.body.addEventListener('click', e => {
         if (e.target === document.body) {
@@ -27,5 +33,4 @@ window.onload = function() {
             }
         }
     });
-
 }

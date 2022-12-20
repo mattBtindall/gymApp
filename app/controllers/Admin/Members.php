@@ -8,7 +8,6 @@ class Members extends Controller {
 
     public function index() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $opemModal = false;
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
 
             $modal = [
@@ -16,10 +15,13 @@ class Members extends Controller {
                 'term' => trim($_POST['term']),
                 'start_date' => trim($_POST['start_date']),
                 'expiry_date' => trim($_POST['expiry_date']),
+                'open' => 0,
                 'term_err' => '',
                 'start_date_err' => '',
                 'expiry_date_err' => ''
             ];
+
+            var_dump($modal);
 
             if (empty($modal['term']) || $modal['term'] === 'please_select') {
                 $modal['term_err'] = 'Please select a term.';
@@ -48,26 +50,28 @@ class Members extends Controller {
                 }
             } else {
                 // errors so tell javascript to open modal
-                $openModal = true;
+                // $openModal = true;
+                $modal['open'] = 1;
             }
 
             $data = [
                 'modal' => $modal,
                 'members' => $this->members,
-                'openModal' => $openModal
             ];
 
         } else {
             $data = [
                 'modal' => [
+                    'user_id' => 0,
                     'term' => '',
                     'start_date' => '',
                     'expiry_date' => '',
+                    'open' => 0,
                     'term_err' => '',
                     'start_date_err' => '',
                     'expiry_date_err' => ''
                 ],
-                'members' => $this->members
+                'members' => $this->members,
             ];
         }
 
