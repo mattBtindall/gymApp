@@ -14,12 +14,17 @@ class UserModal extends Modal {
     }
 
     setEventListeners() {
-        document.querySelector('.membership-table').addEventListener('click', (e) => this.openModalClick(e.target, '.account-link'));
-        document.querySelector('.search-bar-modal__output').addEventListener('click', (e) => {
-            if (e.target.classList.contains('account-link')) {
-                this.openModalClick(e.target, '.search-modal__row');
-            }
-        });
+        const membershipTable = document.querySelector('.membership-table');
+        const searchOutput = document.querySelector('.search-bar-modal__output');
+
+        if (membershipTable) membershipTable.addEventListener('click', (e) => this.openModalClick(e.target, '.account-link'));
+        if (searchOutput) {
+            searchOutput.addEventListener('click', (e) => {
+                if (e.target.classList.contains('account-link')) {
+                    this.openModalClick(e.target, '.search-modal__row');
+                }
+            });
+        }
 
         document.querySelector('.exit-modal-container i').addEventListener('click', () => this.closeModal());
     }
@@ -27,6 +32,24 @@ class UserModal extends Modal {
     openModalClick(element, parentSelector) {
         const user = this.getCurrentUser(element, parentSelector);
         this.setModal(user);
+    }
+
+    closeModal() {
+        this.resetModalInputs();
+        super.closeModal();
+    }
+
+    resetModalInputs() {
+        const inputs = [
+            document.querySelector('.user-modal__content .term'),
+            document.querySelector('.user-modal__content .start_date'),
+            document.querySelector('.user-modal__content .expiry_date')
+        ]
+
+        inputs.forEach(input => {
+            input.classList.remove('is-invalid');
+            input.value = input.dataset.initialValue;
+        });
     }
 
     setModal(user) {

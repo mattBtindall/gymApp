@@ -17,12 +17,13 @@ window.onload = function() {
     modals.search = new SearchModal();
     modals.user = new UserModal();
 
-    if (openModal) {
-        // get user
-        console.log(userData);
-        // open modal
-        modals.user.setModal(user);
+    const openUserModal = (data) => {
+        if (openModal) {
+            const user = data.filter(user => user.id == currentUserId)[0];
+            modals.user.setModal(user);
+        }
     }
+    getUserData(window.location.href + '/getMembersData', openUserModal);
 
     document.body.addEventListener('click', e => {
         if (e.target === document.body) {
