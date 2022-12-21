@@ -21,8 +21,6 @@ class Members extends Controller {
                 'expiry_date_err' => ''
             ];
 
-            var_dump($modal);
-
             if (empty($modal['term']) || $modal['term'] === 'please_select') {
                 $modal['term_err'] = 'Please select a term.';
             }
@@ -40,17 +38,15 @@ class Members extends Controller {
             if (empty($modal['term_err']) && empty($modal['start_date_err']) && empty($modal['expiry_date_err'] )) {
                 $membershipDates = $this->generateMembershipDates($modal['term'], $modal['start_date'], $modal['expiry_date']);
                 if ($this->membersModel->addMembership($membershipDates, $modal['user_id'])) {
-                    // flash message here
                     $userName = $this->userModel->selectUserById($modal['user_id'], 'User')['name'];
                     $successMsg = "A membership has been successfully added for {$userName}";
                     flash('membership_assignment', $successMsg);
+                    $this->members = $this->membersModel->getMembers($_SESSION['user_id']); // reload members so newly added member shows
                 } else {
-                    // flash message here
                     flash('membership_assignment', 'Membership assignment failed', 'alert alert-danger');
                 }
             } else {
                 // errors so tell javascript to open modal
-                // $openModal = true;
                 $modal['open'] = 1;
             }
 
@@ -80,8 +76,8 @@ class Members extends Controller {
 
     public function getMembersData() {
         // this is called from an ajax call from the frontend
-        // echo json_encode($this->membersModal->getMembers($_SESSION['user_id']));
-        echo $this->membersModel->getMembers($_SESSION['user_id']) ? json_encode($this->membersModel->getMembers($_SESSION['user_id'])) : '{}';
+        $jsonData = $this->members ? json_encode(($this->members)) : '{}';
+        echo $jsonData;
     }
 
     private function generateMembershipDates($term, $startDate, $endDate) {
