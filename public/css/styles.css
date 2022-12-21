@@ -114,6 +114,7 @@ img {
     box-shadow: var(--box-shadow-lg);
     z-index: var(--z-index-above-overlay);
     height: 100%;
+    display: none;
 
     transform: translateX(110%);
     transition: transform .3s ease-in-out;
@@ -121,6 +122,7 @@ img {
 
 .user-modal.active {
     transform: translateX(0%);
+    display: block;
 }
 
 .exit-modal-container {

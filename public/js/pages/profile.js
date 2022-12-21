@@ -1,6 +1,3 @@
-console.log('hello world');
-'use strict';
-
 const fileInput = document.getElementsByName('file')[0];
 const uploadbtn = document.querySelector('.upload');
 

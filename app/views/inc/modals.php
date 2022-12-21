@@ -48,8 +48,8 @@
 				<div class="col-6">
 					<div class="form-group">
 						<label for="term" class="mb-1 text-bold">Term</label>
-						<select class="form-control form-control-lg <?= !empty($data['modal']['term_err']) ? 'is-invalid' : ''; ?>" name="term">
-							<option <?= $data['modal']['term'] === 'please_select' ? 'select' : ''; ?> value="please_select">Please select</option>
+						<select class="form-control form-control-lg term <?= !empty($data['modal']['term_err']) ? 'is-invalid' : ''; ?>" name="term" data-initial-value="please_select">
+							<option <?= $data['modal']['term'] === 'please_select' ? 'selected' : ''; ?> value="please_select">Please select</option>
 							<option <?= $data['modal']['term'] == '1' ? 'selected' : ''; ?> value="1">1 Month</option>
 							<option <?= $data['modal']['term'] === '3' ? 'selected' : ''; ?> value="3">3 Months</option>
 							<option <?= $data['modal']['term'] === '6' ? 'selected' : ''; ?> value="6">6 Months</option>
@@ -62,12 +62,12 @@
 				<div class="col-6">
 					<div class="form-group">
 						<label for="start" class="mb-1 text-bold ">Start Date</label>
-						<input type="date" class="form-control form-control-lg <?= !empty($data['modal']['start_date_err']) ? 'is-invalid' : '';?>" name="start_date" value="<?= $data['modal']['start_date']; ?>">
+						<input type="date" class="form-control form-control-lg start_date <?= !empty($data['modal']['start_date_err']) ? 'is-invalid' : '';?>" name="start_date" value="<?= $data['modal']['start_date']; ?>" data-initial-value="">
 						<span class="invalid-feedback"><?= $data['modal']['start_date_err']; ?></span>
 					</div>
 					<div class="form-group expiry-date <?= $data['modal']['term'] === 'custom' ? 'active' : ''; ?>">
 						<label for="start" class="mb-1 text-bold">Expiry Date</label>
-						<input type="date" class="form-control form-control-lg <?= !empty($data['modal']['expiry_date_err']) ? 'is-invalid' : '';?>" name="expiry_date" value="<?= $data['modal']['expiry_date']; ?>">
+						<input type="date" class="form-control form-control-lg expiry_date <?= !empty($data['modal']['expiry_date_err']) ? 'is-invalid' : '';?>" name="expiry_date" value="<?= $data['modal']['expiry_date']; ?>" data-initial-value="">
 						<span class="invalid-feedback"><?= $data['modal']['expiry_date_err']; ?></span>
 					</div>
 				</div>

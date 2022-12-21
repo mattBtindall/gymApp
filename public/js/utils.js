@@ -1,7 +1,8 @@
-'use strict';
-let userData = [];
+export let userData = [];
 
-function getUserData(url, callback) {
+export const modals = {};
+
+export function getUserData(url, callback) {
     fetch(url)
     .then(response => response.json())
     .then(data => {
