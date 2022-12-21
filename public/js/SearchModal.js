@@ -1,6 +1,7 @@
-'use strict';
+import { Modal } from './Modal.js';
+import { getUserData } from './utils.js';
 
-class SearchModal extends Modal {
+export class SearchModal extends Modal {
     constructor() {
         super({
             output: '.search-bar-modal__output',
@@ -47,9 +48,13 @@ class SearchModal extends Modal {
     }
 
     closeModal() {
-        super.closeModal();
+        if (!this.open) {
+            return;
+        }
+
         this.elements.searchBar.value = "";
         this.setEmptyModalMessage('Type a name in the search bar');
+        super.closeModal();
     }
 
     setModal(data) {

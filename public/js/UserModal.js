@@ -1,7 +1,8 @@
-'use strict';
+import { Modal } from './Modal.js';
+import { modals, userData, getUserData } from './utils.js';
 
-class UserModal extends Modal {
-    constructor() {
+export class UserModal extends Modal {
+    constructor(open, userId) { // both params are used to open the modal on load with correct user
         super({
             name: '.name',
             email: '.email',
@@ -10,18 +11,30 @@ class UserModal extends Modal {
             id: '.id'
         }, '.user-modal');
 
+        this.init(open, userId);
+    }
+
+    init(open, userId) {
         this.setEventListeners();
+
+        if (!open) {
+            return;
+        }
+
+        if (!userData.length) {
+            getUserData(window.location.href + '/getMembersData', () => this.openModalOnLoad(userId));
+        }
     }
 
     setEventListeners() {
         const membershipTable = document.querySelector('.membership-table');
         const searchOutput = document.querySelector('.search-bar-modal__output');
 
-        if (membershipTable) membershipTable.addEventListener('click', (e) => this.openModalClick(e.target, '.account-link'));
+        if (membershipTable) membershipTable.addEventListener('click', (e) => this.openModalOnClick(e.target, '.account-link'));
         if (searchOutput) {
             searchOutput.addEventListener('click', (e) => {
                 if (e.target.classList.contains('account-link')) {
-                    this.openModalClick(e.target, '.search-modal__row');
+                    this.openModalOnClick(e.target, '.search-modal__row');
                 }
             });
         }
@@ -29,13 +42,25 @@ class UserModal extends Modal {
         document.querySelector('.exit-modal-container i').addEventListener('click', () => this.closeModal());
     }
 
-    openModalClick(element, parentSelector) {
+    openModalOnLoad(currentUserId) {
+        const user = this.getUserById(currentUserId);
+        this.setModal(user);
+        this.openModal(user);
+    }
+
+    openModalOnClick(element, parentSelector) {
         const user = this.getCurrentUser(element, parentSelector);
         this.setModal(user);
+        this.openModal(user);
     }
 
     closeModal() {
+        if (!this.open) {
+            return;
+        }
+
         this.resetModalInputs();
+        modals.search.closeModal();
         super.closeModal();
     }
 
@@ -58,6 +83,5 @@ class UserModal extends Modal {
         this.elements.phone_number.textContent = user.phone_number;
         this.elements.dob.textContent = user.dob;
         this.elements.id.value = user.id;
-        this.openModal();
     }
 }

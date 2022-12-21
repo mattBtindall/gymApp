@@ -1,9 +1,9 @@
-'use strict';
+import { userData } from "./utils.js";
 
-class Modal {
+export class Modal {
     constructor(spec, parentSelector) {
         this.elements = {};
-        this.modalOpen = false;
+        this.open = false;
 
         this.setElements(spec, parentSelector);
     }
@@ -18,17 +18,21 @@ class Modal {
     openModal() {
         this.elements.modal.classList.add('active');
         document.body.classList.add('overlay-active');
-        this.modalOpen = true;
+        this.open = true;
     }
 
     closeModal() {
         this.elements.modal.classList.remove('active');
         document.body.classList.remove('overlay-active');
-        this.modalOpen = false;
+        this.open = false;
+    }
+
+    getUserById(id) {
+        return userData.filter(user => user.id == id)[0];
     }
 
     getCurrentUser(searchElement, parentSelector) {
         const currentUserId = searchElement.closest(parentSelector).querySelector('.id').textContent;
-        return userData.filter(user => user.id == currentUserId)[0];
+        return this.getUserById(currentUserId);
     }
 }
