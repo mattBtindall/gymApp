@@ -11,7 +11,7 @@ export class UserModal extends Modal {
             id: '.id'
         }, '.user-modal');
 
-        this.init(open, userId);
+        // this.init(open, userId);
     }
 
     init(open, userId) {
@@ -21,9 +21,9 @@ export class UserModal extends Modal {
             return;
         }
 
-        if (!userData.length) {
+        // if (!userData.length) {
             getUserData(window.location.href + '/getMembersData', () => this.openModalOnLoad(userId));
-        }
+        // }
     }
 
     setEventListeners() {
