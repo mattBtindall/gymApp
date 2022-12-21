@@ -13,7 +13,10 @@
         protected $restricted_paths = [
             '/users/profile',
             '/users/profile_edit',
-            '/users/searchDb'
+            '/users/searchDb',
+            '/members',
+            '/members/index',
+            '/members/getMembersData'
         ];
 
         public function __construct() {
