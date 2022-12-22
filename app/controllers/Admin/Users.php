@@ -10,6 +10,7 @@ class Users extends Users_base {
             'description'
         ];
 
+        $this->memberModel = $this->model('Member');
         parent::__construct($profileValuesToShow);
     }
 
@@ -127,5 +128,17 @@ class Users extends Users_base {
 
             $this->view('/users/register', $data);
         }
+    }
+
+    public function getUserData() {
+        // called by ajax request
+        if (!isLoggedIn()) {
+           echo '{}';
+           return;
+        }
+
+        $data = parent::getUserData();
+        $data['members'] = $this->memberModel->getMembers();
+        echo json_encode($data);
     }
 }

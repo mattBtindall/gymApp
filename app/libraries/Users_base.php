@@ -179,4 +179,16 @@ class Users_base extends Controller {
         session_destroy();
         redirect('/users/login');
     }
+
+    public function getUserData() {
+        if (!isLoggedIn()) {
+            return '{}';
+        }
+
+        $allUsers = $this->userModel->getAllUsersFromOppositeArea();
+        $data = [
+            'allUsers' => $allUsers
+        ];
+        return $data;
+    }
 }

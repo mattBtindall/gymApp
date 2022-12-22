@@ -126,4 +126,9 @@ class Users extends Users_base {
             $this->view('/users/register', $data);
         }
     }
+
+    public function getUserData() {
+        $data = parent::getUserData();
+        echo json_encode($data);
+    }
 }

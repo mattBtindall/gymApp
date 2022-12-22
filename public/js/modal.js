@@ -129,7 +129,7 @@ window.onload = function () {
             }
         }
         url = baseUrl + phpMethod + query,
-        getUserData(url, displaySearchResults);
+        getData(url, displaySearchResults);
     });
 }
 

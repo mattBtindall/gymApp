@@ -100,4 +100,11 @@ class User {
     public function isAdmin() {
         return $this->selectUserById($_SESSION['user_id'], 'admin') ? true : false;
     }
+
+    public function getAllUsersFromOppositeArea() {
+        $oppositeArea = strtolower(getOppositeArea());
+        $this->db->query('SELECT * FROM ' . $oppositeArea . '_users');
+        $rows = $this->db->resultSet(PDO::FETCH_ASSOC);
+        return $rows;
+    }
 }

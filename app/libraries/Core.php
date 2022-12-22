@@ -14,6 +14,7 @@
             '/users/profile',
             '/users/profile_edit',
             '/users/searchDb',
+            '/users/getUsersFromOppositeArea',
             '/members',
             '/members/index',
             '/members/getMembersData'

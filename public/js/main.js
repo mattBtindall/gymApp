@@ -1,6 +1,6 @@
 import { SearchModal } from "./SearchModal.js";
 import { UserModal } from "./UserModal.js";
-import { modals, getUserData, userData } from "./utils.js";
+import { modals, getData, userData, getPhpMethodUrl } from "./utils.js";
 
 // varialbes are injected via php
 // if (!openModal) {
@@ -11,10 +11,7 @@ import { modals, getUserData, userData } from "./utils.js";
 // console.log(currentUserId);
 
 window.onload = function() {
-    // if admin logged in get user data
-    // getUserData(window.location.href + '/getMembersData', openUserModal);
-    getUserData('http://localhost/gymApp/Admin/members/getMembersData', () => console.log('data: ' + userData));
-
+    getUserData();
 
     modals.search = new SearchModal();
     modals.user = new UserModal(openModal, currentUserId);
@@ -27,5 +24,18 @@ window.onload = function() {
                 }
             }
         }
+    });
+}
+
+// makes ajax call to backend
+// if logged in
+// gets the correct data for either area
+// for admin gets all users and all members
+function getUserData() {
+    const url = getPhpMethodUrl("Users/getUserData");
+    // checks to see if logged in then fetches the data from the opposite area
+    getData(url, function(data) {
+        userData.set(data);
+        console.log(userData.get());
     });
 }
