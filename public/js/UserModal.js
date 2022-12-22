@@ -1,8 +1,8 @@
 import { Modal } from './Modal.js';
-import { modals, userData } from './utils.js';
+import { modals, userData, getPhpMethodUrl, getData } from './utils.js';
 
 export class UserModal extends Modal {
-    constructor(open, userId) { // both params are used to open the modal on load with correct user
+    constructor() {
         super({
             name: '.name',
             email: '.email',
@@ -11,20 +11,12 @@ export class UserModal extends Modal {
             id: '.id'
         }, '.user-modal');
 
-        // this.init(open, userId);
-        this.setEventListeners();
+        this.init();
     }
 
-    init(open, userId) {
+    init() {
         this.setEventListeners();
-
-        if (!open) {
-            return;
-        }
-
-        // if (!userData.length) {
-        // this.openModalOnLoad(userId);
-        // }
+        this.getModalStatus((id) => this.openModalOnLoad(id));
     }
 
     setEventListeners() {
@@ -45,7 +37,7 @@ export class UserModal extends Modal {
     }
 
     openModalOnLoad(currentUserId) {
-        const user = this.getUserById(currentUserId);
+        const user = this.getUserById(currentUserId, userData.get().members);
         this.setModal(user);
         this.openModal(user);
     }
@@ -85,5 +77,15 @@ export class UserModal extends Modal {
         this.elements.phone_number.textContent = user.phone_number;
         this.elements.dob.textContent = user.dob;
         this.elements.id.value = user.id;
+    }
+
+    getModalStatus(callback) {
+        // sees whether to open the modal or not from php
+        const url = getPhpMethodUrl('Members/getModalStatus');
+        getData(url,(modalStatus) => {
+            if(modalStatus.open) {
+                callback(modalStatus['user_id']);
+            }
+        });
     }
 }

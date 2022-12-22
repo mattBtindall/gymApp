@@ -7,15 +7,18 @@ class Members extends Controller {
     }
 
     public function index() {
+        $_SESSION['modal_open'] = [
+            'open' => false,
+            'user_id' => 0
+        ];
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
-
             $modal = [
                 'user_id' => trim($_POST['user_id']),
                 'term' => trim($_POST['term']),
                 'start_date' => trim($_POST['start_date']),
                 'expiry_date' => trim($_POST['expiry_date']),
-                'open' => 0,
                 'term_err' => '',
                 'start_date_err' => '',
                 'expiry_date_err' => ''
@@ -47,7 +50,8 @@ class Members extends Controller {
                 }
             } else {
                 // errors so tell javascript to open modal
-                $modal['open'] = 1;
+                $_SESSION['modal_open']['open'] = true;
+                $_SESSION['modal_open']['user_id'] = $modal['user_id'];
             }
 
             $data = [
@@ -62,7 +66,6 @@ class Members extends Controller {
                     'term' => '',
                     'start_date' => '',
                     'expiry_date' => '',
-                    'open' => 0,
                     'term_err' => '',
                     'start_date_err' => '',
                     'expiry_date_err' => ''
@@ -72,6 +75,11 @@ class Members extends Controller {
         }
 
         $this->view('members/index', $data);
+    }
+
+    public function getModalStatus() {
+        // ajax tells js whether to open modal or not
+        echo json_encode($_SESSION['modal_open']);
     }
 
     public function getMembersData() {

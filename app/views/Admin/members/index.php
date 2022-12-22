@@ -1,8 +1,4 @@
 <?php require APP_ROOT . '/views/inc/header.php'; ?>
-<script>
-    openModal = <?= $data['modal']['open']; ?>;
-    currentUserId = <?= $data['modal']['user_id']; ?>;
-</script>
 <div class="membership-table">
     <div class="container">
         <div class="flash-container mt-3">

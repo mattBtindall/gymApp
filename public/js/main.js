@@ -2,19 +2,11 @@ import { SearchModal } from "./SearchModal.js";
 import { UserModal } from "./UserModal.js";
 import { modals, getData, userData, getPhpMethodUrl } from "./utils.js";
 
-// varialbes are injected via php
-// if (!openModal) {
-//     openModal = 0;
-//     currentUserId = 0;
-// }
-// console.log(openModal);
-// console.log(currentUserId);
-
 window.onload = function() {
     getUserData();
 
     modals.search = new SearchModal();
-    modals.user = new UserModal(openModal, currentUserId);
+    modals.user = new UserModal();
 
     document.body.addEventListener('click', e => {
         if (e.target === document.body) {
@@ -36,6 +28,6 @@ function getUserData() {
     // checks to see if logged in then fetches the data from the opposite area
     getData(url, function(data) {
         userData.set(data);
-        console.log(userData.get());
     });
 }
+
