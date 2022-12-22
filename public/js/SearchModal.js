@@ -1,5 +1,5 @@
 import { Modal } from './Modal.js';
-import { getUserData } from './utils.js';
+import { getData, getPhpMethodUrl } from './utils.js';
 
 export class SearchModal extends Modal {
     constructor() {
@@ -20,22 +20,8 @@ export class SearchModal extends Modal {
                 return;
             }
 
-            // truncate string after /Admin/ or /admin/ or /User/ or /user/
-            // gets base url
-            let url = window.location.href;
-            const phpMethod =  "Users/searchDb/";
-            const query = e.target.value;
-            const areas = ['/Admin/', '/admin/', '/User/', '/user/'];
-            let baseUrl = '';
-
-            for (const area of areas) {
-                if (url.indexOf(area) > 0) { // gets correct area
-                    baseUrl = url.slice(0, url.indexOf(area) + area.length);
-                    break;
-                }
-            }
-            url = baseUrl + phpMethod + query;
-            getUserData(url, (data) => this.setModal(data));
+            const url = getPhpMethodUrl("Users/searchDb/", e.target.value);
+            getData(url, (data) => this.setModal(data));
         });
     }
 

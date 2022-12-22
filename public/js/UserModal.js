@@ -1,5 +1,5 @@
 import { Modal } from './Modal.js';
-import { modals, userData, getUserData } from './utils.js';
+import { modals, userData } from './utils.js';
 
 export class UserModal extends Modal {
     constructor(open, userId) { // both params are used to open the modal on load with correct user
@@ -12,6 +12,7 @@ export class UserModal extends Modal {
         }, '.user-modal');
 
         // this.init(open, userId);
+        this.setEventListeners();
     }
 
     init(open, userId) {
@@ -22,7 +23,7 @@ export class UserModal extends Modal {
         }
 
         // if (!userData.length) {
-            getUserData(window.location.href + '/getMembersData', () => this.openModalOnLoad(userId));
+            getData(window.location.href + '/getMembersData', () => this.openModalOnLoad(userId));
         // }
     }
 
