@@ -27,12 +27,12 @@ export class Modal {
         this.open = false;
     }
 
-    getUserById(id) {
-        return userData.filter(user => user.id == id)[0];
+    getUserById(id, data) {
+        return data.filter(user => user.id == id)[0];
     }
 
-    getCurrentUser(searchElement, parentSelector) {
+    getCurrentUser(searchElement, parentSelector, data) {
         const currentUserId = searchElement.closest(parentSelector).querySelector('.id').textContent;
-        return this.getUserById(currentUserId);
+        return this.getUserById(currentUserId, data);
     }
 }

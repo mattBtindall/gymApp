@@ -23,7 +23,7 @@ export class UserModal extends Modal {
         }
 
         // if (!userData.length) {
-            getData(window.location.href + '/getMembersData', () => this.openModalOnLoad(userId));
+        // this.openModalOnLoad(userId);
         // }
     }
 
@@ -31,11 +31,12 @@ export class UserModal extends Modal {
         const membershipTable = document.querySelector('.membership-table');
         const searchOutput = document.querySelector('.search-bar-modal__output');
 
-        if (membershipTable) membershipTable.addEventListener('click', (e) => this.openModalOnClick(e.target, '.account-link'));
+        if (membershipTable) membershipTable.addEventListener('click', (e) => this.openModalOnClick(e.target, '.account-link', userData.get().members));
         if (searchOutput) {
             searchOutput.addEventListener('click', (e) => {
                 if (e.target.classList.contains('account-link')) {
-                    this.openModalOnClick(e.target, '.search-modal__row');
+                    modals.search.closeModal();
+                    this.openModalOnClick(e.target, '.search-modal__row', userData.get().allUsers);
                 }
             });
         }
@@ -49,8 +50,8 @@ export class UserModal extends Modal {
         this.openModal(user);
     }
 
-    openModalOnClick(element, parentSelector) {
-        const user = this.getCurrentUser(element, parentSelector);
+    openModalOnClick(element, parentSelector, data) {
+        const user = this.getCurrentUser(element, parentSelector, data);
         this.setModal(user);
         this.openModal(user);
     }
