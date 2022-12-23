@@ -20,7 +20,7 @@
                     </td>
                     <td><?= $row['email']; ?></td>
                     <td><?= $row['phone_number']; ?></td>
-                    <td><?= $row['term']; ?></td>
+                    <td><?= $row['term']; ?> <?= $row['term'] != 'custom' ? 'months' : ''; ?> </td>
                     <td><?= $row['expiry_date']; ?></td>
                     <td class="id" style="display: none;"><?= $row['id']; ?></td>
                 </tr>

@@ -1,5 +1,3 @@
-import { userData } from "./utils.js";
-
 export class Modal {
     constructor(spec, parentSelector) {
         this.elements = {};
@@ -27,8 +25,8 @@ export class Modal {
         this.open = false;
     }
 
-    getUserById(id, data) {
-        return data.filter(user => user.id == id)[0];
+    getUserById(id, users) {
+        return users.filter(user => user.id == id)[0];
     }
 
     getCurrentUser(searchElement, parentSelector, data) {
