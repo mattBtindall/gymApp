@@ -79,6 +79,7 @@ class Members extends Controller {
 
     public function getModalStatus() {
         // ajax tells js whether to open modal or not
+        $_SESSION['modal_open'] = $_SESSION['modal_open'] ?? ['open' => false, 'user_id' => 0];
         echo json_encode($_SESSION['modal_open']);
     }
 
