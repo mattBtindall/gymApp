@@ -21,7 +21,8 @@ export class SearchModal extends Modal {
             }
 
             const url = getPhpMethodUrl("Users/searchDb/", e.target.value);
-            getData(url, (data) => this.setModal(data));
+            getData(url)
+                .then(data => this.setModal(data));
         });
     }
 

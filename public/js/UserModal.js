@@ -16,7 +16,12 @@ export class UserModal extends Modal {
 
     init() {
         this.setEventListeners();
-        this.getModalStatus((id) => this.openModalOnLoad(id));
+        this.getModalStatus()
+            .then(modalStatus => {
+                if (modalStatus.open) {
+                   this.openModalOnLoad(modalStatus.user_id);
+                }
+            })
     }
 
     setEventListeners() {
@@ -79,13 +84,9 @@ export class UserModal extends Modal {
         this.elements.id.value = user.id;
     }
 
-    getModalStatus(callback) {
+    getModalStatus() {
         // sees whether to open the modal or not from php
-        const url = getPhpMethodUrl('Members/getModalStatus');
-        getData(url,(modalStatus) => {
-            if(modalStatus.open) {
-                callback(modalStatus['user_id']);
-            }
-        });
+        const url = getPhpMethodUrl('/Members/getModalStatus');
+        return getData(url);
     }
 }
