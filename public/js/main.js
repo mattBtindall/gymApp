@@ -5,7 +5,7 @@ import * as eventListeners from "./generalEventListeners.js";
 
 window.onload = function() {
     contentSpecificJs();
-    const url = getPhpMethodUrl("Users/getUserData");
+    const url = getPhpMethodUrl("/Users/getUserData");
     // checks to see if logged in then fetches the data from the opposite area
     getData(url)
         .then(data => {

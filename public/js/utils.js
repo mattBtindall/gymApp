@@ -7,14 +7,16 @@ export let userData = {
 export const modals = {};
 
 export function getData(url) {
-    return fetch(url).then(response => response.json()).catch(e => console.log(e));
+    return fetch(url)
+    .then(response => response.json())
+    .catch(e => console.log(e));
 }
 
 export function getPhpMethodUrl(phpMethod, param = "") {
     // truncate string after /Admin/ or /admin/ or /User/ or /user/
     // gets base url
     const url = window.location.href;
-    const areas = ['/Admin/', '/Admin', '/admin/', '/admin', '/User/', '/User', '/user/', '/user'];
+    const areas = ['Admin', 'admin', 'User', 'user'];
     let baseUrl = '';
 
     for (const area of areas) {
