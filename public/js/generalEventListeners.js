@@ -1,7 +1,6 @@
 import { modals } from "./utils.js";
 
 export function setImgUpload() {
-    console.log('setImgUpload');
     const fileInput = document.getElementsByName('file')[0];
     const uploadbtn = document.querySelector('.upload');
 
@@ -22,7 +21,6 @@ export function setImgUpload() {
 }
 
 export function setMembershipTab() {
-    console.log('setMembershipTab');
     const term = document.getElementsByName('term')[0];
     const expiryDate = document.querySelector('.expiry-date');
 

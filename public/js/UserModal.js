@@ -42,7 +42,8 @@ export class UserModal extends Modal {
     }
 
     openModalOnLoad(currentUserId) {
-        const user = this.getUserById(currentUserId, userData.get().members);
+        const user = this.getUserById(currentUserId, userData.get().allUsers);
+        console.log(user);
         this.setModal(user);
         this.openModal(user);
     }

@@ -1,3 +1,17 @@
+<?php
+	if (!isset($data['modal'])) {
+		$data['modal'] = [
+			'user_id' => 0,
+			'term' => '',
+			'start_date' => '',
+			'expiry_date' => '',
+			'term_err' => '',
+			'start_date_err' => '',
+			'expiry_date_err' => ''
+		];
+	}
+?>
+
 <!-- Pop up for search bar -->
 <div class="search-bar-modal">
 	<div class="container">

@@ -12,7 +12,6 @@
                 <th>Membership</th>
                 <th>Expiry Date</th>
             </tr>
-            <?php var_dump($data['members']); ?>
             <?php foreach($data['members'] as $row): ?>
                 <tr class="border-bottom border-top account-link">
                     <td>

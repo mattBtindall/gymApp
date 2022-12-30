@@ -5,6 +5,7 @@ class Member {
     }
 
     public function getMembers() {
+        // change this so that is more generic so it returns the results and then at source return the '{}' for when working with json
         $this->db->query('SELECT user_users.id, name, email, phone_number, term, expiry_date, img_url
                           FROM user_users
                           INNER JOIN memberships
@@ -12,8 +13,7 @@ class Member {
                           WHERE memberships.admin_id = :admin_id
                         ');
         $this->db->bind(':admin_id', $_SESSION['user_id']);
-        $results = $this->db->resultSet(PDO::FETCH_ASSOC);
-        return $results ? $results : '{}';
+        return $this->db->resultSet(PDO::FETCH_ASSOC);
     }
 
     public function addMembership($membershipDates, $user_id) {

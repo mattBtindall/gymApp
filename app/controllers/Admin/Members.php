@@ -7,10 +7,10 @@ class Members extends Controller {
     }
 
     public function index() {
-        $_SESSION['modal_open'] = [
-            'open' => false,
-            'user_id' => 0
-        ];
+        // $_SESSION['modal_open'] = [
+        //     'open' => false,
+        //     'user_id' => 0
+        // ];
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
