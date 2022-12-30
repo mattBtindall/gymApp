@@ -77,6 +77,13 @@ class Members extends Controller {
         $this->view('members/index', $data);
     }
 
+    public function activity() {
+        // get activity for this account
+
+
+        $this->view('members/activity');
+    }
+
     public function getModalStatus() {
         // ajax tells js whether to open modal or not
         $_SESSION['modal_open'] = $_SESSION['modal_open'] ?? ['open' => false, 'user_id' => 0];

@@ -14,6 +14,12 @@ class Users extends Users_base {
         parent::__construct($profileValuesToShow);
     }
 
+    public function index() {
+        // dashboard
+
+        $this->view('/users/index');
+    }
+
     public function register() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
@@ -138,7 +144,8 @@ class Users extends Users_base {
         }
 
         $data = parent::getUserData();
-        $data['members'] = $this->memberModel->getMembers();
+        $members = $this->memberModel->getMembers();
+        $data['members'] = $members ? $members : '{}';
         echo json_encode($data);
     }
 }
