@@ -12,6 +12,10 @@ export function getData(url) {
     .catch(e => console.log(e));
 }
 
+export function sendAjax(url) {
+    fetch(url);
+}
+
 export function getPhpMethodUrl(phpMethod, param = "") {
     // truncate string after /Admin/ or /admin/ or /User/ or /user/
     // gets base url
