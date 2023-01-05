@@ -1,5 +1,5 @@
 import { Modal } from './Modal.js';
-import { modals, userData, getPhpMethodUrl, getData } from './utils.js';
+import { modals, userData, getPhpMethodUrl, getData, sendAjax } from './utils.js';
 
 export class UserModal extends Modal {
     constructor() {
@@ -59,6 +59,8 @@ export class UserModal extends Modal {
             return;
         }
 
+        const url = getPhpMethodUrl('/userModal/disable');
+        sendAjax(url); // remove modal errors so it doesn't reopen
         this.resetModalInputs();
         modals.search.closeModal();
         super.closeModal();
@@ -87,7 +89,7 @@ export class UserModal extends Modal {
 
     getModalStatus() {
         // sees whether to open the modal or not from php
-        const url = getPhpMethodUrl('/Members/getModalStatus');
+        const url = getPhpMethodUrl('/userModal/getStatus');
         return getData(url);
     }
 }

@@ -38,7 +38,10 @@ class Members extends Controller {
                 $modal['expiry_date_err'] = 'Please select an expiry date that is greater than the start date';
             }
 
-            if (empty($modal['term_err']) && empty($modal['start_date_err']) && empty($modal['expiry_date_err'] )) {
+            if (empty($modal['term_err']) && empty($modal['start_date_err']) && empty($modal['expiry_date_err'])) {
+                // reset modal state so that it doesn't reopen
+                $_SESSION['user_modal_state']['open'] = false;
+                $_SESSION['user_modal_state']['user_id'] = 0;
                 $membershipDates = $this->generateMembershipDates($modal['term'], $modal['start_date'], $modal['expiry_date']);
                 if ($this->membersModel->addMembership($membershipDates, $modal['user_id'])) {
                     $userName = $this->userModel->selectUserById($modal['user_id'], 'User')['name'];
@@ -50,8 +53,8 @@ class Members extends Controller {
                 }
             } else {
                 // errors so tell javascript to open modal
-                $_SESSION['modal_open']['open'] = true;
-                $_SESSION['modal_open']['user_id'] = $modal['user_id'];
+                $_SESSION['user_modal_state']['open'] = true;
+                $_SESSION['user_modal_state']['user_id'] = $modal['user_id'];
             }
 
             $data = [
@@ -82,12 +85,6 @@ class Members extends Controller {
 
 
         $this->view('members/activity');
-    }
-
-    public function getModalStatus() {
-        // ajax tells js whether to open modal or not
-        $_SESSION['modal_open'] = $_SESSION['modal_open'] ?? ['open' => false, 'user_id' => 0];
-        echo json_encode($_SESSION['modal_open']);
     }
 
     public function getMembersData() {
