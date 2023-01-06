@@ -59,7 +59,6 @@ class Members extends Controller {
 
             $data = [
                 'modal' => $modal,
-                'members' => $this->memberships,
             ];
 
         } else {
@@ -73,17 +72,16 @@ class Members extends Controller {
                     'start_date_err' => '',
                     'expiry_date_err' => ''
                 ],
-                'members' => $this->memberships,
             ];
         }
 
         $mostRecentMemberships = $this->getMostRecentMemberships($this->memberships);
+        $data['members'] = $mostRecentMemberships;
         $this->view('members/index', $data);
     }
 
     public function activity() {
         // get activity for this account
-
 
         $this->view('members/activity');
     }
@@ -108,10 +106,6 @@ class Members extends Controller {
             }
         }
 
-        foreach($mostRecentMemberships as $recentMembership) {
-            var_dump($recentMembership);
-            echo '<br>';
-        }
         return $mostRecentMemberships;
     }
 
