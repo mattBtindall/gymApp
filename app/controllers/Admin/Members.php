@@ -142,6 +142,7 @@ class Members extends Controller {
     private function generateMembershipDates($term, $startDate, $endDate) {
         // notice here that when the date comes from html the HTML_DATE_TIME_FORMAT is used
         // the same goes for when the date comes from the SQL db -> SQL_DATE_TIME_FORMAT is used
+        // cheesy dogs
         if (!$endDate) {
             $endDate = date_create_from_format(HTML_DATE_TIME_FORMAT, $startDate);
             $endDate->modify('+' . $term . ' month');
