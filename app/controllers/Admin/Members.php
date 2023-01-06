@@ -7,11 +7,6 @@ class Members extends Controller {
     }
 
     public function index() {
-        // $_SESSION['modal_open'] = [
-        //     'open' => false,
-        //     'user_id' => 0
-        // ];
-
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
             $modal = [
@@ -30,6 +25,8 @@ class Members extends Controller {
 
             if (empty($modal['start_date'])) {
                 $modal['start_date_err'] = 'Please select a start date.';
+            } else if ($this->dateOverlap($modal['user_id'], $modal['start_date'])) {
+                $modal['start_date_err'] = 'Please select a date that begins after the current membership expires';
             }
 
             if ($modal['term'] === 'custom' && empty($modal['expiry_date'])) {
@@ -42,6 +39,8 @@ class Members extends Controller {
                 // reset modal state so that it doesn't reopen
                 $_SESSION['user_modal_state']['open'] = false;
                 $_SESSION['user_modal_state']['user_id'] = 0;
+
+                // set dates for membership
                 $membershipDates = $this->generateMembershipDates($modal['term'], $modal['start_date'], $modal['expiry_date']);
                 if ($this->membersModel->addMembership($membershipDates, $modal['user_id'])) {
                     $userName = $this->userModel->selectUserById($modal['user_id'], 'User')['name'];
@@ -91,6 +90,27 @@ class Members extends Controller {
         // this is called from an ajax call from the frontend
         $jsonData = $this->members ? json_encode(($this->members)) : '{}';
         echo $jsonData;
+    }
+
+    private function dateOverlap($user_id, $startDate) {
+        // get active memberships from the user
+        $memberships = $this->membersModel->getMemberById($user_id);
+        if (!$memberships) return false;
+
+        // loop through all memberships here, not just one
+        // see if there is an active membership
+        $startDate = new DateTime($startDate);
+        $formattedStartDate = $startDate->format('d/m/y');
+        $hasOverlap = false;
+        foreach ($memberships as $membership) {
+            echo 'start date: ' . $formattedStartDate . '<br>';
+            echo 'expiry date: ' . $membership['expiry_date'] . '<br>';
+            if (strtotime($formattedStartDate) < strtotime($membership['expiry_date'])) {
+                $hasOverlap = true;
+            }
+        }
+
+        return $hasOverlap;
     }
 
     private function generateMembershipDates($term, $startDate, $endDate) {

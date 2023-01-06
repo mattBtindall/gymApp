@@ -27,4 +27,11 @@ class Member {
 
         return $this->db->execute() ? true : false;
     }
+
+    public function getMemberById($user_id) {
+        $this->db->query('SELECT * from memberships WHERE user_id = :userId AND admin_id = :adminId');
+        $this->db->bind(':userId', $user_id);
+        $this->db->bind(':adminId', $_SESSION['user_id']);
+        return $this->db->resultSet(PDO::FETCH_ASSOC);
+    }
 }
