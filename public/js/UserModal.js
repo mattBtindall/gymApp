@@ -84,7 +84,8 @@ export class UserModal extends Modal {
         this.elements.email.textContent = user.email;
         this.elements.phone_number.textContent = user.phone_number;
         this.elements.dob.textContent = user.dob;
-        this.elements.id.value = user.id;
+        // this data is fetched from different sql calls which sometimes calls the id different things due to table joining
+        this.elements.id.value = user.user_id ? user.user_id : user.id;
     }
 
     getModalStatus() {

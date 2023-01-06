@@ -3,7 +3,7 @@ class Members extends Controller {
     public function __construct() {
         $this->membersModel = $this->model('Member');
         $this->userModel = $this->model('User');
-        $this->members = $this->membersModel->getMembers($_SESSION['user_id']);
+        $this->memberships = $this->membersModel->getMembers($_SESSION['user_id']);
     }
 
     public function index() {
@@ -25,7 +25,8 @@ class Members extends Controller {
 
             if (empty($modal['start_date'])) {
                 $modal['start_date_err'] = 'Please select a start date.';
-            } else if ($this->dateOverlap($modal['user_id'], $modal['start_date'])) {
+            }
+            else if ($this->dateOverlap($modal['user_id'], $modal['start_date'])) {
                 $modal['start_date_err'] = 'Please select a date that begins after the current membership expires';
             }
 
@@ -46,7 +47,7 @@ class Members extends Controller {
                     $userName = $this->userModel->selectUserById($modal['user_id'], 'User')['name'];
                     $successMsg = "A membership has been successfully added for {$userName}";
                     flash('membership_assignment', $successMsg);
-                    $this->members = $this->membersModel->getMembers($_SESSION['user_id']); // reload members so newly added member shows
+                    $this->memberships = $this->membersModel->getMembers($_SESSION['user_id']); // reload members so newly added member shows
                 } else {
                     flash('membership_assignment', 'Membership assignment failed', 'alert alert-danger');
                 }
@@ -58,7 +59,7 @@ class Members extends Controller {
 
             $data = [
                 'modal' => $modal,
-                'members' => $this->members,
+                'members' => $this->memberships,
             ];
 
         } else {
@@ -72,10 +73,11 @@ class Members extends Controller {
                     'start_date_err' => '',
                     'expiry_date_err' => ''
                 ],
-                'members' => $this->members,
+                'members' => $this->memberships,
             ];
         }
 
+        $mostRecentMemberships = $this->getMostRecentMemberships($this->memberships);
         $this->view('members/index', $data);
     }
 
@@ -88,8 +90,29 @@ class Members extends Controller {
 
     public function getMembersData() {
         // this is called from an ajax call from the frontend
-        $jsonData = $this->members ? json_encode(($this->members)) : '{}';
+        $jsonData = $this->memberships ? json_encode(($this->memberships)) : '{}';
         echo $jsonData;
+    }
+
+    private function getMostRecentMemberships($memberships) {
+        // when displaying the members regardless of how many memberships a user has had we only want to show the most recent
+        $mostRecentMemberships = [];
+        foreach ($memberships as $membership) {
+            if (in_array($membership['user_id'], $mostRecentMemberships)) {
+                // if (strtotime($mostRecentMemberships[$membership['user_id']]['expiry_date']) < strtotime($membership['expiry_date'])) {
+                if (strtotime($mostRecentMemberships[$membership['user_id']]['expiry_date']) < strtotime($membership['expiry_date'])) {
+                    $mostRecentMemberships[$membership['user_id']] = $membership;
+                }
+            } else {
+                $mostRecentMemberships[$membership['user_id']] = $membership;
+            }
+        }
+
+        foreach($mostRecentMemberships as $recentMembership) {
+            var_dump($recentMembership);
+            echo '<br>';
+        }
+        return $mostRecentMemberships;
     }
 
     private function dateOverlap($user_id, $startDate) {
@@ -97,16 +120,19 @@ class Members extends Controller {
         $memberships = $this->membersModel->getMemberById($user_id);
         if (!$memberships) return false;
 
-        // loop through all memberships here, not just one
-        // see if there is an active membership
-        $startDate = new DateTime($startDate);
-        $formattedStartDate = $startDate->format('d/m/y');
         $hasOverlap = false;
+        // date here comes in from html so first need to create a date using html dateTime format and then convert it to SQL dateTime format so they can be compared
+        $startDate = date_create_from_format(HTML_DATE_TIME_FORMAT, $startDate);
+        $startDate = $startDate->format(SQL_DATE_TIME_FORMAT);
+
         foreach ($memberships as $membership) {
-            echo 'start date: ' . $formattedStartDate . '<br>';
-            echo 'expiry date: ' . $membership['expiry_date'] . '<br>';
-            if (strtotime($formattedStartDate) < strtotime($membership['expiry_date'])) {
+            // date here comes from db so the date object can be created straight from sql dateTime format
+            $expiryDate = date_create_from_format(SQL_DATE_TIME_FORMAT, $membership['expiry_date']);
+            $expiryDate = $expiryDate->format(SQL_DATE_TIME_FORMAT); // need to use this to get the date string
+
+            if (strtotime($startDate) < strtotime($expiryDate)) {
                 $hasOverlap = true;
+                break;
             }
         }
 
@@ -114,18 +140,20 @@ class Members extends Controller {
     }
 
     private function generateMembershipDates($term, $startDate, $endDate) {
+        // notice here that when the date comes from html the HTML_DATE_TIME_FORMAT is used
+        // the same goes for when the date comes from the SQL db -> SQL_DATE_TIME_FORMAT is used
         if (!$endDate) {
-            $endDate = new DateTime($startDate);
+            $endDate = date_create_from_format(HTML_DATE_TIME_FORMAT, $startDate);
             $endDate->modify('+' . $term . ' month');
         } else {
-            $endDate = new DateTime($endDate);
+            $endDate = date_create_from_format(HTML_DATE_TIME_FORMAT, $endDate);
         }
-        $startDate = new DateTime($startDate);
+        $startDate = date_create_from_format(HTML_DATE_TIME_FORMAT, $startDate);
 
         return [
             'term' => $term,
-            'start_date' => $startDate->format('d/m/y'),
-            'expiry_date' => $endDate->format('d/m/y')
+            'start_date' => $startDate->format(SQL_DATE_TIME_FORMAT),
+            'expiry_date' => $endDate->format(SQL_DATE_TIME_FORMAT)
         ];
     }
 }

@@ -6,7 +6,9 @@ class Member {
 
     public function getMembers() {
         // change this so that is more generic so it returns the results and then at source return the '{}' for when working with json
-        $this->db->query('SELECT user_users.id, name, email, phone_number, term, expiry_date, img_url
+        $this->db->query('SELECT user_users.id, memberships.id, name, email, phone_number, term, expiry_date, img_url,
+                          user_users.id as user_id,
+                          memberships.id as membership_id
                           FROM user_users
                           INNER JOIN memberships
                           ON memberships.user_id = user_users.id
@@ -19,9 +21,9 @@ class Member {
     public function addMembership($membershipDates, $user_id) {
         // admin_id, user_id, term, expiry_date, start_date
         $this->db->query('INSERT INTO memberships (admin_id, user_id, term, start_date, expiry_Date) VALUE(:admin_id, :user_id, :term, :start_date, :expiry_date)');
-        $this->db->bind('admin_id', $_SESSION['user_id']);
-        $this->db->bind('user_id', $user_id);
-        $this->db->bind('term', $membershipDates['term']);
+        $this->db->bind(':admin_id', $_SESSION['user_id']);
+        $this->db->bind(':user_id', $user_id);
+        $this->db->bind(':term', $membershipDates['term']);
         $this->db->bind(':start_date', $membershipDates['start_date']);
         $this->db->bind(':expiry_date', $membershipDates['expiry_date']);
 
