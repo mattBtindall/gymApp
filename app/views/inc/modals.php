@@ -10,6 +10,10 @@
 			'expiry_date_err' => ''
 		];
 	}
+
+	if (!isset($data['memberships'])) {
+
+	}
 ?>
 
 <!-- Pop up for search bar -->
@@ -56,6 +60,10 @@
 		</div>
 	</div>
 	<div class="user-modal__content px-3 py-2">
+		<!-- Membership -->
+		<div class="membership">
+
+		</div>
 		<!-- Add membership -->
 		<form action="<?= URL_ROOT; ?>/members" method="POST" class="add-membership d-flex flex-column justify-content-between">
 			<div class="row flex-shrink-0">
