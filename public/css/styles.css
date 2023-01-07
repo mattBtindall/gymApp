@@ -172,10 +172,28 @@ img {
     font-weight: bold;
 }
 
+/* Content [user modal] */
+.user-modal__menu-item {
+    color: #cecece;
+    cursor: pointer;
+}
+
+.user-modal__menu-item.active {
+    color: var(--body-color);
+}
+
+.user-modal__item {
+    display: none;
+}
+
+.user-modal__item.active {
+    display: block;
+}
+
 /* Add membership [from user modal] */
 
-.add-membership { /* form */
-    min-height: 25vh;
+.add-membership > form {
+    min-height: 30vh;
 }
 
 .expiry-date {
