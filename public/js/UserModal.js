@@ -15,6 +15,18 @@ export class UserModal extends Modal {
     }
 
     init() {
+        this.elements.tabs = {
+            menu: {
+                items: document.querySelectorAll('.user-modal__menu-item'),
+                activity: document.querySelectorAll('.user-modal__menu-item')[0],
+                membership: document.querySelectorAll('.user-modal__menu-item')[1],
+                addMembership: document.querySelectorAll('.user-modal__menu-item')[2]
+            },
+            content: {
+                items: document.querySelectorAll('.user-modal__item')
+            }
+        }
+
         this.setEventListeners();
         this.getModalStatus()
             .then(modalStatus => {
@@ -28,10 +40,8 @@ export class UserModal extends Modal {
         const membershipTable = document.querySelector('.membership-table');
         const searchOutput = document.querySelector('.search-bar-modal__output');
         const userModalMenuBar = document.querySelector('.user-modal__menu-bar');
-        const userModalMenuItems = document.querySelectorAll('.user-modal__menu-item');
-        const userModalItems = document.querySelectorAll('.user-modal__item');
 
-        if (membershipTable) 
+        if (membershipTable)
             membershipTable.addEventListener('click', (e) => this.openModalOnClick(e.target, '.account-link', userData.get().members));
 
         if (searchOutput) {
@@ -48,14 +58,17 @@ export class UserModal extends Modal {
         if (userModalMenuBar){
             userModalMenuBar.addEventListener('click', (e) => {
                 if (e.target.classList.contains('user-modal__menu-item')) {
-                    userModalMenuItems.forEach(menuItem => menuItem.classList.remove('active'));
-                    e.target.classList.add('active');
-                    userModalItems.forEach(item => item.classList.remove('active'));
-                    document.querySelector(`.${e.target.getAttribute('name')}`).classList.add('active');
+                    this.setTabs(e.target);
                 }
             });
         }
-    
+    }
+
+    setTabs(menuItem) {
+        this.elements.tabs.menu.items.forEach(menuItem => menuItem.classList.remove('active'));
+        menuItem.classList.add('active');
+        this.elements.tabs.content.items.forEach(item => item.classList.remove('active'));
+        document.querySelector(`.${menuItem.dataset.contentClassName}`).classList.add('active');
     }
 
     openModalOnLoad(currentUserId) {
@@ -79,6 +92,7 @@ export class UserModal extends Modal {
         const url = getPhpMethodUrl('/userModal/disable');
         sendAjax(url); // remove modal errors so it doesn't reopen
         this.resetModalInputs();
+        this.setTabs(this.elements.tabs.menu.activity);
         modals.search.closeModal();
         super.closeModal();
     }

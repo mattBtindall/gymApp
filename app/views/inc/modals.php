@@ -54,9 +54,9 @@
 	</header>
 	<div class="user-modal__menu-bar bg-light px-4 py-4 border-top border-bottom">
 		<div class="d-flex gap-5">
-			<span class="user-modal__menu-item" name="activity">Activity</span>
-			<span class="user-modal__menu-item" name="membership">Membership</span>
-			<span class="user-modal__menu-item active" name="add-membership">Add Membership</span>
+			<span class="user-modal__menu-item" data-content-class-name="activity" >Activity</span>
+			<span class="user-modal__menu-item" data-content-class-name="membership" >Membership</span>
+			<span class="user-modal__menu-item active" data-content-class-name="add-membership" >Add Membership</span>
 		</div>
 	</div>
 	<div class="user-modal__content px-3 py-2">
