@@ -11,6 +11,7 @@ class Users extends Users_base {
         ];
 
         $this->memberModel = $this->model('Member');
+        $this->termsModel = $this->model('Term');
         parent::__construct($profileValuesToShow);
     }
 
@@ -133,6 +134,20 @@ class Users extends Users_base {
             ];
 
             $this->view('/users/register', $data);
+        }
+    }
+
+    public function terms_edit() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+        } else {
+            $terms = $this->termsModel->getTerms($_SESSION['user_id']);
+
+            $data = [
+                'terms' => $terms
+            ];
+
+            $this->view('/users/terms_edit', $data);
         }
     }
 
