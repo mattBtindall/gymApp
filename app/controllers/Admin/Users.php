@@ -151,6 +151,15 @@ class Users extends Users_base {
         }
     }
 
+    public function term_delete($termId) {
+        if ($this->termsModel->deleteTerm($termId)) {
+            flash('term_deleted', 'Term deleted successfully');
+            redirect('/users/terms_edit');
+        } else {
+            flash('term_deleted', 'Term could not be deleted at this time please try again', 'alert alert-danger');
+        }
+    }
+
     public function getUserData() {
         // called by ajax request
         if (!isLoggedIn()) {

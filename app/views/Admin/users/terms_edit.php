@@ -21,6 +21,7 @@
     <p class="mt-2">
         Add/edit your custom terms. You may edit one term at a time. Please take in mind that you can add 'custom' memberships of varying lengths when assigning users memberships.
     </p>
+    <?= flash('term_deleted'); ?>
     <!-- <a href="" class="btn btn-success"></a> -->
     <table>
         <tr>
@@ -56,7 +57,7 @@
                 <td>£<?= $term['cost']; ?></td>
                 <td><?= $expiryDate ;?></td>
                 <td><a href="" class="btn btn-warning">Edit</a></td>
-                <td><a href="" class="btn btn-danger">Delete</a></td>
+                <td><a href="<?= URL_ROOT; ?>/users/term_delete/<?= $term['id']; ?>" class="btn btn-danger">Delete</a></td>
             </tr>
         <?php endforeach; ?>
     </table>
