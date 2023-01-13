@@ -34,6 +34,37 @@ export function setMembershipTab() {
     });
 }
 
+export function setTermsEditTable() {
+    // if edit button
+    // enable cost input and submit button
+    // hide term and show select
+    const elements = {
+        term: document.querySelector('.terms-edit__term'),
+        dropDown: document.querySelector('.terms-edit__drop-down'),
+        costInput: document.querySelector('.terms-edit__cost'),
+        submitBtn: document.querySelector('.terms-edit__submit'),
+        editBtn: document.querySelector('.terms-edit__edit')
+    }
+
+    const toggleInput = (element) => {
+        if (element.disabled) {
+            element.disabled = false;
+        } else {
+            element.disabled = true;
+        }
+    }
+
+    const editClick = (e) => {
+        e.preventDefault();
+        elements.dropDown.classList.toggle('active');
+        elements.term.classList.toggle('active');
+        toggleInput(elements.submitBtn);
+        toggleInput(elements.costInput);
+    };
+
+    elements.editBtn.addEventListener('click', editClick);
+}
+
 export function setBodyClick() {
     document.body.addEventListener('click', e => {
         if (e.target === document.body) {

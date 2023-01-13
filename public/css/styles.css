@@ -147,7 +147,8 @@ img {
 
 /* Mebership table */
 
-.membership-table table {
+.membership-table table,
+.terms-table {
     width: 100%;
     margin-top: 1rem;
 }
@@ -161,7 +162,9 @@ img {
 }
 
 .membership-table td,
-.membership-table th {
+.membership-table th,
+.terms-table td,
+.terms-table th {
     margin: 1rem 0;
 }
 
@@ -202,6 +205,21 @@ img {
 
 .expiry-date.active {
     display: block;
+}
+
+/* terms edit */
+.terms-edit__term.active,
+.terms-edit__drop-down.active {
+    display: inline-block !important;
+}
+
+.terms-edit__term,
+.terms-edit__drop-down {
+    display: none !important;
+}
+
+.term-table tr {
+    padding: 1rem;
 }
 
 @media (min-width: 992px) {

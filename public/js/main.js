@@ -30,4 +30,9 @@ function contentSpecificJs() {
     if (document.querySelector('.search-bar')) {
         modals.search = new SearchModal();
     }
+
+    // if there is a terms table lead the setTermsTable from genEventListeners
+    if (document.querySelector('.terms-table')) {
+        eventListeners.setTermsEditTable();
+    }
 }
