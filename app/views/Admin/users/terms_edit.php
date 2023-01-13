@@ -32,7 +32,7 @@
             <?php
                 // format the expiry date to d/m/y
                 $expiryDate = date_create_from_format(SQL_DATE_TIME_FORMAT, $term['created_at']);
-                $expiryDate = $expiryDate->format('d/m/y');
+                $expiryDate = $expiryDate->format(OUTPUT_DATE_TIME_FORMAT);
                 $combinedTermMultiplier = $term['term_multiplier'] . ' ' . $term['term'];
             ?>
             <tr>
