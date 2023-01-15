@@ -27,6 +27,7 @@
     <?= flash('term_deleted'); ?>
     <table class="terms-table">
         <tr>
+            <th>Display name</th>
             <th>Term</th>
             <th>Cost</th>
             <th>Date created</th>
@@ -39,6 +40,7 @@
                 $combinedTermMultiplier = $term['term_multiplier'] . ' ' . $term['term'];
             ?>
             <tr>
+                <td><input type="text" value="<?= $term['display_name']; ?>" class="form-control form-control-lg w-50 terms-edit__display-name" disabled data-term-number="<?= $i; ?>"></td>
                 <td>
                     <select class="form-control form-control-lg terms-edit__drop-down" name="term" data-term-number="<?= $i; ?>">
                         <option value="please_select">Please select</option>

@@ -37,6 +37,7 @@ export function setMembershipTab() {
 export function setTermsEditTable() {
     const elements = {
         table: document.querySelector('.terms-table'),
+        displayNameInput: document.querySelectorAll('.terms-edit__display-name'),
         term: document.querySelectorAll('.terms-edit__term'),
         dropDown: document.querySelectorAll('.terms-edit__drop-down'),
         costInput: document.querySelectorAll('.terms-edit__cost'),
@@ -54,6 +55,7 @@ export function setTermsEditTable() {
         const currentTermNumber = e.target.dataset.termNumber;
         for (let i = 0; i < elements.editBtn.length; i++) {
             if (i === +currentTermNumber) continue; 
+            elements.displayNameInput[i].disabled = true;
             elements.submitBtn[i].disabled = true;
             elements.costInput[i].disabled = true;
             elements.dropDown[i].classList.remove('active');
@@ -62,9 +64,11 @@ export function setTermsEditTable() {
         
         // toggle current inputs
         if (elements.submitBtn[currentTermNumber].disabled) {
+            elements.displayNameInput[currentTermNumber].disabled = false;
             elements.submitBtn[currentTermNumber].disabled = false;
             elements.costInput[currentTermNumber].disabled = false;
         } else {
+            elements.displayNameInput[currentTermNumber].disabled = true;
             elements.submitBtn[currentTermNumber].disabled = true;
             elements.costInput[currentTermNumber].disabled = true;
         }
