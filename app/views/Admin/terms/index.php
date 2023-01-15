@@ -1,3 +1,4 @@
+
 <?php
     # Terms
     # New db table for terms
@@ -60,9 +61,9 @@
                 </td>
                 <td><input type="text" value="£<?= $term['cost']; ?>" class="form-control form-control-lg w-50 terms-edit__cost" disabled data-term-number="<?= $i; ?>"></td>
                 <td><?= $expiryDate ;?></td>
-                <td><button href="" class="btn btn-success terms-edit__submit" data-term-number="<?= $i; ?>" disabled data-term-number="<?= $i; ?>">Submit</button></td>
+                <td><button href="<?= URL_ROOT; ?>/terms/edit" class="btn btn-success terms-edit__submit" data-term-number="<?= $i; ?>" disabled data-term-number="<?= $i; ?>">Submit</button></td>
                 <td><a href="" class="btn btn-warning terms-edit__edit" data-term-number="<?= $i; ?>">Edit</a></td>
-                <td><a href="<?= URL_ROOT; ?>/users/term_delete/<?= $term['id']; ?>" class="btn btn-danger">Delete</a></td>
+                <td><a href="<?= URL_ROOT; ?>/terms/delete/<?= $term['id']; ?>" class="btn btn-danger">Delete</a></td>
             </tr>
         <?php $i++ // incerment after so i starts from 0 as element arrays in js are zero indexed; ?> 
         <?php endforeach; ?>

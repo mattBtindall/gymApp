@@ -11,7 +11,6 @@ class Users extends Users_base {
         ];
 
         $this->memberModel = $this->model('Member');
-        $this->termsModel = $this->model('Term');
         parent::__construct($profileValuesToShow);
     }
 
@@ -134,29 +133,6 @@ class Users extends Users_base {
             ];
 
             $this->view('/users/register', $data);
-        }
-    }
-
-    public function terms_edit() {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
-        } else {
-            $terms = $this->termsModel->getTerms($_SESSION['user_id']);
-
-            $data = [
-                'terms' => $terms
-            ];
-
-            $this->view('/users/terms_edit', $data);
-        }
-    }
-
-    public function term_delete($termId) {
-        if ($this->termsModel->deleteTerm($termId)) {
-            flash('term_deleted', 'Term deleted successfully');
-            redirect('/users/terms_edit');
-        } else {
-            flash('term_deleted', 'Term could not be deleted at this time please try again', 'alert alert-danger');
         }
     }
 

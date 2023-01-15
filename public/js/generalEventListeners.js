@@ -46,10 +46,10 @@ export function setTermsEditTable() {
     };
 
     const tableClickListener = (e) => {
-        e.preventDefault();
         if (!e.target.classList.contains('terms-edit__edit')) {
             return;
         }
+        e.preventDefault();
         
         // disable unclicked inputs
         const currentTermNumber = e.target.dataset.termNumber;
