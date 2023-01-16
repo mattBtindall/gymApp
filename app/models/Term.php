@@ -15,4 +15,14 @@ class Term {
         $this->db->bind(':id', $termId);
         return $this->db->execute() ? true : false;
     }
+
+    public function editTerm($term) {
+        $this->db->query('UPDATE membership_terms SET display_name = :displayName, term = :term, term_multiplier = :termMultiplier, cost = :cost WHERE id = :termId');
+        $this->db->bind(':displayName', $term['display_name']);
+        $this->db->bind(':term', $term['term']);
+        $this->db->bind(':termMultiplier', $term['term_multiplier']);
+        $this->db->bind(':cost', $term['cost']);
+        $this->db->bind(':termId', $term['term_id']);
+        return $this->db->execute() ? true : false;
+    }
 }

@@ -30,6 +30,7 @@
         Add/edit your custom terms. You may edit one term at a time. Please take in mind that you can add 'custom' memberships of varying lengths when assigning users memberships.
     </p>
     <?= flash('term_deleted'); ?>
+    <?= flash('term_updated'); ?>
     <table class="terms-table">
         <tr>
             <th>Display name</th>
@@ -83,7 +84,7 @@
                         <span class="terms-edit__term active" data-term-number="<?= $i; ?>"><?php echo $combinedTermMultiplier; echo $term['term_multiplier'] > 1 ? 's' : ''; ?></span>
                     </td>
                     <td>
-                        <input type="number" value="<?= $cost; ?>" class="form-control form-control-lg w-50 terms-edit__cost <?= $errClassName['cost']; ?>" name="cost" disabled data-term-number="<?= $i; ?>">
+                        <input type="number" step="0.05" value="<?= $cost; ?>" class="form-control form-control-lg w-50 terms-edit__cost <?= $errClassName['cost']; ?>" name="cost" disabled data-term-number="<?= $i; ?>">
                         <span class="invalid-feedback"><?= $data['term_update']['cost_err']; ?></span>
                     </td>
                     <td><?= $dateCreated;?></td>

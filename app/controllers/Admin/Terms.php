@@ -42,6 +42,14 @@ class Terms extends Controller {
             $termUpdate['cost_err'] = 'Please enter a price';
         }
 
+        if (empty($termUpdate['display_name_err']) && empty($termUpdate['cost_err'])) {
+            if ($this->termsModel->editTerm($termUpdate)) {
+                flash('term_updated', 'Term successfully updated');
+            } else {
+                flash('term_updated', 'Term could not be updated at this time, please try again', 'alert alert-danger');
+            }
+        }
+
         $terms = $this->termsModel->getTerms($_SESSION['user_id']);
         $data = [
             'terms' => $terms,
@@ -60,4 +68,7 @@ class Terms extends Controller {
         redirect('/terms/index');
     }
 
+    public function getErrorStatus() {
+
+    }
 }
