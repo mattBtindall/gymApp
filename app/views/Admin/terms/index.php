@@ -1,29 +1,18 @@
 
 <?php
-    # Terms
-    # New db table for terms
-    # Db fields:
-    # id, admin_id, term, term_multiplier, cost, created_at
-    # use term & term_multiplier so that we can seperate the time frame month or week e.g. term = weeek and term_multiplier = 2 (2 week)
-    # All current terms are displayed here with a choice to edit the cost of the term
-    # Remind user that they can add a custom term in when adding a membership, these are just prest templates
-    # list of terms:
-    # one week, two week, one month, 6 week, two month, three month, six month, twelve month
-
     // check to see if the term_update exists if it doesn't create it here
     if (!isset($data['term_update'])) {
         $data['term_update'] = [
             'display_name' => '',
             'term' => '',
             'term_multiplier' => '',
+            'combined_term_multiplier' => '',
             'cost' => '',
-            'id' => '',
+            'term_id' => '',
             'display_name_err' => '',
             'cost_err' => ''
         ];
     }
-
-    var_dump($data['term_update']);
 ?>
 <?php require APP_ROOT . '/views/inc/header.php'; ?>
 <?php
@@ -62,16 +51,16 @@
                         <select class="form-control form-control-lg terms-edit__drop-down" name="term" data-term-number="<?= $i; ?>">
                             <option value="please_select">Please select</option>
                             <!-- user can't select a term that has already been sued but is not the current term as they're editing that -->
-                            <option value ="1 week" class="<?= ($combinedTermMultiplier !== '1 week' && in_array('1 week', $combinedTermMultipliers)) ? 'd-none' : ''; ?>" <?= $combinedTermMultiplier == '1 week' ? 'selected' : ''; ?>>1 Week</option>
-                            <option value ="2 week" class="<?= ($combinedTermMultiplier !== '2 week' && in_array('2 week', $combinedTermMultipliers)) ? 'd-none' : ''; ?>" <?= $combinedTermMultiplier == '2 week' ? 'selected' : ''; ?>>2 Weeks</option>
-                            <option value ="1 month" class="<?= ($combinedTermMultiplier !== '1 month' && in_array('1 month', $combinedTermMultipliers)) ? 'd-none' : ''; ?>" <?= $combinedTermMultiplier == '1 month' ? 'selected' : ''; ?>>1 month</option>
-                            <option value ="2 month" class="<?= ($combinedTermMultiplier !== '2 month' && in_array('2 month', $combinedTermMultipliers)) ? 'd-none' : ''; ?>" <?= $combinedTermMultiplier == '2 month' ? 'selected' : ''; ?>>2 Months</option>
-                            <option value ="3 month" class="<?= ($combinedTermMultiplier !== '3 month' && in_array('3 month', $combinedTermMultipliers)) ? 'd-none' : ''; ?>" <?= $combinedTermMultiplier == '3 month' ? 'selected' : ''; ?>>3 Months</option>
-                            <option value ="6 month" class="<?= ($combinedTermMultiplier !== '3 month' && in_array('3 month', $combinedTermMultipliers)) ? 'd-none' : ''; ?>" <?= $combinedTermMultiplier == '3 month' ? 'selected' : ''; ?>>6 Months</option>
-                            <option value ="9 month" class="<?= ($combinedTermMultiplier !== '9 month' && in_array('9 month', $combinedTermMultipliers)) ? 'd-none' : ''; ?>" <?= $combinedTermMultiplier == '9 month' ? 'selected' : ''; ?>>9 Months</option>
-                            <option value ="12 month" class="<?= ($combinedTermMultiplier !== '12 month' && in_array('12 month', $combinedTermMultipliers)) ? 'd-none' : ''; ?>" <?= $combinedTermMultiplier == '12 month' ? 'selected' : ''; ?>>12 Months</option>
-                            <option value ="24 month" class="<?= ($combinedTermMultiplier !== '24 month' && in_array('24 month', $combinedTermMultipliers)) ? 'd-none' : ''; ?>" <?= $combinedTermMultiplier == '24 month' ? 'selected' : ''; ?>>24 Months</option>
-                            <option value ="36 month" class="<?= ($combinedTermMultiplier !== '36 month' && in_array('36 month', $combinedTermMultipliers)) ? 'd-none' : ''; ?>" <?= $combinedTermMultiplier == '36 month' ? 'selected' : ''; ?>>36 Months</option>
+                            <option value ="1 week" <?= $combinedTermMultiplier == '1 week' ? 'selected' : ''; ?>>1 Week</option>
+                            <option value ="2 week" <?= $combinedTermMultiplier == '2 week' ? 'selected' : ''; ?>>2 Weeks</option>
+                            <option value ="1 month" <?= $combinedTermMultiplier == '1 month' ? 'selected' : ''; ?>>1 month</option>
+                            <option value ="2 month" <?= $combinedTermMultiplier == '2 month' ? 'selected' : ''; ?>>2 Months</option>
+                            <option value ="3 month" <?= $combinedTermMultiplier == '3 month' ? 'selected' : ''; ?>>3 Months</option>
+                            <option value ="6 month" <?= $combinedTermMultiplier == '3 month' ? 'selected' : ''; ?>>6 Months</option>
+                            <option value ="9 month" <?= $combinedTermMultiplier == '9 month' ? 'selected' : ''; ?>>9 Months</option>
+                            <option value ="12 month" <?= $combinedTermMultiplier == '12 month' ? 'selected' : ''; ?>>12 Months</option>
+                            <option value ="24 month" <?= $combinedTermMultiplier == '24 month' ? 'selected' : ''; ?>>24 Months</option>
+                            <option value ="36 month" <?= $combinedTermMultiplier == '36 month' ? 'selected' : ''; ?>>36 Months</option>
                         </select>
                         <span class="terms-edit__term active" data-term-number="<?= $i; ?>"><?php echo $combinedTermMultiplier; echo $term['term_multiplier'] > 1 ? 's' : ''; ?></span>
                     </td>

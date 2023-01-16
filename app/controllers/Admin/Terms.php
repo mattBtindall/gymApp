@@ -23,12 +23,13 @@ class Terms extends Controller {
         // split $_POST['term'] into term (e.g. month or week) and term_multipler (number that preceeds the term)
         $termAndMultiplier = explode(' ', $_POST['term']);
         // here we don't have errors from term or term_multiplier as they come from the drop down
-        $termUpdate= [
+        $termUpdate = [
             'display_name' => trim($_POST['display_name']),
             'term' => $termAndMultiplier[1],
             'term_multiplier' => $termAndMultiplier[0],
+            'combined_term_multiplier' => $_POST['term'],
             'cost' => trim($_POST['cost']),
-            'id' => $_POST['term_id'],
+            'term_id' => $_POST['term_id'],
             'display_name_err' => '',
             'cost_err' => ''
         ];
