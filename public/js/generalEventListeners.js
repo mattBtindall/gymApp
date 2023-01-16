@@ -34,52 +34,6 @@ export function setMembershipTab() {
     });
 }
 
-export function setTermsEditTable() {
-    const elements = {
-        table: document.querySelector('.terms-table'),
-        displayNameInput: document.querySelectorAll('.terms-edit__display-name'),
-        term: document.querySelectorAll('.terms-edit__term'),
-        dropDown: document.querySelectorAll('.terms-edit__drop-down'),
-        costInput: document.querySelectorAll('.terms-edit__cost'),
-        submitBtn: document.querySelectorAll('.terms-edit__submit'),
-        editBtn: document.querySelectorAll('.terms-edit__edit')
-    };
-
-    const tableClickListener = (e) => {
-        if (!e.target.classList.contains('terms-edit__edit')) {
-            return;
-        }
-        e.preventDefault();
-        
-        // disable unclicked inputs
-        const currentTermNumber = e.target.dataset.termNumber;
-        for (let i = 0; i < elements.editBtn.length; i++) {
-            if (i === +currentTermNumber) continue; 
-            elements.displayNameInput[i].disabled = true;
-            elements.submitBtn[i].disabled = true;
-            elements.costInput[i].disabled = true;
-            elements.dropDown[i].classList.remove('active');
-            elements.term[i].classList.add('active');
-        }
-        
-        // toggle current inputs
-        if (elements.submitBtn[currentTermNumber].disabled) {
-            elements.displayNameInput[currentTermNumber].disabled = false;
-            elements.submitBtn[currentTermNumber].disabled = false;
-            elements.costInput[currentTermNumber].disabled = false;
-        } else {
-            elements.displayNameInput[currentTermNumber].disabled = true;
-            elements.submitBtn[currentTermNumber].disabled = true;
-            elements.costInput[currentTermNumber].disabled = true;
-        }
-
-        elements.dropDown[currentTermNumber].classList.toggle('active');
-        elements.term[currentTermNumber].classList.toggle('active');
-    }
-
-    elements.table.addEventListener('click', tableClickListener);
-}
-
 export function setBodyClick() {
     document.body.addEventListener('click', e => {
         if (e.target === document.body) {

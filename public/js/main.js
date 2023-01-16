@@ -1,5 +1,6 @@
 import { SearchModal } from "./SearchModal.js";
 import { UserModal } from "./UserModal.js";
+import { Terms } from "./Terms.js";
 import { modals, getData, userData, getPhpMethodUrl } from "./utils.js";
 import * as eventListeners from "./generalEventListeners.js";
 
@@ -33,6 +34,6 @@ function contentSpecificJs() {
 
     // if there is a terms table lead the setTermsTable from genEventListeners
     if (document.querySelector('.terms-table')) {
-        eventListeners.setTermsEditTable();
+        const term = new Terms();
     }
 }
