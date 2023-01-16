@@ -39,7 +39,7 @@ class Terms extends Controller {
         }
 
         if (empty($termUpdate['cost'])) {
-            $termUpdate['display_cost_err'] = 'Please enter a price';
+            $termUpdate['cost_err'] = 'Please enter a price';
         }
 
         $terms = $this->termsModel->getTerms($_SESSION['user_id']);

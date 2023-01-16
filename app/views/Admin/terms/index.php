@@ -42,11 +42,29 @@
                 // format the expiry date to d/m/y
                 $dateCreated= date_create_from_format(SQL_DATE_TIME_FORMAT, $term['created_at']);
                 $dateCreated = $dateCreated->format(OUTPUT_DATE_TIME_FORMAT);
+
                 $combinedTermMultiplier = $term['term_multiplier'] . ' ' . $term['term'];
+                $displayName = $term['display_name'];
+                $cost = $term['cost'];
+                $errClassName = [
+                    'display_name' => '',
+                    'cost' => ''
+                ];
+
+                if ($data['term_update']['term_id'] == $term['id']) {
+                    $displayName = $data['term_update']['display_name'];
+                    $cost = $data['term_update']['cost'];
+                    $errClassName['display_name'] = !empty($data['term_update']['display_name_err']) ? 'is-invalid' : '';
+                    $errClassName['cost'] = !empty($data['term_update']['cost_err']) ? 'is-invalid' : '';
+                    $combinedTermMultiplier = $data['term_update']['combined_term_multiplier'];
+                }
             ?>
             <tr>
                 <form action="<?= URL_ROOT; ?>/terms/edit" method="POST">
-                    <td><input type="text" value="<?= $term['display_name']; ?>" class="form-control form-control-lg w-50 terms-edit__display-name" name="display_name" disabled data-term-number="<?= $i; ?>"></td>
+                    <td>
+                        <input type="text" value="<?= $displayName; ?>" class="form-control form-control-lg w-50 terms-edit__display-name <?= $errClassName['display_name']; ?>" name="display_name" disabled data-term-number="<?= $i; ?>">
+                        <span class="invalid-feedback"><?= $data['term_update']['display_name_err']; ?></span>
+                    </td>
                     <td>
                         <select class="form-control form-control-lg terms-edit__drop-down" name="term" data-term-number="<?= $i; ?>">
                             <option value="please_select">Please select</option>
@@ -64,7 +82,10 @@
                         </select>
                         <span class="terms-edit__term active" data-term-number="<?= $i; ?>"><?php echo $combinedTermMultiplier; echo $term['term_multiplier'] > 1 ? 's' : ''; ?></span>
                     </td>
-                    <td><input type="number" value="<?= $term['cost']; ?>" class="form-control form-control-lg w-50 terms-edit__cost" name="cost" disabled data-term-number="<?= $i; ?>"></td>
+                    <td>
+                        <input type="number" value="<?= $cost; ?>" class="form-control form-control-lg w-50 terms-edit__cost <?= $errClassName['cost']; ?>" name="cost" disabled data-term-number="<?= $i; ?>">
+                        <span class="invalid-feedback"><?= $data['term_update']['cost_err']; ?></span>
+                    </td>
                     <td><?= $dateCreated;?></td>
                     <td><input class="btn btn-success terms-edit__submit" disabled data-term-number="<?= $i; ?>" type="submit" value="submit"></td>
                     <td><a href="" class="btn btn-warning terms-edit__edit" data-term-number="<?= $i; ?>">Edit</a></td>
