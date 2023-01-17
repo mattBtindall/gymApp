@@ -1,16 +1,30 @@
+import { getPhpMethodUrl, getData } from "./utils.js";
+
 export class Terms {
     constructor() {
         this.elements = {
-            table: document.querySelector('.terms-table'),
-            displayNameInput: document.querySelectorAll('.terms-edit__display-name'),
-            term: document.querySelectorAll('.terms-edit__term'),
-            dropDown: document.querySelectorAll('.terms-edit__drop-down'),
-            costInput: document.querySelectorAll('.terms-edit__cost'),
-            submitBtn: document.querySelectorAll('.terms-edit__submit'),
-            editBtn: document.querySelectorAll('.terms-edit__edit')
+            inputs: {}
         };
+        this.elements.table = document.querySelector('.terms-table');
+        this.elements.rows = this.elements.table.querySelectorAll('tr');
+
+        // sets inputs so this.elements[rowId] = { rowElements }
+        const idElements = document.getElementsByName('term_id');
+        idElements.forEach(idElement => {
+            const parentNode = idElement.parentNode;
+            const id = idElement.value;
+            this.elements.inputs[id] = {
+                displayNameInput: parentNode.querySelector('.terms-edit__display-name'),
+                term: parentNode.querySelector('.terms-edit__term'),
+                dropDown: parentNode.querySelector('.terms-edit__drop-down'),
+                costInput: parentNode.querySelector('.terms-edit__cost'),
+                submitBtn: parentNode.querySelector('.terms-edit__submit'),
+                editBtn: parentNode.querySelector('.terms-edit__edit'),
+            }
+        });
 
         this.setEventListeners();
+        this.openOnLoad();
     }
 
     setEventListeners() {
@@ -23,35 +37,54 @@ export class Terms {
         }
         e.preventDefault();
 
-        const currentTermNumber = parseInt(e.target.dataset.termNumber);
-        this.disableAllInputs(currentTermNumber);
-        this.enableCurrentInputs(currentTermNumber);
+        const rowId = e.target.closest('tr').querySelector('input[name="term_id"]').value;
+        this.disableAllRows(rowId);
+        this.toggleRow(this.elements.inputs[rowId]);
     }
 
-    disableAllInputs(termToExclude) {
-        const numberOfTerms = this.elements.table.querySelectorAll('tr').length - 1; // - 1 for the headings
-        for (let i = 0; i < numberOfTerms; i++) {
-            if (i === termToExclude) continue;
-            this.elements.displayNameInput[i].disabled = true;
-            this.elements.submitBtn[i].disabled = true;
-            this.elements.costInput[i].disabled = true;
-            this.elements.dropDown[i].classList.remove('active');
-            this.elements.term[i].classList.add('active');
+    disableRow(elements) {
+        elements.displayNameInput.disabled = true;
+        elements.submitBtn.disabled = true;
+        elements.costInput.disabled = true;
+        elements.dropDown.classList.remove('active');
+        elements.term.classList.add('active');
+    }
+
+    disableAllRows(rowIdToExclude) {
+        for (let key in this.elements.inputs) {
+            if (rowIdToExclude == key) continue;
+            this.disableRow(this.elements.inputs[key]);
         }
     }
 
-    enableCurrentInputs(currentTermNumber) {
-        if (this.elements.submitBtn[currentTermNumber].disabled) {
-            this.elements.displayNameInput[currentTermNumber].disabled = false;
-            this.elements.submitBtn[currentTermNumber].disabled = false;
-            this.elements.costInput[currentTermNumber].disabled = false;
+    enableRow(elements) {
+        elements.displayNameInput.disabled = false;
+        elements.submitBtn.disabled = false;
+        elements.costInput.disabled = false;
+        elements.dropDown.classList.add('active');
+        elements.term.classList.remove('active');
+    }
+
+    toggleRow(elements) {
+        if (elements.displayNameInput.disabled) {
+            this.enableRow(elements);
         } else {
-            this.elements.displayNameInput[currentTermNumber].disabled = true;
-            this.elements.submitBtn[currentTermNumber].disabled = true;
-            this.elements.costInput[currentTermNumber].disabled = true;
+            this.disableRow(elements);
         }
+    }
 
-        this.elements.dropDown[currentTermNumber].classList.toggle('active');
-        this.elements.term[currentTermNumber].classList.toggle('active');
+    getErrorState() {
+        const url = getPhpMethodUrl('/terms/getErrorStatus');
+        return getData(url);
+    }
+
+    openOnLoad() {
+        this.getErrorState()
+            .then(termId => {
+                // check to see if the element exists, may have been deleted by user
+                if (termId && this.elements.inputs.hasOwnProperty(termId)) {
+                    this.enableRow(this.elements.inputs[termId])
+                }
+            });
     }
 }

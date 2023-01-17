@@ -48,6 +48,9 @@ class Terms extends Controller {
             } else {
                 flash('term_updated', 'Term could not be updated at this time, please try again', 'alert alert-danger');
             }
+        } else {
+            // set error variable for js
+            $_SESSION['term_edit_error_id'] = $termUpdate['term_id'];
         }
 
         $terms = $this->termsModel->getTerms($_SESSION['user_id']);
@@ -69,6 +72,7 @@ class Terms extends Controller {
     }
 
     public function getErrorStatus() {
-
+        $_SESSION['term_edit_error_id'] = $_SESSION['term_edit_error_id'] ?? 0;
+        echo json_encode($_SESSION['term_edit_error_id']);
     }
 }
