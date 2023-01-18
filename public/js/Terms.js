@@ -3,10 +3,11 @@ import { getPhpMethodUrl, getData } from "./utils.js";
 export class Terms {
     constructor() {
         this.elements = {
-            inputs: {}
+            inputs: {},
+            table: document.querySelector('.terms-table'),
+            rows: document.querySelector('.terms-table tr'),
+            addBtn: document.querySelector('.add-term')
         };
-        this.elements.table = document.querySelector('.terms-table');
-        this.elements.rows = this.elements.table.querySelectorAll('tr');
 
         // sets inputs so this.elements[rowId] = { rowElements }
         const idElements = document.getElementsByName('term_id');
@@ -29,6 +30,7 @@ export class Terms {
 
     setEventListeners() {
         this.elements.table.addEventListener('click', (e) => this.tableClick(e));
+        this.elements.addBtn.addEventListener('click', () => this.addBtnClick());
     }
 
     tableClick(e) {
@@ -40,6 +42,15 @@ export class Terms {
         const rowId = e.target.closest('tr').querySelector('input[name="term_id"]').value;
         this.disableAllRows(rowId);
         this.toggleRow(this.elements.inputs[rowId]);
+    }
+
+    addBtnClick() {
+        const date = new Date(Date.now()).toLocaleString();
+        const formattedDate = date.slice(0,date.lastIndexOf(','));
+        const emptyTemplate = document.getElementById('new-term');
+        const emptyRow = document.importNode(emptyTemplate.content, true);
+        emptyRow.querySelector('.date-created').textContent = formattedDate;
+        this.elements.table.appendChild(emptyRow);
     }
 
     disableRow(elements) {

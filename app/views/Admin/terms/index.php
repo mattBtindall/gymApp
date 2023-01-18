@@ -13,9 +13,7 @@
             'cost_err' => ''
         ];
     }
-?>
-<?php require APP_ROOT . '/views/inc/header.php'; ?>
-<?php
+
     // created for ease of use when showing/hiding terms in the drop down
     $combinedTermMultipliers = [];
     foreach ($data['terms'] as $term) {
@@ -25,10 +23,12 @@
     // used to label edit buttons which are used in javascript as event aggregation is used
     $i = 0;
 ?>
+<?php require APP_ROOT . '/views/inc/header.php'; ?>
     <h3 class="mt-3"> Terms </h3>
     <p class="mt-2">
         Add/edit your custom terms. You may edit one term at a time. Please take in mind that you can add 'custom' memberships of varying lengths when assigning users memberships.
     </p>
+    <span href="" class="btn btn-success add-term mb-3">Add</span>
     <?= flash('term_deleted'); ?>
     <?= flash('term_updated'); ?>
     <table class="terms-table">
@@ -69,7 +69,6 @@
                     <td>
                         <select class="form-control form-control-lg terms-edit__drop-down" name="term" data-term-number="<?= $i; ?>">
                             <option value="please_select">Please select</option>
-                            <!-- user can't select a term that has already been sued but is not the current term as they're editing that -->
                             <option value ="1 week" <?= $combinedTermMultiplier == '1 week' ? 'selected' : ''; ?>>1 Week</option>
                             <option value ="2 week" <?= $combinedTermMultiplier == '2 week' ? 'selected' : ''; ?>>2 Weeks</option>
                             <option value ="1 month" <?= $combinedTermMultiplier == '1 month' ? 'selected' : ''; ?>>1 month</option>
