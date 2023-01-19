@@ -2,20 +2,67 @@
 class Terms extends Controller {
     public function __construct() {
         $this->termsModel = $this->model('Term');
+        $this->terms = $this->termsModel->getTerms($_SESSION['user_id']);
     }
 
     public function index() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         } else {
-            $terms = $this->termsModel->getTerms($_SESSION['user_id']);
-
             $data = [
-                'terms' => $terms
+                'terms' => $this->terms
             ];
 
             $this->view('/terms/index', $data);
         }
+    }
+
+    public function add() {
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
+
+        // $termAndMultiplier = explode(' ', $_POST['term']);
+        $termAdd = [
+            'display_name' => trim($_POST['display_name']),
+            'term' => '',
+            'term_multiplier' => '',
+            'combined_term_multiplier' => $_POST['term'],
+            'cost' => trim($_POST['cost']),
+            'display_name_err' => '',
+            'term_err' => '',
+            'cost_err' => ''
+        ];
+
+        if (empty($termAdd['display_name'])) {
+            $termAdd['display_name_err'] = 'Please enter a display name';
+        }
+
+        if ($termAdd['combined_term_multiplier'] === 'please_select') {
+            $termAdd['term_err'] = 'Please select a term';
+        }
+
+        if (empty($termAdd['cost'])) {
+            $termAdd['cost_err'] = 'Please enter a price';
+        }
+
+        if (empty($termAdd['display_name_err']) && empty($termAdd['cost_err']) ) {
+            $termAndMultiplier = explode(' ', $_POST['term']);
+            $termAdd['term'] = $termAndMultiplier[1];
+            $termAdd['term_mulitplier'] = $termAndMultiplier[0];
+            if ($this->termsModel->addTerm($termAdd, $_SESSION['user_id'])) {
+                flash('term_added', 'The new term has been successfully added');
+            } else {
+                flash('term_added', 'New term failed to upload, please try again', 'alert alert-danger');
+            }
+            redirect('/terms/index');
+        }
+
+        $data = [
+            'term_add' => $termAdd,
+            'terms' => $this->terms
+        ];
+
+
+        $this->view('/terms/index', $data);
     }
 
     public function edit() {
@@ -48,12 +95,13 @@ class Terms extends Controller {
             } else {
                 flash('term_updated', 'Term could not be updated at this time, please try again', 'alert alert-danger');
             }
+            $_SESSION['term_edit_error_id'] = '';
         } else {
             // set error variable for js
             $_SESSION['term_edit_error_id'] = $termUpdate['term_id'];
         }
 
-        $terms = $this->termsModel->getTerms($_SESSION['user_id']);
+        $terms = $this->termsModel->getTerms($_SESSION['user_id']); // get news terms here so you get the update term to display
         $data = [
             'terms' => $terms,
             'term_update' => $termUpdate
@@ -72,7 +120,7 @@ class Terms extends Controller {
     }
 
     public function getErrorStatus() {
-        $_SESSION['term_edit_error_id'] = $_SESSION['term_edit_error_id'] ?? 0;
+        $_SESSION['term_edit_error_id'] = $_SESSION['term_edit_error_id'] ??'';
         echo json_encode($_SESSION['term_edit_error_id']);
     }
 }

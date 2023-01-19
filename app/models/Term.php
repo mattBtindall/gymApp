@@ -10,6 +10,16 @@ class Term {
         return $this->db->resultSet(PDO::FETCH_ASSOC);
     }
 
+    public function addTerm($term, $adminId) {
+        $this->db->query('INSERT INTO membership_terms (display_name, admin_id, term, term_multiplier, cost) VALUE(:displayName, :adminId, :term, :termMultiplier, :cost)');
+        $this->db->bind(':displayName', $term['display_name']);
+        $this->db->bind(':adminId', $adminId);
+        $this->db->bind(':term', $term['term']);
+        $this->db->bind(':termMultiplier', $term['term_mulitplier']);
+        $this->db->bind(':cost', $term['cost']);
+        return $this->db->execute() ? true : false;
+    }
+
     public function deleteTerm($termId) {
         $this->db->query('DELETE FROM membership_terms WHERE id = :id');
         $this->db->bind(':id', $termId);
