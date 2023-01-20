@@ -43,6 +43,7 @@ export class Terms {
         this.elements.table.addEventListener('click', (e) => this.tableClick(e));
         this.elements.add.btn.addEventListener('click', () => this.addBtnClick());
         this.elements.add.deleteBtn.addEventListener('click', () => this.addDeleteBtnClick());
+        this.elements.add.inputs.dropDown.addEventListener('change', (e) => this.addNewTermDropDownChange(e));
     }
 
     tableClick(e) {
@@ -115,5 +116,25 @@ export class Terms {
         this.elements.add.inputs.cost.value = '';
         this.elements.add.row.classList.remove('active');
         this.elements.add.btn.disabled = false;
+    }
+
+    addNewTermDropDownChange(e) {
+        console.log('called');
+        const dropDown = e.target;
+        const selectedText = dropDown.options[dropDown.selectedIndex].text;
+        let matches = 0;
+        // see how many display names match the selected option
+        for (let key in this.elements.edit.allInputs) {
+            if (this.elements.edit.allInputs[key].displayName.value.includes(selectedText)) {
+                matches++;
+            }
+        }
+        matches = matches ? '(' + matches + ')' : '';
+
+        if (selectedText !== 'Please select') {
+            this.elements.add.inputs.displayName.value = `${selectedText} ${matches}`;
+        } else {
+            this.elements.add.inputs.displayName.value = '';
+        }
     }
 }
