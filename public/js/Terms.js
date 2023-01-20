@@ -20,7 +20,7 @@ export class Terms {
             table: document.querySelector('.terms-table')
         };
 
-        // sets inputs so this.elements[rowId] = { rowElements }
+        // sets edit inputs so this.elements[rowId] = { rowElements }
         const idElements = document.getElementsByName('term_id');
         idElements.forEach(idElement => {
             const parentNode = idElement.parentNode;
@@ -42,6 +42,7 @@ export class Terms {
     setEventListeners() {
         this.elements.table.addEventListener('click', (e) => this.tableClick(e));
         this.elements.add.btn.addEventListener('click', () => this.addBtnClick());
+        this.elements.add.deleteBtn.addEventListener('click', () => this.addDeleteBtnClick());
     }
 
     tableClick(e) {
@@ -109,9 +110,10 @@ export class Terms {
     }
 
     addDeleteBtnClick() {
-        // reset inputs - empty all three
-        // hide row - remove active
-        // enable addBtn
-        // this.elements.add.inputs.displayName
+        this.elements.add.inputs.displayName.value = '';
+        this.elements.add.inputs.dropDown.value = 'please_select';
+        this.elements.add.inputs.cost.value = '';
+        this.elements.add.row.classList.remove('active');
+        this.elements.add.btn.disabled = false;
     }
 }
