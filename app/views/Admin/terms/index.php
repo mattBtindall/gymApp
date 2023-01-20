@@ -1,8 +1,20 @@
 
 <?php
-    // check to see if the term_update exists if it doesn't create it here
     if (!isset($data['term_update'])) {
         $data['term_update'] = [
+            'display_name' => '',
+            'term' => '',
+            'term_multiplier' => '',
+            'combined_term_multiplier' => '',
+            'cost' => '',
+            'term_id' => '',
+            'display_name_err' => '',
+            'cost_err' => ''
+        ];
+    }
+
+    if (!isset($data['term_add'])) {
+        $data['term_add'] = [
             'display_name' => '',
             'term' => '',
             'term_multiplier' => '',
@@ -31,6 +43,7 @@
     <span href="" class="btn btn-success add-term mb-3">Add</span>
     <?= flash('term_deleted'); ?>
     <?= flash('term_updated'); ?>
+    <?= flash('term_added'); ?>
     <table class="terms-table">
         <tr>
             <th>Display name</th>
@@ -52,6 +65,7 @@
                     'cost' => ''
                 ];
 
+                // if there is an an error
                 if ($data['term_update']['term_id'] == $term['id']) {
                     $displayName = $data['term_update']['display_name'];
                     $cost = $data['term_update']['cost'];
@@ -74,7 +88,7 @@
                             <option value ="1 month" <?= $combinedTermMultiplier == '1 month' ? 'selected' : ''; ?>>1 month</option>
                             <option value ="2 month" <?= $combinedTermMultiplier == '2 month' ? 'selected' : ''; ?>>2 Months</option>
                             <option value ="3 month" <?= $combinedTermMultiplier == '3 month' ? 'selected' : ''; ?>>3 Months</option>
-                            <option value ="6 month" <?= $combinedTermMultiplier == '3 month' ? 'selected' : ''; ?>>6 Months</option>
+                            <option value ="6 month" <?= $combinedTermMultiplier == '6 month' ? 'selected' : ''; ?>>6 Months</option>
                             <option value ="9 month" <?= $combinedTermMultiplier == '9 month' ? 'selected' : ''; ?>>9 Months</option>
                             <option value ="12 month" <?= $combinedTermMultiplier == '12 month' ? 'selected' : ''; ?>>12 Months</option>
                             <option value ="24 month" <?= $combinedTermMultiplier == '24 month' ? 'selected' : ''; ?>>24 Months</option>
@@ -95,5 +109,38 @@
             </tr>
         <?php $i++ // incerment after so i starts from 0 as element arrays in js are zero indexed; ?>
         <?php endforeach; ?>
+        <!-- new term -->
+        <tr class="new-term <?= (!empty($data['term_add']['display_name_err']) || !empty($data['term_add']['cost_err'])) ? 'active' : ''; ?>">
+            <form action="<?= URL_ROOT; ?>/terms/add" method="POST">
+                <td>
+                    <input type="text" value="<?=$data['term_add']['display_name']; ?>" class="form-control form-control-lg w-50 terms-edit__display-name <?= !empty($data['term_add']['display_name_err']) ? 'is-invalid' : ''; ?>" name="display_name">
+                    <span class="invalid-feedback"><?= $data['term_add']['display_name_err']; ?></span>
+                </td>
+                <td>
+                    <select class="form-control form-control-lg <?= !empty($data['term_add']['term_err']) ? 'is-invalid' : ''; ?>" name="term" data-term-number="<?= $i; ?>">
+                        <option value="please_select" selected>Please select</option>
+                        <option value ="1 week" <?= $data['term_add']['combined_term_multiplier'] == '1 week' ? 'selected' : ''; ?>>1 Week</option>
+                        <option value ="2 week" <?= $data['term_add']['combined_term_multiplier'] == '2 week' ? 'selected' : ''; ?>>2 Weeks</option>
+                        <option value ="1 month" <?= $data['term_add']['combined_term_multiplier'] == '1 month' ? 'selected' : ''; ?>>1 month</option>
+                        <option value ="2 month" <?= $data['term_add']['combined_term_multiplier'] == '2 month' ? 'selected' : ''; ?>>2 Months</option>
+                        <option value ="3 month" <?= $data['term_add']['combined_term_multiplier'] == '3 month' ? 'selected' : ''; ?>>3 Months</option>
+                        <option value ="6 month" <?= $data['term_add']['combined_term_multiplier'] == '6 month' ? 'selected' : ''; ?>>6 Months</option>
+                        <option value ="9 month" <?= $data['term_add']['combined_term_multiplier'] == '9 month' ? 'selected' : ''; ?>>9 Months</option>
+                        <option value ="12 month" <?= $data['term_add']['combined_term_multiplier'] == '12 month' ? 'selected' : ''; ?>>12 Months</option>
+                        <option value ="24 month" <?= $data['term_add']['combined_term_multiplier'] == '24 month' ? 'selected' : ''; ?>>24 Months</option>
+                        <option value ="36 month" <?= $data['term_add']['combined_term_multiplier'] == '36 month' ? 'selected' : ''; ?>>36 Months</option>
+                    </select>
+                <span class="invalid-feedback"><?= $data['term_add']['term_err']; ?></span>
+                </td>
+                <td>
+                    <input type="number" step="0.05" class="form-control form-control-lg w-50 terms-edit__cost <?= !empty($data['term_add']['cost_err']) ? 'is-invalid' : ''; ?>" name="cost" value="<? $data['term_add']['cost']; ?>">
+                    <span class="invalid-feedback"><?= $data['term_add']['cost_err']; ?></span>
+                </td>
+                <td class="date-created"></td>
+                <td><input class="btn btn-success terms-edit__submit" data-term-number="<?= $i; ?>" type="submit" value="submit"></td>
+                <td><a class="btn opacity-0" disabled>Edit</a></td>
+                <td><a class="btn opacity-0" disabled>Delete</a></td>
+            </form>
+        </tr>
     </table>
 <?php require APP_ROOT . '/views/inc/footer.php'; ?>

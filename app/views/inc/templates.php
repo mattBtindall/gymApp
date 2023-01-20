@@ -37,36 +37,3 @@
 		</div>
 	</div>
 </template>
-
-<!-- Template for adding a term -->
-<template id="new-term">
-	<tr>
-		<form action="<?= URL_ROOT; ?>/terms/add" method="POST">
-			<td>
-				<input type="text" value="" class="form-control form-control-lg w-50 terms-edit__display-name" name="display_name">
-			</td>
-			<td>
-				<select class="form-control form-control-lg" name="term" data-term-number="<?= $i; ?>">
-					<option value="please_select" selected>Please select</option>
-					<option value ="1 week">1 Week</option>
-					<option value ="2 week">2 Weeks</option>
-					<option value ="1 month">1 month</option>
-					<option value ="2 month">2 Months</option>
-					<option value ="3 month">3 Months</option>
-					<option value ="6 month">6 Months</option>
-					<option value ="9 month">9 Months</option>
-					<option value ="12 month">12 Months</option>
-					<option value ="24 month">24 Months</option>
-					<option value ="36 month">36 Months</option>
-				</select>
-			</td>
-			<td>
-				<input type="number" step="0.05" class="form-control form-control-lg w-50 terms-edit__cost" name="cost">
-			</td>
-			<td class="date-created"></td>
-			<td><input class="btn btn-success terms-edit__submit" data-term-number="<?= $i; ?>" type="submit" value="submit"></td>
-			<td><a class="btn opacity-0" disabled>Edit</a></td>
-			<td><a class="btn opacity-0" disabled>Delete</a></td>
-		</form>
-	</tr>
-</template>

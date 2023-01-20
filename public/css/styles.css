@@ -222,6 +222,14 @@ img {
     padding: 1rem;
 }
 
+.new-term {
+    display: none;
+}
+
+.new-term.active {
+    display: table-row;
+}
+
 @media (min-width: 992px) {
     .profile-right-container {
         width: 60%;

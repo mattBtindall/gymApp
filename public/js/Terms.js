@@ -6,7 +6,8 @@ export class Terms {
             inputs: {},
             table: document.querySelector('.terms-table'),
             rows: document.querySelector('.terms-table tr'),
-            addBtn: document.querySelector('.add-term')
+            addBtn: document.querySelector('.add-term'),
+            newTermRow: document.querySelector('.new-term')
         };
 
         // sets inputs so this.elements[rowId] = { rowElements }
@@ -45,12 +46,7 @@ export class Terms {
     }
 
     addBtnClick() {
-        const date = new Date(Date.now()).toLocaleString();
-        const formattedDate = date.slice(0,date.lastIndexOf(','));
-        const emptyTemplate = document.getElementById('new-term');
-        const emptyRow = document.importNode(emptyTemplate.content, true);
-        emptyRow.querySelector('.date-created').textContent = formattedDate;
-        this.elements.table.appendChild(emptyRow);
+        this.elements.newTermRow.classList.add('active');
     }
 
     disableRow(elements) {
@@ -84,13 +80,14 @@ export class Terms {
         }
     }
 
-    getErrorState() {
+    // error state for edit as inputs need enabling on load, if errors with add inputs are already enabled
+    getEditErrorState() {
         const url = getPhpMethodUrl('/terms/getErrorStatus');
         return getData(url);
     }
 
     openOnLoad() {
-        this.getErrorState()
+        this.getEditErrorState()
             .then(termId => {
                 // check to see if the element exists, may have been deleted by user
                 if (termId && this.elements.inputs.hasOwnProperty(termId)) {
