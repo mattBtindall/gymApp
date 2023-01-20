@@ -47,6 +47,15 @@ export class Terms {
 
     addBtnClick() {
         this.elements.newTermRow.classList.add('active');
+
+        if (this.elements.newTermRow.classList.contains('active')) {
+            console.log('new row active');
+            this.disableAddBtn();
+        }
+    }
+
+    disableAddBtn() {
+        this.elements.addBtn.disabled = true;
     }
 
     disableRow(elements) {

@@ -40,7 +40,7 @@
     <p class="mt-2">
         Add/edit your custom terms. You may edit one term at a time. Please take in mind that you can add 'custom' memberships of varying lengths when assigning users memberships.
     </p>
-    <span href="" class="btn btn-success add-term mb-3">Add</span>
+    <button class="btn btn-success add-term mb-3">Add</button>
     <?= flash('term_deleted'); ?>
     <?= flash('term_updated'); ?>
     <?= flash('term_added'); ?>
