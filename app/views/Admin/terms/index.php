@@ -40,7 +40,7 @@
     <p class="mt-2">
         Add/edit your custom terms. You may edit one term at a time. Please take in mind that you can add 'custom' memberships of varying lengths when assigning users memberships.
     </p>
-    <button class="btn btn-success add-term mb-3">Add</button>
+    <button class="btn btn-success add-term mb-3" <?= (!empty($data['term_add']['display_name_err']) || !empty($data['term_add']['cost_err'])) ? 'disabled' : ''; ?>>Add</button>
     <?= flash('term_deleted'); ?>
     <?= flash('term_updated'); ?>
     <?= flash('term_added'); ?>
@@ -109,15 +109,16 @@
             </tr>
         <?php $i++ // incerment after so i starts from 0 as element arrays in js are zero indexed; ?>
         <?php endforeach; ?>
+
         <!-- new term -->
         <tr class="new-term <?= (!empty($data['term_add']['display_name_err']) || !empty($data['term_add']['cost_err'])) ? 'active' : ''; ?>">
             <form action="<?= URL_ROOT; ?>/terms/add" method="POST">
                 <td>
-                    <input type="text" value="<?=$data['term_add']['display_name']; ?>" class="form-control form-control-lg w-50 terms-edit__display-name <?= !empty($data['term_add']['display_name_err']) ? 'is-invalid' : ''; ?>" name="display_name">
+                    <input type="text" value="<?=$data['term_add']['display_name']; ?>" class="form-control form-control-lg w-50 new-term__display-name <?= !empty($data['term_add']['display_name_err']) ? 'is-invalid' : ''; ?>" name="display_name">
                     <span class="invalid-feedback"><?= $data['term_add']['display_name_err']; ?></span>
                 </td>
                 <td>
-                    <select class="form-control form-control-lg <?= !empty($data['term_add']['term_err']) ? 'is-invalid' : ''; ?>" name="term" data-term-number="<?= $i; ?>">
+                    <select class="form-control form-control-lg new-term__term <?= !empty($data['term_add']['term_err']) ? 'is-invalid' : ''; ?>" name="term" data-term-number="<?= $i; ?>">
                         <option value="please_select" selected>Please select</option>
                         <option value ="1 week" <?= $data['term_add']['combined_term_multiplier'] == '1 week' ? 'selected' : ''; ?>>1 Week</option>
                         <option value ="2 week" <?= $data['term_add']['combined_term_multiplier'] == '2 week' ? 'selected' : ''; ?>>2 Weeks</option>
@@ -133,13 +134,13 @@
                 <span class="invalid-feedback"><?= $data['term_add']['term_err']; ?></span>
                 </td>
                 <td>
-                    <input type="number" step="0.05" class="form-control form-control-lg w-50 terms-edit__cost <?= !empty($data['term_add']['cost_err']) ? 'is-invalid' : ''; ?>" name="cost" value="<? $data['term_add']['cost']; ?>">
+                    <input type="number" step="0.05" class="form-control form-control-lg w-50 new-term__cost <?= !empty($data['term_add']['cost_err']) ? 'is-invalid' : ''; ?>" name="cost" value="<? $data['term_add']['cost']; ?>">
                     <span class="invalid-feedback"><?= $data['term_add']['cost_err']; ?></span>
                 </td>
                 <td class="date-created"></td>
                 <td><input class="btn btn-success terms-edit__submit" data-term-number="<?= $i; ?>" type="submit" value="submit"></td>
                 <td><a class="btn opacity-0" disabled>Edit</a></td>
-                <td><a class="btn opacity-0" disabled>Delete</a></td>
+                <td><a class="btn btn-danger new-term__delete">Delete</a></td>
             </form>
         </tr>
     </table>

@@ -3,11 +3,21 @@ import { getPhpMethodUrl, getData } from "./utils.js";
 export class Terms {
     constructor() {
         this.elements = {
-            inputs: {},
-            table: document.querySelector('.terms-table'),
-            rows: document.querySelector('.terms-table tr'),
-            addBtn: document.querySelector('.add-term'),
-            newTermRow: document.querySelector('.new-term')
+            edit: {
+                allInputs: {},
+                rows: document.querySelector('.terms-table tr'),
+            },
+            add: {
+                btn: document.querySelector('.add-term'),
+                row: document.querySelector('.new-term'),
+                deleteBtn: document.querySelector('.new-term__delete'),
+                inputs: {
+                    displayName: document.querySelector('.new-term__display-name'),
+                    dropDown: document.querySelector('.new-term__term'),
+                    cost: document.querySelector('.new-term__cost')
+                }
+            },
+            table: document.querySelector('.terms-table')
         };
 
         // sets inputs so this.elements[rowId] = { rowElements }
@@ -15,11 +25,11 @@ export class Terms {
         idElements.forEach(idElement => {
             const parentNode = idElement.parentNode;
             const id = idElement.value;
-            this.elements.inputs[id] = {
-                displayNameInput: parentNode.querySelector('.terms-edit__display-name'),
+            this.elements.edit.allInputs[id] = {
+                displayName: parentNode.querySelector('.terms-edit__display-name'),
                 term: parentNode.querySelector('.terms-edit__term'),
                 dropDown: parentNode.querySelector('.terms-edit__drop-down'),
-                costInput: parentNode.querySelector('.terms-edit__cost'),
+                cost: parentNode.querySelector('.terms-edit__cost'),
                 submitBtn: parentNode.querySelector('.terms-edit__submit'),
                 editBtn: parentNode.querySelector('.terms-edit__edit'),
             }
@@ -31,7 +41,7 @@ export class Terms {
 
     setEventListeners() {
         this.elements.table.addEventListener('click', (e) => this.tableClick(e));
-        this.elements.addBtn.addEventListener('click', () => this.addBtnClick());
+        this.elements.add.btn.addEventListener('click', () => this.addBtnClick());
     }
 
     tableClick(e) {
@@ -42,47 +52,34 @@ export class Terms {
 
         const rowId = e.target.closest('tr').querySelector('input[name="term_id"]').value;
         this.disableAllRows(rowId);
-        this.toggleRow(this.elements.inputs[rowId]);
-    }
-
-    addBtnClick() {
-        this.elements.newTermRow.classList.add('active');
-
-        if (this.elements.newTermRow.classList.contains('active')) {
-            console.log('new row active');
-            this.disableAddBtn();
-        }
-    }
-
-    disableAddBtn() {
-        this.elements.addBtn.disabled = true;
+        this.toggleRow(this.elements.edit.allInputs[rowId]);
     }
 
     disableRow(elements) {
-        elements.displayNameInput.disabled = true;
+        elements.displayName.disabled = true;
         elements.submitBtn.disabled = true;
-        elements.costInput.disabled = true;
+        elements.cost.disabled = true;
         elements.dropDown.classList.remove('active');
         elements.term.classList.add('active');
     }
 
     disableAllRows(rowIdToExclude) {
-        for (let key in this.elements.inputs) {
+        for (let key in this.elements.edit.allInputs) {
             if (rowIdToExclude == key) continue;
-            this.disableRow(this.elements.inputs[key]);
+            this.disableRow(this.elements.edit.allInputs[key]);
         }
     }
 
     enableRow(elements) {
-        elements.displayNameInput.disabled = false;
+        elements.displayName.disabled = false;
         elements.submitBtn.disabled = false;
-        elements.costInput.disabled = false;
+        elements.cost.disabled = false;
         elements.dropDown.classList.add('active');
         elements.term.classList.remove('active');
     }
 
     toggleRow(elements) {
-        if (elements.displayNameInput.disabled) {
+        if (elements.displayName.disabled) {
             this.enableRow(elements);
         } else {
             this.disableRow(elements);
@@ -99,9 +96,22 @@ export class Terms {
         this.getEditErrorState()
             .then(termId => {
                 // check to see if the element exists, may have been deleted by user
-                if (termId && this.elements.inputs.hasOwnProperty(termId)) {
-                    this.enableRow(this.elements.inputs[termId])
+                if (termId && this.elements.edit.allInputs.hasOwnProperty(termId)) {
+                    this.enableRow(this.elements.edit.allInputs[termId])
                 }
             });
+    }
+
+    /* ### Add row functions ### */
+    addBtnClick() {
+        this.elements.add.row.classList.add('active');
+        this.elements.add.btn.disabled = true;
+    }
+
+    addDeleteBtnClick() {
+        // reset inputs - empty all three
+        // hide row - remove active
+        // enable addBtn
+        // this.elements.add.inputs.displayName
     }
 }
