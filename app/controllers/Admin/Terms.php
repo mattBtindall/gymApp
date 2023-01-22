@@ -130,4 +130,10 @@ class Terms extends Controller {
         $_SESSION['term_edit_error_id'] = $_SESSION['term_edit_error_id'] ??'';
         echo json_encode($_SESSION['term_edit_error_id']);
     }
+
+    public function getTerms() {
+        // called from javascript
+        $terms = $this->terms ?? '{}';
+        echo json_encode($terms);
+    }
 }

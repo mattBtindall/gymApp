@@ -46,6 +46,7 @@ export class Terms {
         this.elements.add.inputs.dropDown.addEventListener('change', (e) => this.addNewTermDropDownChange(e));
     }
 
+    /* ### Edit row functions ### */
     tableClick(e) {
         if (!e.target.classList.contains('terms-edit__edit')) {
             return;
@@ -88,8 +89,8 @@ export class Terms {
         }
     }
 
-    // error state for edit as inputs need enabling on load, if errors with add inputs are already enabled
     getEditErrorState() {
+        // error state for edit as inputs need enabling on load, if errors with add inputs are already enabled
         const url = getPhpMethodUrl('/terms/getErrorStatus');
         return getData(url);
     }

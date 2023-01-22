@@ -10,10 +10,6 @@
 			'expiry_date_err' => ''
 		];
 	}
-
-	if (!isset($data['memberships'])) {
-
-	}
 ?>
 
 <!-- Pop up for search bar -->
@@ -79,10 +75,6 @@
 							<label for="term" class="mb-1 text-bold">Term</label>
 							<select class="form-control form-control-lg term <?= !empty($data['modal']['term_err']) ? 'is-invalid' : ''; ?>" name="term" data-initial-value="please_select">
 								<option <?= $data['modal']['term'] === 'please_select' ? 'selected' : ''; ?> value="please_select">Please select</option>
-								<option <?= $data['modal']['term'] == '1' ? 'selected' : ''; ?> value="1">1 Month</option>
-								<option <?= $data['modal']['term'] === '3' ? 'selected' : ''; ?> value="3">3 Months</option>
-								<option <?= $data['modal']['term'] === '6' ? 'selected' : ''; ?> value="6">6 Months</option>
-								<option <?= $data['modal']['term'] === '12' ? 'selected' : ''; ?> value="12">12 Months</option>
 								<option <?= $data['modal']['term'] === 'custom' ? 'selected' : ''; ?> value="custom">Custom</option>
 							</select>
 							<span class="invalid-feedback"><?= $data['modal']['term_err']; ?></span>

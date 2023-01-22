@@ -56,7 +56,7 @@ export class UserModal extends Modal {
         document.querySelector('.exit-modal-container i').addEventListener('click', () => this.closeModal());
 
         if (userModalMenuBar){ // only performs this for admin
-            this.setMembershipTab();
+            this.setAddMembershipTab();
             userModalMenuBar.addEventListener('click', (e) => {
                 if (e.target.classList.contains('user-modal__menu-item')) {
                     this.setTabs(e.target);
@@ -72,8 +72,7 @@ export class UserModal extends Modal {
         document.querySelector(`.${menuItem.dataset.contentClassName}`).classList.add('active');
     }
 
-    setMembershipTab() {
-        console.log('called');
+    setAddMembershipTab() {
         const term = document.getElementsByName('term')[0];
         const expiryDate = document.querySelector('.expiry-date');
 
@@ -85,6 +84,8 @@ export class UserModal extends Modal {
                 expiryDate.classList.remove('active');
             }
         });
+
+        this.setTerms();
     }
 
     openModalOnLoad(currentUserId) {
@@ -146,8 +147,18 @@ export class UserModal extends Modal {
         return getData(url);
     }
 
-    setTerms(terms) {
+    setTerms() {
+        const setTerm = (term) => {
+            console.log(term);
+        }
+
         this.getTerms()
-            .then(data => console.log(data));
+            .then((terms) => {
+                if (terms.length === 0) {
+                    return;
+                }
+
+                terms.forEach(term => setTerm(term));
+            });
     }
 }
