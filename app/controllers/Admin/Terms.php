@@ -32,8 +32,15 @@ class Terms extends Controller {
             'cost_err' => ''
         ];
 
+        $displayNames = [];
+        foreach ($this->terms as $term) {
+            array_push($displayNames, $term['display_name']);
+        }
         if (empty($termAdd['display_name'])) {
             $termAdd['display_name_err'] = 'Please enter a display name';
+        }
+        else if (in_array($termAdd['display_name'], $displayNames)) {
+            $termAdd['display_name_err'] = 'Please enter a unique display name';
         }
 
         if ($termAdd['combined_term_multiplier'] === 'please_select') {
