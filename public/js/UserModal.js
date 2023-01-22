@@ -55,7 +55,8 @@ export class UserModal extends Modal {
 
         document.querySelector('.exit-modal-container i').addEventListener('click', () => this.closeModal());
 
-        if (userModalMenuBar){
+        if (userModalMenuBar){ // only performs this for admin
+            this.setMembershipTab();
             userModalMenuBar.addEventListener('click', (e) => {
                 if (e.target.classList.contains('user-modal__menu-item')) {
                     this.setTabs(e.target);
@@ -69,6 +70,21 @@ export class UserModal extends Modal {
         menuItem.classList.add('active');
         this.elements.tabs.content.items.forEach(item => item.classList.remove('active'));
         document.querySelector(`.${menuItem.dataset.contentClassName}`).classList.add('active');
+    }
+
+    setMembershipTab() {
+        console.log('called');
+        const term = document.getElementsByName('term')[0];
+        const expiryDate = document.querySelector('.expiry-date');
+
+        // Show & hide expiry date input
+        term.addEventListener('click', function(e) {
+            if (e.target.value === 'custom') {
+                expiryDate.classList.add('active');
+            } else {
+                expiryDate.classList.remove('active');
+            }
+        });
     }
 
     openModalOnLoad(currentUserId) {
@@ -123,5 +139,15 @@ export class UserModal extends Modal {
         // sees whether to open the modal or not from php
         const url = getPhpMethodUrl('/userModal/getStatus');
         return getData(url);
+    }
+
+    getTerms() {
+        const url = getPhpMethodUrl('/terms/getTerms');
+        return getData(url);
+    }
+
+    setTerms(terms) {
+        this.getTerms()
+            .then(data => console.log(data));
     }
 }

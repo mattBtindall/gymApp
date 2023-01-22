@@ -20,20 +20,6 @@ export function setImgUpload() {
     });
 }
 
-export function setMembershipTab() {
-    const term = document.getElementsByName('term')[0];
-    const expiryDate = document.querySelector('.expiry-date');
-
-    // Show & hide expiry date input
-    term.addEventListener('click', function(e) {
-        if (e.target.value === 'custom') {
-            expiryDate.classList.add('active');
-        } else {
-            expiryDate.classList.remove('active');
-        }
-    });
-}
-
 export function setBodyClick() {
     document.body.addEventListener('click', e => {
         if (e.target === document.body) {

@@ -21,15 +21,11 @@ function contentSpecificJs() {
         eventListeners.setImgUpload();
     }
 
-    // if membership tab present load setMembershiptab from genEventListeners
-    if (document.querySelector('.expiry-date')) {
-        modals.user = new UserModal();
-        eventListeners.setMembershipTab();
-    }
-
     // if there is a search bar load the searchbar Modal class
     if (document.querySelector('.search-bar')) {
         modals.search = new SearchModal();
+        // if searchbar present then users are logged in so they can open user modal
+        modals.user = new UserModal();
     }
 
     // if there is a terms table lead the setTermsTable from genEventListeners
