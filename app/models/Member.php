@@ -6,12 +6,20 @@ class Member {
 
     public function getMembers() {
         // change this so that is more generic so it returns the results and then at source return the '{}' for when working with json
-        $this->db->query('SELECT user_users.id, memberships.id, name, email, phone_number, term, expiry_date, img_url,
-                          user_users.id as user_id,
-                          memberships.id as membership_id
+        // $this->db->query('SELECT user_users.id, memberships.id, name, email, phone_number, expiry_date, img_url,
+        //                   user_users.id as user_id,
+        //                   memberships.id as membership_id
+        //                   FROM user_users
+        //                   INNER JOIN memberships
+        //                   ON memberships.user_id = user_users.id
+        //                   WHERE memberships.admin_id = :admin_id
+        //                 ');
+        $this->db->query('SELECT user_users.id as user_id, name, email, phone_number, img_url, memberships.expiry_date, memberships.id as membership_id, display_name as term_display_name, cost
                           FROM user_users
                           INNER JOIN memberships
-                          ON memberships.user_id = user_users.id
+                          ON user_users.id = memberships.user_id
+                          INNER JOIN membership_terms
+                          ON memberships.term_id = membership_terms.id
                           WHERE memberships.admin_id = :admin_id
                         ');
         $this->db->bind(':admin_id', $_SESSION['user_id']);

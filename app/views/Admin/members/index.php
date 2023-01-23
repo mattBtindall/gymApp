@@ -25,9 +25,9 @@
                     </td>
                     <td class="d-none d-lg-table-cell"><?= $row['email']; ?></td>
                     <td class="d-none d-lg-table-cell"><?= $row['phone_number']; ?></td>
-                    <td><?= $row['term']; ?> <?= $row['term'] != 'custom' ? 'months' : ''; ?> </td>
+                    <td><?= $row['term_display_name']; ?></td>
                     <td><?= $expiryDate; ?></td>
-                    <td class="id" style="display: none;"><?= $row['id']; ?></td>
+                    <td class="id" style="display: none;"><?= $row['user_id']; ?></td>
                 </tr>
             <?php endforeach; ?>
         </table>

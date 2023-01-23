@@ -5,11 +5,14 @@
 			'term' => '',
 			'start_date' => '',
 			'expiry_date' => '',
+			'cost' => '',
 			'term_err' => '',
 			'start_date_err' => '',
-			'expiry_date_err' => ''
+			'expiry_date_err' => '',
+			'cost_err' => ''
 		];
 	}
+	echo $data['modal']['term'];
 ?>
 
 <!-- Pop up for search bar -->
@@ -69,13 +72,14 @@
 		<!-- Add membership -->
 		<div class="user-modal__item add-membership active">
 			<form action="<?= URL_ROOT; ?>/members" method="POST" class="d-flex flex-column justify-content-between">
-				<div class="row flex-shrink-0">
+				<div class="row">
 					<div class="col-6">
 						<div class="form-group">
 							<label for="term" class="mb-1 text-bold">Term</label>
 							<select class="form-control form-control-lg term <?= !empty($data['modal']['term_err']) ? 'is-invalid' : ''; ?>" name="term" data-initial-value="please_select">
 								<option <?= $data['modal']['term'] === 'please_select' ? 'selected' : ''; ?> value="please_select">Please select</option>
 								<option <?= $data['modal']['term'] === 'custom' ? 'selected' : ''; ?> value="custom">Custom</option>
+
 							</select>
 							<span class="invalid-feedback"><?= $data['modal']['term_err']; ?></span>
 						</div>
@@ -86,6 +90,17 @@
 							<input type="date" class="form-control form-control-lg start_date <?= !empty($data['modal']['start_date_err']) ? 'is-invalid' : '';?>" name="start_date" value="<?= $data['modal']['start_date']; ?>" data-initial-value="">
 							<span class="invalid-feedback"><?= $data['modal']['start_date_err']; ?></span>
 						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-6">
+						<div class="form-group cost">
+							<label for="cost">Cost</label>
+							<input type="number" step="0.1" class="form-control form-control-lg cost <?= !empty($data['modal']['cost_err']) ? 'is-invalid' : ''; ?>" name="cost" value="<?= $data['modal']['cost']; ?>">
+							<span class="invalid-feedback"><?= $data['modal']['cost_err']; ?></span>
+						</div>
+					</div>
+					<div class="col-6">
 						<div class="form-group expiry-date <?= $data['modal']['term'] === 'custom' ? 'active' : ''; ?>">
 							<label for="start" class="mb-1 text-bold">Expiry Date</label>
 							<input type="date" class="form-control form-control-lg expiry_date <?= !empty($data['modal']['expiry_date_err']) ? 'is-invalid' : '';?>" name="expiry_date" value="<?= $data['modal']['expiry_date']; ?>" data-initial-value="">

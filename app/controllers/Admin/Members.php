@@ -7,6 +7,7 @@ class Members extends Controller {
     }
 
     public function index() {
+        var_dump($_POST);
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
             $modal = [
@@ -14,9 +15,11 @@ class Members extends Controller {
                 'term' => trim($_POST['term']),
                 'start_date' => trim($_POST['start_date']),
                 'expiry_date' => trim($_POST['expiry_date']),
+                'cost' => trim($_POST['cost']),
                 'term_err' => '',
                 'start_date_err' => '',
-                'expiry_date_err' => ''
+                'expiry_date_err' => '',
+                'cost_err' => ''
             ];
 
             if (empty($modal['term']) || $modal['term'] === 'please_select') {
@@ -36,10 +39,15 @@ class Members extends Controller {
                 $modal['expiry_date_err'] = 'Please select an expiry date that is greater than the start date';
             }
 
-            if (empty($modal['term_err']) && empty($modal['start_date_err']) && empty($modal['expiry_date_err'])) {
+            if (empty($modal['cost'])) {
+                $modal['cost_err'] = 'Please select a cost.';
+            }
+
+            if (empty($modal['term_err']) && empty($modal['start_date_err']) && empty($modal['expiry_date_err']) && empty($modal['cost_err'])) {
                 // reset modal state so that it doesn't reopen
                 $_SESSION['user_modal_state']['open'] = false;
                 $_SESSION['user_modal_state']['user_id'] = 0;
+                $_SESSION['user_modal_state']['selected'] = '';
 
                 // set dates for membership
                 $membershipDates = $this->generateMembershipDates($modal['term'], $modal['start_date'], $modal['expiry_date']);
@@ -55,6 +63,7 @@ class Members extends Controller {
                 // errors so tell javascript to open modal
                 $_SESSION['user_modal_state']['open'] = true;
                 $_SESSION['user_modal_state']['user_id'] = $modal['user_id'];
+                $_SESSION['user_modal_state']['selected'] = $modal['term'];
             }
 
             $data = [
@@ -68,9 +77,11 @@ class Members extends Controller {
                     'term' => '',
                     'start_date' => '',
                     'expiry_date' => '',
+                    'cost' => '',
                     'term_err' => '',
                     'start_date_err' => '',
-                    'expiry_date_err' => ''
+                    'expiry_date_err' => '',
+                    'cost_err' => ''
                 ],
             ];
         }
