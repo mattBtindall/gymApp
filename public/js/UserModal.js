@@ -31,7 +31,7 @@ export class UserModal extends Modal {
         this.getModalStatus()
             .then(modalStatus => {
                 if (modalStatus.open) {
-                   this.openModalOnLoad(modalStatus.user_id);
+                   this.openModalOnLoad(modalStatus.user_id, modalStatus.selected);
                 }
             })
     }
@@ -73,24 +73,32 @@ export class UserModal extends Modal {
     }
 
     setAddMembershipTab() {
-        const term = document.getElementsByName('term')[0];
+        this.setTerms();
+        this.elements.addMembershipTab = {};
+        this.elements.addMembershipTab.termDropDown = document.getElementsByName('term')[0];
+        this.elements.addMembershipTab.cost = document.querySelector('.add-membership input.cost');
         const expiryDate = document.querySelector('.expiry-date');
 
-        // Show & hide expiry date input
-        term.addEventListener('click', function(e) {
+        // Show & hide expiry date input for custom membership
+        this.elements.addMembershipTab.termDropDown.addEventListener('click',(e) => {
             if (e.target.value === 'custom') {
                 expiryDate.classList.add('active');
+                this.elements.addMembershipTab.cost.value = '';
+                // this.elements.addMembershipTab.cost.disabled = false;
             } else {
                 expiryDate.classList.remove('active');
+                this.elements.addMembershipTab.cost.value = e.target.dataset.cost;
+                // this.elements.addMembershipTab.cost.disabled = true;
             }
         });
-
-        this.setTerms();
     }
 
-    openModalOnLoad(currentUserId) {
+    openModalOnLoad(currentUserId, selected) {
         const user = this.getUserById(currentUserId, userData.get().allUsers);
-        console.log(user);
+        // tries to set the selected drop down here
+        Array.from(this.elements.addMembershipTab.termDropDown.children).forEach(option => {
+            console.log(option.text);
+        });
         this.setModal(user);
         this.openModal(user);
     }
@@ -132,8 +140,7 @@ export class UserModal extends Modal {
         this.elements.email.textContent = user.email;
         this.elements.phone_number.textContent = user.phone_number;
         this.elements.dob.textContent = user.dob;
-        // this data is fetched from different sql calls which sometimes calls the id different things due to table joining
-        this.elements.id.value = user.user_id ? user.user_id : user.id;
+        this.elements.id.value = user.user_id;
     }
 
     getModalStatus() {
@@ -149,7 +156,12 @@ export class UserModal extends Modal {
 
     setTerms() {
         const setTerm = (term) => {
-            console.log(term);
+            const optionElement = document.createElement('option');
+            optionElement.innerText = term['display_name'];
+            optionElement.value = term['term_multiplier'] + ' ' + term['term'];
+            optionElement.dataset.termId = term.id;
+            optionElement.dataset.cost = term.cost;
+            this.elements.addMembershipTab.termDropDown.appendChild(optionElement);
         }
 
         this.getTerms()

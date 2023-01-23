@@ -26,7 +26,8 @@ export class Modal {
     }
 
     getUserById(id, users) {
-        return users.filter(user => user.id == id)[0];
+        // can be either user_id or id here as the data comes from different places
+        return users.filter(user => user['user_id'] == id || user['id'] == id)[0];
     }
 
     getCurrentUser(searchElement, parentSelector, data) {
