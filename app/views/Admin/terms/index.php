@@ -28,7 +28,7 @@
 
     // created for ease of use when showing/hiding terms in the drop down
     $combinedTermMultipliers = [];
-    foreach ($data['terms'] as $term) {
+    foreach ($data['active_terms'] as $term) {
         $combinedTermMultipliers[] = $term['term_multiplier'] . ' ' . $term['term'];
     }
 
@@ -51,7 +51,7 @@
             <th>Cost (£)</th>
             <th>Date created</th>
         </tr>
-        <?php foreach($data['terms'] as $term): ?>
+        <?php foreach($data['active_terms'] as $term): ?>
             <?php
                 // format the expiry date to d/m/y
                 $dateCreated= date_create_from_format(SQL_DATE_TIME_FORMAT, $term['created_at']);
@@ -62,7 +62,8 @@
                 $cost = $term['cost'];
                 $errClassName = [
                     'display_name' => '',
-                    'cost' => ''
+                    'cost' => '',
+                    'term' => ''
                 ];
 
                 // if there is an an error
@@ -71,6 +72,7 @@
                     $cost = $data['term_update']['cost'];
                     $errClassName['display_name'] = !empty($data['term_update']['display_name_err']) ? 'is-invalid' : '';
                     $errClassName['cost'] = !empty($data['term_update']['cost_err']) ? 'is-invalid' : '';
+                    $errClassName['term'] = !empty($data['term_update']['term_err']) ? 'is-invalid' : '';
                     $combinedTermMultiplier = $data['term_update']['combined_term_multiplier'];
                 }
             ?>
@@ -81,7 +83,7 @@
                         <span class="invalid-feedback"><?= $data['term_update']['display_name_err']; ?></span>
                     </td>
                     <td>
-                        <select class="form-control form-control-lg terms-edit__drop-down" name="term" data-term-number="<?= $i; ?>">
+                        <select class="form-control form-control-lg terms-edit__drop-down <?= $errClassName['term']; ?>" name="term" data-term-number="<?= $i; ?>">
                             <option value="please_select">Please select</option>
                             <option value ="1 week" <?= $combinedTermMultiplier == '1 week' ? 'selected' : ''; ?>>1 Week</option>
                             <option value ="2 week" <?= $combinedTermMultiplier == '2 week' ? 'selected' : ''; ?>>2 Weeks</option>
@@ -94,6 +96,7 @@
                             <option value ="24 month" <?= $combinedTermMultiplier == '24 month' ? 'selected' : ''; ?>>24 Months</option>
                             <option value ="36 month" <?= $combinedTermMultiplier == '36 month' ? 'selected' : ''; ?>>36 Months</option>
                         </select>
+                        <span class="invalid-feedback"><?= $data['term_update']['term_err']; ?></span>
                         <span class="terms-edit__term active" data-term-number="<?= $i; ?>"><?php echo $combinedTermMultiplier; echo $term['term_multiplier'] > 1 ? 's' : ''; ?></span>
                     </td>
                     <td>

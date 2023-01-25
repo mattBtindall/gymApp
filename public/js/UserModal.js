@@ -73,11 +73,11 @@ export class UserModal extends Modal {
     }
 
     setAddMembershipTab() {
-        this.setTerms();
         this.elements.addMembershipTab = {};
-        this.elements.addMembershipTab.termDropDown = document.getElementsByName('term')[0];
+        this.elements.addMembershipTab.termDropDown = document.getElementsByName('term_id')[0];
         this.elements.addMembershipTab.cost = document.querySelector('.add-membership input.cost');
         const expiryDate = document.querySelector('.expiry-date');
+        this.setTerms();
 
         // Show & hide expiry date input for custom membership
         this.elements.addMembershipTab.termDropDown.addEventListener('click',(e) => {
@@ -126,6 +126,7 @@ export class UserModal extends Modal {
         const inputs = [
             document.querySelector('.user-modal__content .term'),
             document.querySelector('.user-modal__content .start_date'),
+            document.querySelector('.user-modal__content .cost'),
             document.querySelector('.user-modal__content .expiry_date')
         ]
 
@@ -140,7 +141,7 @@ export class UserModal extends Modal {
         this.elements.email.textContent = user.email;
         this.elements.phone_number.textContent = user.phone_number;
         this.elements.dob.textContent = user.dob;
-        this.elements.id.value = user.user_id;
+        this.elements.id.value = user.user_id ? user.user_id : user.id;
     }
 
     getModalStatus() {
@@ -158,8 +159,7 @@ export class UserModal extends Modal {
         const setTerm = (term) => {
             const optionElement = document.createElement('option');
             optionElement.innerText = term['display_name'];
-            optionElement.value = term['term_multiplier'] + ' ' + term['term'];
-            optionElement.dataset.termId = term.id;
+            optionElement.value = term.id;
             optionElement.dataset.cost = term.cost;
             this.elements.addMembershipTab.termDropDown.appendChild(optionElement);
         }
@@ -170,7 +170,9 @@ export class UserModal extends Modal {
                     return;
                 }
 
-                terms.forEach(term => setTerm(term));
+                for (const key in terms) {
+                    setTerm(terms[key]);
+                }
             });
     }
 }

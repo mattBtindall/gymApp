@@ -2,7 +2,7 @@
 class Terms extends Controller {
     public function __construct() {
         $this->termsModel = $this->model('Term');
-        $this->terms = $this->termsModel->getTerms($_SESSION['user_id']);
+        $this->activeTerms = $this->termsModel->getActiveTerms($_SESSION['user_id']);
     }
 
     public function index() {
@@ -10,7 +10,7 @@ class Terms extends Controller {
 
         } else {
             $data = [
-                'terms' => $this->terms
+                'active_terms' => $this->activeTerms
             ];
 
             $this->view('/terms/index', $data);
@@ -33,9 +33,10 @@ class Terms extends Controller {
         ];
 
         $displayNames = [];
-        foreach ($this->terms as $term) {
+        foreach ($this->activeTerms as $term) {
             array_push($displayNames, $term['display_name']);
         }
+
         if (empty($termAdd['display_name'])) {
             $termAdd['display_name_err'] = 'Please enter a display name';
         }
@@ -65,7 +66,7 @@ class Terms extends Controller {
 
         $data = [
             'term_add' => $termAdd,
-            'terms' => $this->terms
+            'active_terms' => $this->activeTerms
         ];
 
 
@@ -74,16 +75,12 @@ class Terms extends Controller {
 
     public function edit() {
         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
-        // split $_POST['term'] into term (e.g. month or week) and term_multipler (number that preceeds the term)
-        $termAndMultiplier = explode(' ', $_POST['term']);
-        // here we don't have errors from term or term_multiplier as they come from the drop down
         $termUpdate = [
             'display_name' => trim($_POST['display_name']),
-            'term' => $termAndMultiplier[1],
-            'term_multiplier' => $termAndMultiplier[0],
             'combined_term_multiplier' => $_POST['term'],
             'cost' => trim($_POST['cost']),
             'term_id' => $_POST['term_id'],
+            'term_err' => '',
             'display_name_err' => '',
             'cost_err' => ''
         ];
@@ -92,11 +89,20 @@ class Terms extends Controller {
             $termUpdate['display_name_err'] = 'Please enter a display name';
         }
 
+        if ($termUpdate['combined_term_multiplier'] === 'please_select') {
+            $termUpdate['term_err'] = 'Please select a term';
+        }
+
         if (empty($termUpdate['cost'])) {
             $termUpdate['cost_err'] = 'Please enter a price';
         }
 
-        if (empty($termUpdate['display_name_err']) && empty($termUpdate['cost_err'])) {
+        if (empty($termUpdate['display_name_err']) && empty($termUpdate['cost_err']) && empty($termUpdate['term_err'])) {
+            // split $_POST['term'] into term (e.g. month or week) and term_multipler (number that preceeds the term)
+            $termAndMultiplier = explode(' ', $_POST['term']);
+            $termUpdate['term'] = $termAndMultiplier[1];
+            $termUpdate['term_multiplier'] = $termAndMultiplier[0];
+
             if ($this->termsModel->editTerm($termUpdate)) {
                 flash('term_updated', 'Term successfully updated');
             } else {
@@ -108,9 +114,8 @@ class Terms extends Controller {
             $_SESSION['term_edit_error_id'] = $termUpdate['term_id'];
         }
 
-        $terms = $this->termsModel->getTerms($_SESSION['user_id']); // get news terms here so you get the update term to display
         $data = [
-            'terms' => $terms,
+            'active_terms' => $this->termsModel->getActiveTerms($_SESSION['user_id']), // get news terms here so you get the update term to display
             'term_update' => $termUpdate
         ];
 
@@ -133,7 +138,7 @@ class Terms extends Controller {
 
     public function getTerms() {
         // called from javascript
-        $terms = $this->terms ?? '{}';
+        $terms = $this->activeTerms ?? '{}';
         echo json_encode($terms);
     }
 }

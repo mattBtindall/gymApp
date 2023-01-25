@@ -5,15 +5,6 @@ class Member {
     }
 
     public function getMembers() {
-        // change this so that is more generic so it returns the results and then at source return the '{}' for when working with json
-        // $this->db->query('SELECT user_users.id, memberships.id, name, email, phone_number, expiry_date, img_url,
-        //                   user_users.id as user_id,
-        //                   memberships.id as membership_id
-        //                   FROM user_users
-        //                   INNER JOIN memberships
-        //                   ON memberships.user_id = user_users.id
-        //                   WHERE memberships.admin_id = :admin_id
-        //                 ');
         $this->db->query('SELECT user_users.id as user_id, name, email, phone_number, img_url, memberships.expiry_date, memberships.id as membership_id, display_name as term_display_name, cost
                           FROM user_users
                           INNER JOIN memberships
@@ -26,12 +17,12 @@ class Member {
         return $this->db->resultSet(PDO::FETCH_ASSOC);
     }
 
-    public function addMembership($membershipDates, $user_id) {
+    public function addMembership($membershipDates, $user_id, $term_id) {
         // admin_id, user_id, term, expiry_date, start_date
-        $this->db->query('INSERT INTO memberships (admin_id, user_id, term, start_date, expiry_Date) VALUE(:admin_id, :user_id, :term, :start_date, :expiry_date)');
+        $this->db->query('INSERT INTO memberships (admin_id, user_id, term_id, start_date, expiry_Date) VALUE(:admin_id, :user_id, :termId, :start_date, :expiry_date)');
         $this->db->bind(':admin_id', $_SESSION['user_id']);
         $this->db->bind(':user_id', $user_id);
-        $this->db->bind(':term', $membershipDates['term']);
+        $this->db->bind(':termId', $term_id);
         $this->db->bind(':start_date', $membershipDates['start_date']);
         $this->db->bind(':expiry_date', $membershipDates['expiry_date']);
 

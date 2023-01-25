@@ -21,7 +21,8 @@ export class Terms {
         };
 
         // sets edit inputs so this.elements[rowId] = { rowElements }
-        const idElements = document.getElementsByName('term_id');
+        // const idElements = document.getElementsByName('term_id');
+        const idElements = document.querySelectorAll('input[name="term_id"]');
         idElements.forEach(idElement => {
             const parentNode = idElement.parentNode;
             const id = idElement.value;
@@ -58,12 +59,12 @@ export class Terms {
         this.toggleRow(this.elements.edit.allInputs[rowId]);
     }
 
-    disableRow(elements) {
-        elements.displayName.disabled = true;
-        elements.submitBtn.disabled = true;
-        elements.cost.disabled = true;
-        elements.dropDown.classList.remove('active');
-        elements.term.classList.add('active');
+    disableRow(row) {
+        row.displayName.disabled = true;
+        row.submitBtn.disabled = true;
+        row.cost.disabled = true;
+        row.dropDown.classList.remove('active');
+        row.term.classList.add('active');
     }
 
     disableAllRows(rowIdToExclude) {
@@ -73,12 +74,12 @@ export class Terms {
         }
     }
 
-    enableRow(elements) {
-        elements.displayName.disabled = false;
-        elements.submitBtn.disabled = false;
-        elements.cost.disabled = false;
-        elements.dropDown.classList.add('active');
-        elements.term.classList.remove('active');
+    enableRow(row) {
+        row.displayName.disabled = false;
+        row.submitBtn.disabled = false;
+        row.cost.disabled = false;
+        row.dropDown.classList.add('active');
+        row.term.classList.remove('active');
     }
 
     toggleRow(elements) {
@@ -120,7 +121,6 @@ export class Terms {
     }
 
     addNewTermDropDownChange(e) {
-        console.log('called');
         const dropDown = e.target;
         const selectedText = dropDown.options[dropDown.selectedIndex].text;
         let matches = 0;

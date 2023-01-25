@@ -2,17 +2,16 @@
 	if (!isset($data['modal'])) {
 		$data['modal'] = [
 			'user_id' => 0,
-			'term' => '',
+			'term_id' => '',
 			'start_date' => '',
 			'expiry_date' => '',
 			'cost' => '',
-			'term_err' => '',
+			'term_id_err' => '',
 			'start_date_err' => '',
 			'expiry_date_err' => '',
 			'cost_err' => ''
 		];
 	}
-	echo $data['modal']['term'];
 ?>
 
 <!-- Pop up for search bar -->
@@ -53,14 +52,14 @@
 	</header>
 	<div class="user-modal__menu-bar bg-light px-4 py-4 border-top border-bottom">
 		<div class="d-flex gap-5">
-			<span class="user-modal__menu-item" data-content-class-name="activity">Activity</span>
+			<span class="user-modal__menu-item active" data-content-class-name="activity">Activity</span>
 			<span class="user-modal__menu-item" data-content-class-name="membership">Membership</span>
-			<span class="user-modal__menu-item active" data-content-class-name="add-membership">Add Membership</span>
+			<span class="user-modal__menu-item" data-content-class-name="add-membership">Add Membership</span>
 		</div>
 	</div>
 	<div class="user-modal__content px-3 py-2">
 		<!-- Actibity -->
-		<div class="user-modal__item activity">
+		<div class="user-modal__item activity active">
 			<h5>Activity</h5>
 		</div>
 
@@ -70,18 +69,18 @@
 		</div>
 
 		<!-- Add membership -->
-		<div class="user-modal__item add-membership active">
+		<div class="user-modal__item add-membership">
 			<form action="<?= URL_ROOT; ?>/members" method="POST" class="d-flex flex-column justify-content-between">
 				<div class="row">
 					<div class="col-6">
 						<div class="form-group">
 							<label for="term" class="mb-1 text-bold">Term</label>
-							<select class="form-control form-control-lg term <?= !empty($data['modal']['term_err']) ? 'is-invalid' : ''; ?>" name="term" data-initial-value="please_select">
-								<option <?= $data['modal']['term'] === 'please_select' ? 'selected' : ''; ?> value="please_select">Please select</option>
-								<option <?= $data['modal']['term'] === 'custom' ? 'selected' : ''; ?> value="custom">Custom</option>
+							<select class="form-control form-control-lg term <?= !empty($data['modal']['term_id_err']) ? 'is-invalid' : ''; ?>" name="term_id" data-initial-value="please_select">
+								<option <?= $data['modal']['term_id'] === 'please_select' ? 'selected' : ''; ?> value="please_select">Please select</option>
+								<option <?= $data['modal']['term_id'] === 'custom' ? 'selected' : ''; ?> value="custom">Custom</option>
 
 							</select>
-							<span class="invalid-feedback"><?= $data['modal']['term_err']; ?></span>
+							<span class="invalid-feedback"><?= $data['modal']['term_id_err']; ?></span>
 						</div>
 					</div>
 					<div class="col-6">
@@ -94,14 +93,14 @@
 				</div>
 				<div class="row">
 					<div class="col-6">
-						<div class="form-group cost">
+						<div class="form-group">
 							<label for="cost">Cost</label>
-							<input type="number" step="0.1" class="form-control form-control-lg cost <?= !empty($data['modal']['cost_err']) ? 'is-invalid' : ''; ?>" name="cost" value="<?= $data['modal']['cost']; ?>">
+							<input type="number" step="0.1" class="form-control form-control-lg cost <?= !empty($data['modal']['cost_err']) ? 'is-invalid' : ''; ?>" name="cost" value="<?= $data['modal']['cost']; ?>" data-initial-value="">
 							<span class="invalid-feedback"><?= $data['modal']['cost_err']; ?></span>
 						</div>
 					</div>
 					<div class="col-6">
-						<div class="form-group expiry-date <?= $data['modal']['term'] === 'custom' ? 'active' : ''; ?>">
+						<div class="form-group expiry-date <?= $data['modal']['term_id'] === 'custom' ? 'active' : ''; ?>">
 							<label for="start" class="mb-1 text-bold">Expiry Date</label>
 							<input type="date" class="form-control form-control-lg expiry_date <?= !empty($data['modal']['expiry_date_err']) ? 'is-invalid' : '';?>" name="expiry_date" value="<?= $data['modal']['expiry_date']; ?>" data-initial-value="">
 							<span class="invalid-feedback"><?= $data['modal']['expiry_date_err']; ?></span>

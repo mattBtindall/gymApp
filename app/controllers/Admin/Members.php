@@ -3,27 +3,27 @@ class Members extends Controller {
     public function __construct() {
         $this->membersModel = $this->model('Member');
         $this->userModel = $this->model('User');
+        $this->termModel = $this->model('Term');
         $this->memberships = $this->membersModel->getMembers($_SESSION['user_id']);
     }
 
     public function index() {
-        var_dump($_POST);
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
             $modal = [
                 'user_id' => trim($_POST['user_id']),
-                'term' => trim($_POST['term']),
+                'term_id' => trim($_POST['term_id']),
                 'start_date' => trim($_POST['start_date']),
                 'expiry_date' => trim($_POST['expiry_date']),
                 'cost' => trim($_POST['cost']),
-                'term_err' => '',
+                'term_id_err' => '',
                 'start_date_err' => '',
                 'expiry_date_err' => '',
                 'cost_err' => ''
             ];
 
-            if (empty($modal['term']) || $modal['term'] === 'please_select') {
-                $modal['term_err'] = 'Please select a term.';
+            if (empty($modal['term_id']) || $modal['term_id'] === 'please_select') {
+                $modal['term_id_err'] = 'Please select a term.';
             }
 
             if (empty($modal['start_date'])) {
@@ -33,9 +33,9 @@ class Members extends Controller {
                 $modal['start_date_err'] = 'Please select a date that begins after the current membership expires';
             }
 
-            if ($modal['term'] === 'custom' && empty($modal['expiry_date'])) {
+            if ($modal['term_id'] === 'custom' && empty($modal['expiry_date'])) {
                 $modal['expiry_date_err'] = 'Please select an expiry date.';
-            } else if ($modal['term'] === 'custom' && strtotime($modal['expiry_date']) <= strtotime($modal['start_date'])) {
+            } else if ($modal['term_id'] === 'custom' && strtotime($modal['expiry_date']) <= strtotime($modal['start_date'])) {
                 $modal['expiry_date_err'] = 'Please select an expiry date that is greater than the start date';
             }
 
@@ -43,15 +43,18 @@ class Members extends Controller {
                 $modal['cost_err'] = 'Please select a cost.';
             }
 
-            if (empty($modal['term_err']) && empty($modal['start_date_err']) && empty($modal['expiry_date_err']) && empty($modal['cost_err'])) {
+            if (empty($modal['term_id_err']) && empty($modal['start_date_err']) && empty($modal['expiry_date_err']) && empty($modal['cost_err'])) {
                 // reset modal state so that it doesn't reopen
                 $_SESSION['user_modal_state']['open'] = false;
                 $_SESSION['user_modal_state']['user_id'] = 0;
                 $_SESSION['user_modal_state']['selected'] = '';
 
+                // get term
+                $term = $this->termModel->getTermById($modal['term_id']);
+                $termLength = $term['term_multiplier'] . ' ' . $term['term'];
                 // set dates for membership
-                $membershipDates = $this->generateMembershipDates($modal['term'], $modal['start_date'], $modal['expiry_date']);
-                if ($this->membersModel->addMembership($membershipDates, $modal['user_id'])) {
+                $membershipDates = $this->generateMembershipDates($termLength, $modal['start_date'], $modal['expiry_date']);
+                if ($this->membersModel->addMembership($membershipDates, $modal['user_id'], $modal['term_id'])) {
                     $userName = $this->userModel->selectUserById($modal['user_id'], 'User')['name'];
                     $successMsg = "A membership has been successfully added for {$userName}";
                     flash('membership_assignment', $successMsg);
@@ -63,7 +66,7 @@ class Members extends Controller {
                 // errors so tell javascript to open modal
                 $_SESSION['user_modal_state']['open'] = true;
                 $_SESSION['user_modal_state']['user_id'] = $modal['user_id'];
-                $_SESSION['user_modal_state']['selected'] = $modal['term'];
+                $_SESSION['user_modal_state']['selected'] = $modal['term_id'];
             }
 
             $data = [
@@ -74,11 +77,11 @@ class Members extends Controller {
             $data = [
                 'modal' => [
                     'user_id' => 0,
-                    'term' => '',
+                    'term_id' => '',
                     'start_date' => '',
                     'expiry_date' => '',
                     'cost' => '',
-                    'term_err' => '',
+                    'term_id_err' => '',
                     'start_date_err' => '',
                     'expiry_date_err' => '',
                     'cost_err' => ''
@@ -144,20 +147,20 @@ class Members extends Controller {
         return $hasOverlap;
     }
 
-    private function generateMembershipDates($term, $startDate, $endDate) {
+    private function generateMembershipDates($termLength, $startDate, $endDate) {
         // notice here that when the date comes from html the HTML_DATE_TIME_FORMAT is used
         // the same goes for when the date comes from the SQL db -> SQL_DATE_TIME_FORMAT is used
         // cheesy dogs
         if (!$endDate) {
             $endDate = date_create_from_format(HTML_DATE_TIME_FORMAT, $startDate);
-            $endDate->modify('+' . $term . ' month');
+            $endDate->modify('+' . $termLength);
         } else {
             $endDate = date_create_from_format(HTML_DATE_TIME_FORMAT, $endDate);
         }
         $startDate = date_create_from_format(HTML_DATE_TIME_FORMAT, $startDate);
 
         return [
-            'term' => $term,
+            'term' => $termLength,
             'start_date' => $startDate->format(SQL_DATE_TIME_FORMAT),
             'expiry_date' => $endDate->format(SQL_DATE_TIME_FORMAT)
         ];
