@@ -49,10 +49,20 @@ class Members extends Controller {
                 $_SESSION['user_modal_state']['user_id'] = 0;
                 $_SESSION['user_modal_state']['selected'] = '';
 
-                // get term
-                $term = $this->termModel->getTermById($modal['term_id']);
-                $termLength = $term['term_multiplier'] . ' ' . $term['term'];
-                // set dates for membership
+                // create new trerm if the user has seleted custom dates
+                if ($modal['term_id'] === 'custom') {
+                    $termLength = 'custom';
+                    $term = [
+                        'display_name' => 'custom',
+                        'term' => 'n/a',
+                        'term_multiplier' => '0',
+                        'cost' => $modal['cost']
+                    ];
+                    $modal['term_id'] = $this->termModel->addTerm($term, $_SESSION['user_id'], '1');
+                } else {
+                    $term = $this->termModel->getTermById($modal['term_id']);
+                    $termLength = $term['term_multiplier'] . ' ' . $term['term'];
+                }
                 $membershipDates = $this->generateMembershipDates($termLength, $modal['start_date'], $modal['expiry_date']);
                 if ($this->membersModel->addMembership($membershipDates, $modal['user_id'], $modal['term_id'])) {
                     $userName = $this->userModel->selectUserById($modal['user_id'], 'User')['name'];
@@ -111,7 +121,6 @@ class Members extends Controller {
         $mostRecentMemberships = [];
         foreach ($memberships as $membership) {
             if (in_array($membership['user_id'], $mostRecentMemberships)) {
-                // if (strtotime($mostRecentMemberships[$membership['user_id']]['expiry_date']) < strtotime($membership['expiry_date'])) {
                 if (strtotime($mostRecentMemberships[$membership['user_id']]['expiry_date']) < strtotime($membership['expiry_date'])) {
                     $mostRecentMemberships[$membership['user_id']] = $membership;
                 }
@@ -150,8 +159,7 @@ class Members extends Controller {
     private function generateMembershipDates($termLength, $startDate, $endDate) {
         // notice here that when the date comes from html the HTML_DATE_TIME_FORMAT is used
         // the same goes for when the date comes from the SQL db -> SQL_DATE_TIME_FORMAT is used
-        // cheesy dogs
-        if (!$endDate) {
+        if ($termLength !== 'custom') {
             $endDate = date_create_from_format(HTML_DATE_TIME_FORMAT, $startDate);
             $endDate->modify('+' . $termLength);
         } else {
@@ -160,7 +168,6 @@ class Members extends Controller {
         $startDate = date_create_from_format(HTML_DATE_TIME_FORMAT, $startDate);
 
         return [
-            'term' => $termLength,
             'start_date' => $startDate->format(SQL_DATE_TIME_FORMAT),
             'expiry_date' => $endDate->format(SQL_DATE_TIME_FORMAT)
         ];

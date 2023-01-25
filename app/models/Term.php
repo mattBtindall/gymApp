@@ -12,23 +12,24 @@ class Term {
 
     public function getActiveTerms($adminId) {
         $terms = $this->getTerms($adminId);
-        return array_filter($terms, fn($term) => $term['is_active']);
+        return array_filter($terms, fn($term) => !$term['deleted'] && !$term['custom']);
     }
 
-    public function addTerm($term, $adminId) {
-        $this->db->query('INSERT INTO membership_terms (display_name, admin_id, term, term_multiplier, cost) VALUE(:displayName, :adminId, :term, :termMultiplier, :cost)');
+    public function addTerm($term, $adminId, $custom = '0') {
+        $this->db->query('INSERT INTO membership_terms (display_name, admin_id, term, term_multiplier, cost, custom) VALUE(:displayName, :adminId, :term, :termMultiplier, :cost, :custom)');
         $this->db->bind(':displayName', $term['display_name']);
         $this->db->bind(':adminId', $adminId);
         $this->db->bind(':term', $term['term']);
-        $this->db->bind(':termMultiplier', $term['term_mulitplier']);
+        $this->db->bind(':termMultiplier', $term['term_multiplier']);
         $this->db->bind(':cost', $term['cost']);
-        return $this->db->execute() ? true : false;
+        $this->db->bind(':custom', $custom);
+        return $this->db->execute() ? $this->db->getLastInsertedId() : false;
     }
 
     public function deleteTerm($termId) {
         // doesn't actually delete the term as we need a record of it for past memberships
-        $this->db->query('UPDATE membership_terms SET is_active = :isActive WHERE id = :termId');
-        $this->db->bind(':isActive', '0');
+        $this->db->query('UPDATE membership_terms SET deleted = :deleted WHERE id = :termId');
+        $this->db->bind(':deleted', '1');
         $this->db->bind(':termId', $termId);
         return $this->db->execute() ? true : false;
     }

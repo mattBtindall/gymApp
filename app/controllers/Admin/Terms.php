@@ -55,7 +55,7 @@ class Terms extends Controller {
         if (empty($termAdd['display_name_err']) && empty($termAdd['cost_err']) ) {
             $termAndMultiplier = explode(' ', $_POST['term']);
             $termAdd['term'] = $termAndMultiplier[1];
-            $termAdd['term_mulitplier'] = $termAndMultiplier[0];
+            $termAdd['term_multiplier'] = $termAndMultiplier[0];
             if ($this->termsModel->addTerm($termAdd, $_SESSION['user_id'])) {
                 flash('term_added', 'The new term has been successfully added');
             } else {
