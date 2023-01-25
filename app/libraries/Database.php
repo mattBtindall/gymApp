@@ -79,4 +79,8 @@
         public function rowCount() {
             return $this->stmt->rowCount();
         }
+
+        public function getLastInsertedId() {
+            return $this->dbh->lastInsertId();
+        }
     }
