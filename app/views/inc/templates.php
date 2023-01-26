@@ -28,7 +28,10 @@
 		</div>
 		<div class="col-7">
 			<div class="d-flex justify-content-between align-items-center">
-				<p class="membership-details m-0">No Membership</p>
+				<div class="membership-details m-0 d-flex flex-column">
+					<strong class=" term-display-name"></strong>
+					<span class=" expiry-date"></span>
+				</div>
 				<div class="btn-container">
 					<div class="btn btn-outline-secondary">Log</div>
 					<div class="btn btn-secondary">Sign Up</div>

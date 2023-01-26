@@ -52,14 +52,20 @@ export class SearchModal extends Modal {
 
         this.elements.output.innerHTML = "";
         const createRow = (rowData) => {
+            // user details
             const rowTemplate = document.getElementById('row');
             const rowBody = document.importNode(rowTemplate.content, true);
-            const nameOutput = rowBody.querySelector('.name');
             rowBody.querySelector('.row-img').src = rowData['img_url'];
-            nameOutput.textContent = rowData['name'];
+            rowBody.querySelector('.name').textContent = rowData['name'];
             rowBody.querySelector('.email').textContent = rowData['email'];
             rowBody.querySelector('.phone_number').textContent = rowData['phone_number'];
             rowBody.querySelector('.id').textContent = rowData['id'];
+
+            // membership details
+            if (rowData.expiry_date) {
+                rowBody.querySelector('.membership-details .term-display-name').textContent = rowData.term_display_name;
+                rowBody.querySelector('.membership-details .expiry-date').textContent = rowData.expiry_date;
+            }
             this.elements.output.appendChild(rowBody);
         }
 
