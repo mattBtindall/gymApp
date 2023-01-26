@@ -71,7 +71,13 @@ export class UserModal extends Modal {
         this.elements.addMembershipTab.termDropDown = document.getElementsByName('term_id')[0];
         this.elements.addMembershipTab.cost = document.querySelector('.add-membership input.cost');
         const expiryDate = document.querySelector('.expiry-date');
-        this.setTerms();
+
+        this.getTerms()
+            .then(terms => this.setTerms(terms))
+            .then(() => this.getModalStatus())
+            .then(modalStatus => this.openModalOnLoad(modalStatus.open, modalStatus.user_id, modalStatus.selected))
+            .catch(e => console.log(e));
+
 
         // Show & hide expiry date input for custom membership
         this.elements.addMembershipTab.termDropDown.addEventListener('click',(e) => {
@@ -87,7 +93,8 @@ export class UserModal extends Modal {
         });
     }
 
-    openModalOnLoad(currentUserId, selected) {
+    openModalOnLoad(openModal, currentUserId, selected) {
+        if (!openModal) return;
         const user = this.getUserById(currentUserId, userData.get().allUsers);
         // tries to set the selected drop down here
         Array.from(this.elements.addMembershipTab.termDropDown.children).forEach(option => {
@@ -154,33 +161,24 @@ export class UserModal extends Modal {
         return getData(url);
     }
 
-    setTerms() {
-        const setTerm = (term) => {
-            const optionElement = document.createElement('option');
-            optionElement.innerText = term['display_name'];
-            optionElement.value = term.id;
-            optionElement.dataset.cost = term.cost;
-            this.elements.addMembershipTab.termDropDown.appendChild(optionElement);
-        }
+    setTerm(term) {
+        const optionElement = document.createElement('option');
+        optionElement.innerText = term['display_name'];
+        optionElement.value = term.id;
+        optionElement.dataset.cost = term.cost;
+        this.elements.addMembershipTab.termDropDown.appendChild(optionElement);
+    }
 
-        this.getTerms()
-            .then((terms) => {
-                if (terms.length === 0) {
-                    return;
-                }
-
+    setTerms(terms) {
+        return new Promise((res, rej) => {
+            if (terms.length === 0) {
+                rej('No terms');
+            } else {
                 for (const key in terms) {
-                    setTerm(terms[key]);
+                    this.setTerm(terms[key]);
                 }
-
-                // always set the modal before getting the status and thus opening
-                // this needs rewokring, return a promise from getTerms and then call the below code with a then block
-                this.getModalStatus()
-                    .then(modalStatus => {
-                        if (modalStatus.open) {
-                            this.openModalOnLoad(modalStatus.user_id, modalStatus.selected);
-                        }
-                    })
-            });
+                res();
+            }
+        })
     }
 }
