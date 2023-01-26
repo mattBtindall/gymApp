@@ -28,12 +28,6 @@ export class UserModal extends Modal {
         }
 
         this.setEventListeners();
-        this.getModalStatus()
-            .then(modalStatus => {
-                if (modalStatus.open) {
-                   this.openModalOnLoad(modalStatus.user_id, modalStatus.selected);
-                }
-            })
     }
 
     setEventListeners() {
@@ -97,9 +91,14 @@ export class UserModal extends Modal {
         const user = this.getUserById(currentUserId, userData.get().allUsers);
         // tries to set the selected drop down here
         Array.from(this.elements.addMembershipTab.termDropDown.children).forEach(option => {
-            console.log(option.text);
+            console.log(`Option value: ${option.value}`) ;
+            if (option.value == selected) {
+                console.log('tis true');
+                option.selected = true;
+            }
         });
         this.setModal(user);
+        this.setTabs(this.elements.tabs.menu.addMembership);
         this.openModal(user);
     }
 
@@ -173,6 +172,15 @@ export class UserModal extends Modal {
                 for (const key in terms) {
                     setTerm(terms[key]);
                 }
+
+                // always set the modal before getting the status and thus opening
+                // this needs rewokring, return a promise from getTerms and then call the below code with a then block
+                this.getModalStatus()
+                    .then(modalStatus => {
+                        if (modalStatus.open) {
+                            this.openModalOnLoad(modalStatus.user_id, modalStatus.selected);
+                        }
+                    })
             });
     }
 }

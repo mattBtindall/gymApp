@@ -8,7 +8,7 @@ window.onload = function() {
     const url = getPhpMethodUrl("/Users/getUserData");
     // checks to see if logged in then fetches the data from the opposite area
     getData(url)
-    .then(data => {
+        .then(data => {
             userData.set(data);
             eventListeners.setBodyClick();
             contentSpecificJs();
