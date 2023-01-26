@@ -127,6 +127,12 @@ class Users extends Users_base {
         }
     }
 
+    public function searchDb($query) {
+        $results = parent::searchDb($query);
+        $results = $results ? $results : '{}';
+        echo json_encode($results);
+    }
+
     public function getUserData() {
         $data = parent::getUserData();
         echo json_encode($data);

@@ -136,6 +136,25 @@ class Users extends Users_base {
         }
     }
 
+    public function searchDb($query) {
+        // working here, need to merge these two arrays
+        $users = parent::searchDb($query);
+        $members = $this->memberModel->getMostRecentMemberships();
+        $combined = [];
+        foreach($users as $user) {
+            foreach ($members as $member) {
+                if ($user['id'] == $member['user_id']) {
+                    $expiryDate = date_create_from_format(SQL_DATE_TIME_FORMAT, $member['expiry_date']);
+                    $expiryDate = $expiryDate->format(OUTPUT_DATE_TIME_FORMAT);
+                    $combined[] = array_merge(['expiry_date' => $expiryDate, 'term_display_name' => $member['term_display_name']], $user);
+                }
+            }
+        }
+
+        $combined = $combined ? $combined : '{}';
+        echo json_encode($combined);
+    }
+
     public function getUserData() {
         // called by ajax request
         if (!isLoggedIn()) {

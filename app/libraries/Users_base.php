@@ -144,8 +144,7 @@ class Users_base extends Controller {
         // data is sent back to javascript
         // strip searchQuery maybe use specailChars
         $oppositeArea = strtolower(getOppositeArea());
-        $results = $this->userModel->selectUserBySearchQuery($searchQuery, $oppositeArea);
-        echo $results ? json_encode($results) : json_encode('{}');
+        return $this->userModel->selectUserBySearchQuery($searchQuery, $oppositeArea);
     }
 
     protected function seperateProfileData($data) {
