@@ -17,6 +17,23 @@ class Member {
         return $this->db->resultSet(PDO::FETCH_ASSOC);
     }
 
+    public function getMostRecentMemberships() {
+        // when displaying the members regardless of how many memberships a user has had we only want to show the most recent
+        $memberships = $this->getMembers();
+        $mostRecentMemberships = [];
+        foreach ($memberships as $membership) {
+            if (in_array($membership['user_id'], $mostRecentMemberships)) {
+                if (strtotime($mostRecentMemberships[$membership['user_id']]['expiry_date']) < strtotime($membership['expiry_date'])) {
+                    $mostRecentMemberships[$membership['user_id']] = $membership;
+                }
+            } else {
+                $mostRecentMemberships[$membership['user_id']] = $membership;
+            }
+        }
+
+        return $mostRecentMemberships;
+    }
+
     public function addMembership($membershipDates, $user_id, $term_id) {
         // admin_id, user_id, term, expiry_date, start_date
         $this->db->query('INSERT INTO memberships (admin_id, user_id, term_id, start_date, expiry_Date) VALUE(:admin_id, :user_id, :termId, :start_date, :expiry_date)');

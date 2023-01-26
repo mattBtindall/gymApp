@@ -99,7 +99,7 @@ class Members extends Controller {
             ];
         }
 
-        $mostRecentMemberships = $this->getMostRecentMemberships($this->memberships);
+        $mostRecentMemberships = $this->membersModel->getMostRecentMemberships();
         $data['members'] = $mostRecentMemberships;
         $this->view('members/index', $data);
     }
@@ -114,22 +114,6 @@ class Members extends Controller {
         // this is called from an ajax call from the frontend
         $jsonData = $this->memberships ? json_encode(($this->memberships)) : '{}';
         echo $jsonData;
-    }
-
-    private function getMostRecentMemberships($memberships) {
-        // when displaying the members regardless of how many memberships a user has had we only want to show the most recent
-        $mostRecentMemberships = [];
-        foreach ($memberships as $membership) {
-            if (in_array($membership['user_id'], $mostRecentMemberships)) {
-                if (strtotime($mostRecentMemberships[$membership['user_id']]['expiry_date']) < strtotime($membership['expiry_date'])) {
-                    $mostRecentMemberships[$membership['user_id']] = $membership;
-                }
-            } else {
-                $mostRecentMemberships[$membership['user_id']] = $membership;
-            }
-        }
-
-        return $mostRecentMemberships;
     }
 
     private function dateOverlap($user_id, $startDate) {
