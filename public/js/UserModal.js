@@ -67,10 +67,12 @@ export class UserModal extends Modal {
     }
 
     setAddMembershipTab() {
-        this.elements.addMembershipTab = {};
-        this.elements.addMembershipTab.termDropDown = document.getElementsByName('term_id')[0];
-        this.elements.addMembershipTab.cost = document.querySelector('.add-membership input.cost');
-        const expiryDate = document.querySelector('.expiry-date');
+        this.elements.addMembershipTab = {
+            termDropDown: document.querySelector('.user-modal__content .term'),
+            startDate: document.querySelector('.user-modal__content .start-date'),
+            cost: document.querySelector('.user-modal__content .cost'),
+            expiryDate: document.querySelector('.user-modal__content .expiry-date')
+        };
 
         this.getTerms()
             .then(terms => this.setTerms(terms))
@@ -128,24 +130,19 @@ export class UserModal extends Modal {
 
         const url = getPhpMethodUrl('/userModal/disable');
         sendAjax(url); // remove modal errors so it doesn't reopen
-        this.resetModalInputs();
+        this.resetAddMembershipTab();
         this.setTabs(this.elements.tabs.menu.activity);
         modals.search.closeModal();
         super.closeModal();
     }
 
-    resetModalInputs() {
-        const inputs = [
-            document.querySelector('.user-modal__content .term'),
-            document.querySelector('.user-modal__content .start_date'),
-            document.querySelector('.user-modal__content .cost'),
-            document.querySelector('.user-modal__content .expiry_date')
-        ]
-
-        inputs.forEach(input => {
-            input.classList.remove('is-invalid');
-            input.value = input.dataset.initialValue;
-        });
+    resetAddMembershipTab() {
+        const { addMembershipTab: inputs } = this.elements;
+        inputs.expiryDate.classList.remove('active');
+        for (const key in inputs) {
+            inputs[key].classList.remove('is-invalid');
+            inputs[key].value = inputs[key].dataset.initialValue;
+        }
     }
 
     setModal(user) {
