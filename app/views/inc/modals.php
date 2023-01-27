@@ -86,7 +86,7 @@
 					<div class="col-6">
 						<div class="form-group">
 							<label for="start" class="mb-1 text-bold ">Start Date</label>
-							<input type="date" class="form-control form-control-lg start_date <?= !empty($data['modal']['start_date_err']) ? 'is-invalid' : '';?>" name="start_date" value="<?= $data['modal']['start_date']; ?>" data-initial-value="">
+							<input type="date" class="form-control form-control-lg start-date <?= !empty($data['modal']['start_date_err']) ? 'is-invalid' : '';?>" name="start_date" value="<?= $data['modal']['start_date']; ?>" data-initial-value="">
 							<span class="invalid-feedback"><?= $data['modal']['start_date_err']; ?></span>
 						</div>
 					</div>
@@ -95,14 +95,14 @@
 					<div class="col-6">
 						<div class="form-group">
 							<label for="cost">Cost</label>
-							<input type="number" step="0.1" class="form-control form-control-lg cost <?= !empty($data['modal']['cost_err']) ? 'is-invalid' : ''; ?>" name="cost" value="<?= $data['modal']['cost']; ?>" data-initial-value="">
+							<input type="number" step="0.1" class="form-control form-control-lg cost <?= !empty($data['modal']['cost_err']) ? 'is-invalid' : ''; ?>" name="cost" value="<?= $data['modal']['cost']; ?>" data-initial-value="" readonly>
 							<span class="invalid-feedback"><?= $data['modal']['cost_err']; ?></span>
 						</div>
 					</div>
 					<div class="col-6">
-						<div class="form-group expiry-date <?= $data['modal']['term_id'] === 'custom' ? 'active' : ''; ?>">
+						<div class="form-group expiry-date-container<?= $data['modal']['term_id'] === 'custom' ? 'active' : ''; ?>">
 							<label for="start" class="mb-1 text-bold">Expiry Date</label>
-							<input type="date" class="form-control form-control-lg expiry_date <?= !empty($data['modal']['expiry_date_err']) ? 'is-invalid' : '';?>" name="expiry_date" value="<?= $data['modal']['expiry_date']; ?>" data-initial-value="">
+							<input type="date" class="form-control form-control-lg expiry-date <?= !empty($data['modal']['expiry_date_err']) ? 'is-invalid' : '';?>" name="expiry_date" value="<?= $data['modal']['expiry_date']; ?>" data-initial-value="">
 							<span class="invalid-feedback"><?= $data['modal']['expiry_date_err']; ?></span>
 						</div>
 					</div>

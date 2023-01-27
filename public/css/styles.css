@@ -199,12 +199,16 @@ img {
     min-height: 30vh;
 }
 
-.expiry-date {
+.add-membership .expiry-date-container {
     display: none;
 }
 
-.expiry-date.active {
+.add-membership .expiry-date-container.active {
     display: block;
+}
+
+.add-membership .cost:read-only {
+    background:  #bebebe;
 }
 
 /* terms edit */
@@ -229,6 +233,8 @@ img {
 .new-term.active {
     display: table-row;
 }
+
+
 
 @media (min-width: 992px) {
     .profile-right-container {

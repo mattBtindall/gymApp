@@ -79,31 +79,37 @@ export class UserModal extends Modal {
             .catch(e => console.log(e));
 
 
+        this.elements.addMembershipTab.termDropDown.addEventListener('change', (e) => this.addMembershipDropDownClick(e));
+    }
+
+    addMembershipDropDownClick(e) {
+        const dropDownOption = e.target.querySelector(`option[value="${e.target.value}"]`);
+        const expiryDateParent = this.elements.addMembershipTab.expiryDate.closest('.expiry-date-container');
+
         // Show & hide expiry date input for custom membership
-        this.elements.addMembershipTab.termDropDown.addEventListener('click',(e) => {
-            if (e.target.value === 'custom') {
-                expiryDate.classList.add('active');
-                this.elements.addMembershipTab.cost.value = '';
-                // this.elements.addMembershipTab.cost.disabled = false;
-            } else {
-                expiryDate.classList.remove('active');
-                this.elements.addMembershipTab.cost.value = e.target.dataset.cost;
-                // this.elements.addMembershipTab.cost.disabled = true;
-            }
-        });
+        if (e.target.value === 'custom') {
+            expiryDateParent.classList.add('active');
+            this.elements.addMembershipTab.cost.value = '';
+            this.elements.addMembershipTab.cost.readOnly = false;
+        } else {
+            expiryDateParent.classList.remove('active');
+            this.elements.addMembershipTab.cost.value = dropDownOption.dataset.cost;
+            this.elements.addMembershipTab.cost.readOnly= true;
+        }
     }
 
     openModalOnLoad(openModal, currentUserId, selected) {
         if (!openModal) return;
         const user = this.getUserById(currentUserId, userData.get().allUsers);
-        // tries to set the selected drop down here
         Array.from(this.elements.addMembershipTab.termDropDown.children).forEach(option => {
-            console.log(`Option value: ${option.value}`) ;
             if (option.value == selected) {
-                console.log('tis true');
                 option.selected = true;
             }
         });
+
+        if (selected === 'custom') {
+            this.elements.addMembershipTab.cost.readOnly = false;
+        }
         this.setModal(user);
         this.setTabs(this.elements.tabs.menu.addMembership);
         this.openModal(user);
