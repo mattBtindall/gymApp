@@ -180,11 +180,18 @@ class Users_base extends Controller {
     }
 
     public function getUserData() {
+        // called from ajax
         if (!isLoggedIn()) {
             return '{}';
         }
 
+        $tempId = NULL;
         $allUsers = $this->userModel->getAllUsersFromOppositeArea();
+        foreach($allUsers as &$user) {
+            $tempId = $user['id'];
+            unset($user['id']);
+            $user['user_id'] = $tempId;
+        }
         $data = [
             'allUsers' => $allUsers
         ];

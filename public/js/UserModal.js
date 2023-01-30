@@ -150,7 +150,7 @@ export class UserModal extends Modal {
         this.elements.email.textContent = user.email;
         this.elements.phone_number.textContent = user.phone_number;
         this.elements.dob.textContent = user.dob;
-        this.elements.id.value = user.user_id ? user.user_id : user.id;
+        this.elements.id.value = user.user_id;
     }
 
     getModalStatus() {
