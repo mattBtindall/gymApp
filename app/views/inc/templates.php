@@ -40,3 +40,45 @@
 		</div>
 	</div>
 </template>
+
+<!-- Template for user modal -->
+<template id="user-modal-membership">
+	<div class="border rounded mb-3 p-3 overflow-hidden user-modal__membership">
+		<div class="row">
+			<div class="col-12">
+				<div class="d-flex justify-content-between">
+					<div class="pb-3 fw-bold">
+						<span class="display-name-output"></span>
+						<span> - Membership</span>
+						<span>(<span class="membership-status"></span>)</span>
+					</div>
+					<div>
+						<i class="icon bi bi-caret-left-fill"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12">
+				<span>From </span>
+				<span class="start-date-output text-decoration-underline"></span>
+				<span>to </span>
+				<span class="expiry-date-output text-decoration-underline"></span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12">
+				<div class="pb-3">
+					<span>Created on: </span>
+					<span class="created-at-output"></span>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12">
+				<span>Paid - </span>
+				<span class="cost-output"></span>
+			</div>
+		</div>
+	</div>
+</template>

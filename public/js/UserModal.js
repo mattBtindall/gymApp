@@ -23,10 +23,17 @@ export class UserModal extends Modal {
                 addMembership: document.querySelectorAll('.user-modal__menu-item')[2]
             },
             content: {
-                items: document.querySelectorAll('.user-modal__item')
+                items: document.querySelectorAll('.user-modal__item'),
+                memberships: document.querySelector('.user-modal__item.membership')
             }
         }
 
+        isAdmin()
+            .then(admin => {
+                if (admin.isAdmin) {
+                    this.setAddMembershipTab();
+                }
+            });
         this.setEventListeners();
     }
 
@@ -53,6 +60,18 @@ export class UserModal extends Modal {
                 if (e.target.classList.contains('user-modal__menu-item')) {
                     this.setTabs(e.target);
                 }
+            });
+
+            // open and close memberships in user modal
+            this.elements.tabs.content.memberships.addEventListener('click', (e) => {
+                const parent = e.target.closest('.user-modal__membership');
+                if (!parent) {
+                    return;
+                }
+
+                parent.classList.toggle('active');
+                parent.querySelector('.icon').classList.toggle('bi-caret-left-fill');
+                parent.querySelector('.icon').classList.toggle('bi-caret-down-fill');
             });
         }
     }
@@ -98,11 +117,41 @@ export class UserModal extends Modal {
     }
 
     setMembershipTab(userId) {
+        const setMembership = (membership) => {
+            const membershipTemplate = document.getElementById('user-modal-membership');
+            const membershipElement = document.importNode(membershipTemplate.content, true);
+            const container = membershipElement.querySelector('.user-modal__membership');
+            let hasExpired = null;
 
-        // get memberships
+            if (membership.is_expired) {
+                hasExpired = 'expired';
+                container.classList.add('bg-danger', 'border-danger');
+            } else {
+                hasExpired = 'active';
+                container.classList.add('bg-success', 'border-success');
+            }
+
+            membershipElement.querySelector('.display-name-output').textContent = membership.display_name;
+            membershipElement.querySelector('.membership-status').textContent = hasExpired;
+            membershipElement.querySelector('.start-date-output').textContent = membership.start_date;
+            membershipElement.querySelector('.expiry-date-output').textContent = membership.expiry_date;
+            membershipElement.querySelector('.created-at-output').textContent = membership.created_at;
+            membershipElement.querySelector('.cost-output').textContent = membership.cost;
+            this.elements.tabs.content.memberships.appendChild(membershipElement);
+        }
+
         this.getMembershipData(userId)
-            .then(data => console.log(data));
-        // display memberships in tab
+            .then(memberships => {
+                if (memberships === '{}') return;
+
+                for (const key in memberships) {
+                    setMembership(memberships[key]);
+                }
+
+                // 'open' first membership if actice
+                const firstMembership = document.querySelector('.user-modal__membership');
+                if (firstMembership.classList.contains('bg-success')) firstMembership.classList.add('active');
+            });
     }
 
     setUserDetails(user) {
@@ -118,7 +167,6 @@ export class UserModal extends Modal {
             .then(admin => {
                 if (admin.isAdmin) {
                     this.setMembershipTab(userId);
-                    this.setAddMembershipTab();
                 }
             });
     }
@@ -194,6 +242,7 @@ export class UserModal extends Modal {
         const url = getPhpMethodUrl('/userModal/disable');
         sendAjax(url); // remove modal errors so it doesn't reopen
         this.resetAddMembershipTab();
+        this.resetMembershipTab();
         this.setTabs(this.elements.tabs.menu.activity);
         modals.search.closeModal();
         super.closeModal();
@@ -201,10 +250,15 @@ export class UserModal extends Modal {
 
     resetAddMembershipTab() {
         const { addMembershipTab: inputs } = this.elements;
-        inputs.expiryDate.classList.remove('active');
+        inputs.expiryDate.parentNode.classList.remove('active');
+        inputs.cost.readOnly = true;
         for (const key in inputs) {
             inputs[key].classList.remove('is-invalid');
             inputs[key].value = inputs[key].dataset.initialValue;
         }
+    }
+
+    resetMembershipTab() {
+        this.elements.tabs.content.memberships.innerText = "";
     }
 }

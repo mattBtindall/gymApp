@@ -211,6 +211,17 @@ img {
     background:  #bebebe;
 }
 
+/* Membership [from user modal] */
+.user-modal__membership {
+    max-height: 4rem;
+    cursor: pointer;
+    opacity: .97;
+}
+
+.user-modal__membership.active {
+    max-height: 1000vh;
+}
+
 /* terms edit */
 .terms-edit__term.active,
 .terms-edit__drop-down.active {

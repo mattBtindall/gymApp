@@ -65,7 +65,6 @@
 
 		<!-- Membership -->
 		<div class="user-modal__item membership">
-			<h5>Membership</h5>
 		</div>
 
 		<!-- Add membership -->
@@ -100,7 +99,7 @@
 						</div>
 					</div>
 					<div class="col-6">
-						<div class="form-group expiry-date-container<?= $data['modal']['term_id'] === 'custom' ? 'active' : ''; ?>">
+						<div class="form-group expiry-date-container <?= $data['modal']['term_id'] === 'custom' ? 'active' : ''; ?>">
 							<label for="start" class="mb-1 text-bold">Expiry Date</label>
 							<input type="date" class="form-control form-control-lg expiry-date <?= !empty($data['modal']['expiry_date_err']) ? 'is-invalid' : '';?>" name="expiry_date" value="<?= $data['modal']['expiry_date']; ?>" data-initial-value="">
 							<span class="invalid-feedback"><?= $data['modal']['expiry_date_err']; ?></span>
