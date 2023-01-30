@@ -197,4 +197,10 @@ class Users_base extends Controller {
         ];
         return $data;
     }
+
+    public function isAdmin() {
+        // called from ajax
+        $data = ['isAdmin' => $this->userModel->isAdmin()];
+        echo json_encode($data);
+    }
 }

@@ -1,5 +1,5 @@
 import { Modal } from './Modal.js';
-import { modals, userData, getPhpMethodUrl, getData, sendAjax } from './utils.js';
+import { modals, userData, getPhpMethodUrl, getData, sendAjax, isAdmin } from './utils.js';
 
 export class UserModal extends Modal {
     constructor() {
@@ -27,6 +27,13 @@ export class UserModal extends Modal {
             }
         }
 
+        isAdmin()
+            .then(admin => {
+                if (admin.isAdmin) {
+                    this.setAddMembershipTab();
+                }
+            });
+
         this.setEventListeners();
     }
 
@@ -41,7 +48,6 @@ export class UserModal extends Modal {
         if (searchOutput) {
             searchOutput.addEventListener('click', (e) => {
                 if (e.target.classList.contains('account-link')) {
-                    modals.search.closeModal();
                     this.openModalOnClick(e.target, '.search-modal__row', userData.get().allUsers);
                 }
             });
@@ -49,8 +55,7 @@ export class UserModal extends Modal {
 
         document.querySelector('.exit-modal-container i').addEventListener('click', () => this.closeModal());
 
-        if (userModalMenuBar){ // only performs this for admin
-            this.setAddMembershipTab();
+        if (userModalMenuBar){
             userModalMenuBar.addEventListener('click', (e) => {
                 if (e.target.classList.contains('user-modal__menu-item')) {
                     this.setTabs(e.target);
@@ -80,24 +85,63 @@ export class UserModal extends Modal {
             .then(modalStatus => this.openModalOnLoad(modalStatus.open, modalStatus.user_id, modalStatus.selected))
             .catch(e => console.log(e));
 
+        const addMembershipDropDownClick = (e) => {
+            const dropDownOption = e.target.querySelector(`option[value="${e.target.value}"]`);
+            const expiryDateParent = this.elements.addMembershipTab.expiryDate.closest('.expiry-date-container');
 
-        this.elements.addMembershipTab.termDropDown.addEventListener('change', (e) => this.addMembershipDropDownClick(e));
+            // Show & hide expiry date input for custom membership
+            if (e.target.value === 'custom') {
+                expiryDateParent.classList.add('active');
+                this.elements.addMembershipTab.cost.value = '';
+                this.elements.addMembershipTab.cost.readOnly = false;
+            } else {
+                expiryDateParent.classList.remove('active');
+                this.elements.addMembershipTab.cost.value = dropDownOption.dataset.cost;
+                this.elements.addMembershipTab.cost.readOnly= true;
+            }
+        }
+
+        this.elements.addMembershipTab.termDropDown.addEventListener('change', addMembershipDropDownClick);
     }
 
-    addMembershipDropDownClick(e) {
-        const dropDownOption = e.target.querySelector(`option[value="${e.target.value}"]`);
-        const expiryDateParent = this.elements.addMembershipTab.expiryDate.closest('.expiry-date-container');
+    setModal(user) {
+        this.elements.name.textContent = user.name;
+        this.elements.email.textContent = user.email;
+        this.elements.phone_number.textContent = user.phone_number;
+        this.elements.dob.textContent = user.dob;
+        this.elements.id.value = user.user_id;
+    }
 
-        // Show & hide expiry date input for custom membership
-        if (e.target.value === 'custom') {
-            expiryDateParent.classList.add('active');
-            this.elements.addMembershipTab.cost.value = '';
-            this.elements.addMembershipTab.cost.readOnly = false;
-        } else {
-            expiryDateParent.classList.remove('active');
-            this.elements.addMembershipTab.cost.value = dropDownOption.dataset.cost;
-            this.elements.addMembershipTab.cost.readOnly= true;
-        }
+    setTerm(term) {
+        const optionElement = document.createElement('option');
+        optionElement.innerText = term['display_name'];
+        optionElement.value = term.id;
+        optionElement.dataset.cost = term.cost;
+        this.elements.addMembershipTab.termDropDown.appendChild(optionElement);
+    }
+
+    setTerms(terms) {
+        return new Promise((res, rej) => {
+            if (terms.length === 0) {
+                rej('No terms');
+            } else {
+                for (const key in terms) {
+                    this.setTerm(terms[key]);
+                }
+                res();
+            }
+        })
+    }
+
+    getModalStatus() {
+        // sees whether to open the modal or not from php
+        const url = getPhpMethodUrl('/userModal/getStatus');
+        return getData(url);
+    }
+
+    getTerms() {
+        const url = getPhpMethodUrl('/terms/getTerms');
+        return getData(url);
     }
 
     openModalOnLoad(openModal, currentUserId, selected) {
@@ -112,12 +156,13 @@ export class UserModal extends Modal {
         if (selected === 'custom') {
             this.elements.addMembershipTab.cost.readOnly = false;
         }
-        this.setModal(user);
         this.setTabs(this.elements.tabs.menu.addMembership);
+        this.setModal(user);
         this.openModal(user);
     }
 
     openModalOnClick(element, parentSelector, data) {
+        modals.search.closeModal();
         const user = this.getCurrentUser(element, parentSelector, data);
         this.setModal(user);
         this.openModal(user);
@@ -143,45 +188,5 @@ export class UserModal extends Modal {
             inputs[key].classList.remove('is-invalid');
             inputs[key].value = inputs[key].dataset.initialValue;
         }
-    }
-
-    setModal(user) {
-        this.elements.name.textContent = user.name;
-        this.elements.email.textContent = user.email;
-        this.elements.phone_number.textContent = user.phone_number;
-        this.elements.dob.textContent = user.dob;
-        this.elements.id.value = user.user_id;
-    }
-
-    getModalStatus() {
-        // sees whether to open the modal or not from php
-        const url = getPhpMethodUrl('/userModal/getStatus');
-        return getData(url);
-    }
-
-    getTerms() {
-        const url = getPhpMethodUrl('/terms/getTerms');
-        return getData(url);
-    }
-
-    setTerm(term) {
-        const optionElement = document.createElement('option');
-        optionElement.innerText = term['display_name'];
-        optionElement.value = term.id;
-        optionElement.dataset.cost = term.cost;
-        this.elements.addMembershipTab.termDropDown.appendChild(optionElement);
-    }
-
-    setTerms(terms) {
-        return new Promise((res, rej) => {
-            if (terms.length === 0) {
-                rej('No terms');
-            } else {
-                for (const key in terms) {
-                    this.setTerm(terms[key]);
-                }
-                res();
-            }
-        })
     }
 }

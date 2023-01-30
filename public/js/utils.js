@@ -31,3 +31,8 @@ export function getPhpMethodUrl(phpMethod, param = "") {
     }
     return baseUrl + phpMethod + param;
 }
+
+export function isAdmin() {
+    const url = getPhpMethodUrl('/Users/isAdmin');
+    return getData(url);
+}
