@@ -116,6 +116,22 @@ class Members extends Controller {
         echo $jsonData;
     }
 
+    public function getTermMembershipByUserId($user_id) {
+        $membershipTerms = $this->membersModel->getTermMembershipByUserId($user_id);
+        foreach ($membershipTerms as &$memberTerm) {
+            // + 1 day becuase the comparison includes time so if its on the same day we don't want it to have expired
+            $modifiedDate = date_create_from_format(SQL_DATE_TIME_FORMAT, $memberTerm['expiry_date'])->modify('+ 1 day');
+            $memberTerm['is_expired'] = $modifiedDate < new DateTime('now');
+            $memberTerm['cost'] = convertNumberToPrice($memberTerm['cost']);
+            $memberTerm['expiry_date'] = date_create_from_format(SQL_DATE_TIME_FORMAT, $memberTerm['expiry_date'])->format(OUTPUT_DATE_TIME_FORMAT);
+            $memberTerm['start_date'] = date_create_from_format(SQL_DATE_TIME_FORMAT, $memberTerm['start_date'])->format(OUTPUT_DATE_TIME_FORMAT);
+            $memberTerm['created_at'] = date_create_from_format(SQL_DATE_TIME_FORMAT, $memberTerm['created_at'])->format(OUTPUT_DATE_TIME_FORMAT);
+        }
+
+        $formattedData = !empty($membershipTerms) ? $membershipTerms : '{}';
+        echo json_encode($formattedData);
+    }
+
     private function dateOverlap($user_id, $startDate) {
         // get active memberships from the user
         $memberships = $this->membersModel->getMemberById($user_id);

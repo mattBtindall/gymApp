@@ -27,13 +27,6 @@ export class UserModal extends Modal {
             }
         }
 
-        isAdmin()
-            .then(admin => {
-                if (admin.isAdmin) {
-                    this.setAddMembershipTab();
-                }
-            });
-
         this.setEventListeners();
     }
 
@@ -104,12 +97,30 @@ export class UserModal extends Modal {
         this.elements.addMembershipTab.termDropDown.addEventListener('change', addMembershipDropDownClick);
     }
 
-    setModal(user) {
+    setMembershipTab(userId) {
+
+        // get memberships
+        this.getMembershipData(userId)
+            .then(data => console.log(data));
+        // display memberships in tab
+    }
+
+    setUserDetails(user) {
         this.elements.name.textContent = user.name;
         this.elements.email.textContent = user.email;
         this.elements.phone_number.textContent = user.phone_number;
         this.elements.dob.textContent = user.dob;
         this.elements.id.value = user.user_id;
+    }
+
+    setModalAdmin(userId) {
+        isAdmin()
+            .then(admin => {
+                if (admin.isAdmin) {
+                    this.setMembershipTab(userId);
+                    this.setAddMembershipTab();
+                }
+            });
     }
 
     setTerm(term) {
@@ -131,6 +142,11 @@ export class UserModal extends Modal {
                 res();
             }
         })
+    }
+
+    getMembershipData(userId) {
+        const url = getPhpMethodUrl(`/members/getTermMembershipByUserId/${userId}`);
+        return getData(url);
     }
 
     getModalStatus() {
@@ -157,14 +173,16 @@ export class UserModal extends Modal {
             this.elements.addMembershipTab.cost.readOnly = false;
         }
         this.setTabs(this.elements.tabs.menu.addMembership);
-        this.setModal(user);
+        this.setModalAdmin(user.user_id)
+        this.setUserDetails(user);
         this.openModal(user);
     }
 
     openModalOnClick(element, parentSelector, data) {
         modals.search.closeModal();
         const user = this.getCurrentUser(element, parentSelector, data);
-        this.setModal(user);
+        this.setUserDetails(user);
+        this.setModalAdmin(user.user_id)
         this.openModal(user);
     }
 

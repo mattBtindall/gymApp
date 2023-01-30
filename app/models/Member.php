@@ -34,6 +34,19 @@ class Member {
         return $mostRecentMemberships;
     }
 
+    public function getTermMembershipByUserId($user_id) {
+        $this->db->query('SELECT start_date, expiry_date, memberships.created_at, display_name, cost
+                          FROM memberships
+                          INNER JOIN membership_terms
+                          ON memberships.term_id = membership_terms.id
+                          WHERE memberships.user_id = :userId AND memberships.admin_id = :adminId
+                          ORDER BY expiry_date DESC
+        ');
+        $this->db->bind(':userId', $user_id);
+        $this->db->bind(':adminId', $_SESSION['user_id']);
+        return $this->db->resultSet(PDO::FETCH_ASSOC);
+    }
+
     public function addMembership($membershipDates, $user_id, $term_id) {
         // admin_id, user_id, term, expiry_date, start_date
         $this->db->query('INSERT INTO memberships (admin_id, user_id, term_id, start_date, expiry_Date) VALUE(:admin_id, :user_id, :termId, :start_date, :expiry_date)');
