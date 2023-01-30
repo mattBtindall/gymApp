@@ -94,7 +94,7 @@
 				<div class="row">
 					<div class="col-6">
 						<div class="form-group">
-							<label for="cost">Cost</label>
+							<label for="cost" class="mb-1 text-bold">Cost</label>
 							<input type="number" step="0.1" class="form-control form-control-lg cost <?= !empty($data['modal']['cost_err']) ? 'is-invalid' : ''; ?>" name="cost" value="<?= $data['modal']['cost']; ?>" data-initial-value="" readonly>
 							<span class="invalid-feedback"><?= $data['modal']['cost_err']; ?></span>
 						</div>
