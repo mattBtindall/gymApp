@@ -138,6 +138,21 @@ class Users extends Users_base {
 
     public function searchDb($query) {
         $users = parent::searchDb($query);
+        echo $this->joinUserMembers($users);
+    }
+
+    public function getUserData() {
+        // called by ajax request
+        if (!isLoggedIn()) {
+           echo '{}';
+           return;
+        }
+
+        $users = parent::getUserData();
+        echo $this->joinUserMembers($users);
+    }
+
+    private function joinUserMembers($users) {
         $members = $this->memberModel->getMostRecentMemberships();
         foreach ($users as &$user) {
             foreach($members as $member) {
@@ -149,19 +164,6 @@ class Users extends Users_base {
             }
         }
         $users = $users ? $users : '{}';
-        echo json_encode($users);
-    }
-
-    public function getUserData() {
-        // called by ajax request
-        if (!isLoggedIn()) {
-           echo '{}';
-           return;
-        }
-
-        $data = parent::getUserData();
-        $members = $this->memberModel->getMembers();
-        $data['members'] = $members ? $members : '{}';
-        echo json_encode($data);
+        return json_encode($users);
     }
 }

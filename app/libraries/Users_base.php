@@ -185,17 +185,7 @@ class Users_base extends Controller {
             return '{}';
         }
 
-        $tempId = NULL;
-        $allUsers = $this->userModel->getAllUsersFromOppositeArea();
-        foreach($allUsers as &$user) {
-            $tempId = $user['id'];
-            unset($user['id']);
-            $user['user_id'] = $tempId;
-        }
-        $data = [
-            'allUsers' => $allUsers
-        ];
-        return $data;
+        return $this->userModel->getAllUsersFromOppositeArea();
     }
 
     public function isAdmin() {

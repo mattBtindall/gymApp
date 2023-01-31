@@ -43,12 +43,12 @@ export class UserModal extends Modal {
         const userModalMenuBar = document.querySelector('.user-modal__menu-bar');
 
         if (membershipTable)
-            membershipTable.addEventListener('click', (e) => this.openModalOnClick(e.target, '.account-link', userData.get().members));
+            membershipTable.addEventListener('click', (e) => this.openModalOnClick(e.target, '.account-link', userData.get()));
 
         if (searchOutput) {
             searchOutput.addEventListener('click', (e) => {
                 if (e.target.classList.contains('account-link')) {
-                    this.openModalOnClick(e.target, '.search-modal__row', userData.get().allUsers);
+                    this.openModalOnClick(e.target, '.search-modal__row', userData.get());
                 }
             });
         }
@@ -159,7 +159,7 @@ export class UserModal extends Modal {
         this.elements.email.textContent = user.email;
         this.elements.phone_number.textContent = user.phone_number;
         this.elements.dob.textContent = user.dob;
-        this.elements.id.value = user.user_id;
+        this.elements.id.value = user.id;
     }
 
     setModalAdmin(userId) {
@@ -210,7 +210,7 @@ export class UserModal extends Modal {
 
     openModalOnLoad(openModal, currentUserId, selected) {
         if (!openModal) return;
-        const user = this.getUserById(currentUserId, userData.get().allUsers);
+        const user = this.getUserById(currentUserId, userData.get());
         Array.from(this.elements.addMembershipTab.termDropDown.children).forEach(option => {
             if (option.value == selected) {
                 option.selected = true;
@@ -221,7 +221,7 @@ export class UserModal extends Modal {
             this.elements.addMembershipTab.cost.readOnly = false;
         }
         this.setTabs(this.elements.tabs.menu.addMembership);
-        this.setModalAdmin(user.user_id)
+        this.setModalAdmin(user.id)
         this.setUserDetails(user);
         this.openModal(user);
     }
@@ -230,7 +230,7 @@ export class UserModal extends Modal {
         modals.search.closeModal();
         const user = this.getCurrentUser(element, parentSelector, data);
         this.setUserDetails(user);
-        this.setModalAdmin(user.user_id)
+        this.setModalAdmin(user.id);
         this.openModal(user);
     }
 
