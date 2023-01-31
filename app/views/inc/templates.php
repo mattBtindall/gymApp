@@ -29,8 +29,8 @@
 		<div class="col-7">
 			<div class="d-flex justify-content-between align-items-center">
 				<div class="membership-details m-0 d-flex flex-column">
-					<strong class=" term-display-name"></strong>
-					<span class=" expiry-date"></span>
+					<strong class="term-display-name"></strong>
+					<span class="fst-italic expiry-date"></span>
 				</div>
 				<div class="btn-container">
 					<div class="btn btn-outline-secondary">Log</div>

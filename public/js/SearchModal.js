@@ -22,7 +22,9 @@ export class SearchModal extends Modal {
 
             const url = getPhpMethodUrl("/Users/searchDb/", e.target.value);
             getData(url)
-                .then(data => this.setModal(data));
+                .then(data => {
+                    this.setModal(data)
+                });
         });
     }
 
@@ -65,6 +67,8 @@ export class SearchModal extends Modal {
             if (rowData.expiry_date) {
                 rowBody.querySelector('.membership-details .term-display-name').textContent = rowData.term_display_name;
                 rowBody.querySelector('.membership-details .expiry-date').textContent = rowData.expiry_date;
+            } else {
+                rowBody.querySelector('.membership-details .expiry-date').textContent = 'No membership';
             }
             this.elements.output.appendChild(rowBody);
         }
