@@ -55,7 +55,8 @@ export class UserModal extends Modal {
 
         document.querySelector('.exit-modal-container i').addEventListener('click', () => this.closeModal());
 
-        if (userModalMenuBar){
+        if (userModalMenuBar) {
+            // tab click
             userModalMenuBar.addEventListener('click', (e) => {
                 if (e.target.classList.contains('user-modal__menu-item')) {
                     this.setTabs(e.target);
@@ -130,6 +131,10 @@ export class UserModal extends Modal {
                 hasExpired = 'active';
                 container.classList.add('bg-success', 'border-success');
             }
+
+            const deleteBtn = membershipElement.querySelector('.delete');
+            const href = deleteBtn.getAttribute('href');
+            deleteBtn.setAttribute('href', href + membership.id);
 
             membershipElement.querySelector('.display-name-output').textContent = membership.display_name;
             membershipElement.querySelector('.membership-status').textContent = hasExpired;

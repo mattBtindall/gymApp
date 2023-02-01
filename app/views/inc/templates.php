@@ -75,9 +75,15 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-12">
+			<div class="col-6">
 				<span>Paid - </span>
 				<span class="cost-output"></span>
+			</div>
+			<div class="col-6">
+				<div class="d-flex justify-content-end">
+					<!-- Id is inserted onto the href from JavaScript -->
+					<a href="<?= URL_ROOT; ?>/members/deleteMembership/" class="btn btn-danger delete">Delete</a>
+				</div>
 			</div>
 		</div>
 	</div>

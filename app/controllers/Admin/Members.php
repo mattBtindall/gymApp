@@ -110,6 +110,15 @@ class Members extends Controller {
         $this->view('members/activity');
     }
 
+    public function deleteMembership($membershipId) {
+        if ($this->membersModel->deleteMembership($membershipId)) {
+            flash('membership_deleted', 'Membership deleted successfully');
+        } else {
+            flash('membership_deleted', 'Failed to delete membership, please try again', 'alert alert-danger');
+        }
+        redirect('/members/index');
+    }
+
     public function getMembersData() {
         // this is called from an ajax call from the frontend
         $jsonData = $this->memberships ? json_encode(($this->memberships)) : '{}';

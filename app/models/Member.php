@@ -35,7 +35,7 @@ class Member {
     }
 
     public function getTermMembershipByUserId($user_id) {
-        $this->db->query('SELECT start_date, expiry_date, memberships.created_at, display_name, cost
+        $this->db->query('SELECT start_date, expiry_date, memberships.created_at, memberships.id, display_name, cost
                           FROM memberships
                           INNER JOIN membership_terms
                           ON memberships.term_id = membership_terms.id
@@ -56,6 +56,12 @@ class Member {
         $this->db->bind(':start_date', $membershipDates['start_date']);
         $this->db->bind(':expiry_date', $membershipDates['expiry_date']);
 
+        return $this->db->execute() ? true : false;
+    }
+
+    public function deleteMembership($membershipId) {
+        $this->db->query('DELETE FROM memberships WHERE id = :membershipId');
+        $this->db->bind(':membershipId', $membershipId);
         return $this->db->execute() ? true : false;
     }
 
