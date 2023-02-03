@@ -5,7 +5,7 @@ class Member {
     }
 
     public function getMembers() {
-        $this->db->query('SELECT user_users.id as user_id, name, email, phone_number, img_url, memberships.expiry_date, memberships.id as membership_id, display_name as term_display_name, cost
+        $this->db->query('SELECT user_users.id as user_id, name, email, phone_number, img_url, memberships.expiry_date, memberships.id as membership_id, display_name as term_display_name, memberships.cost
                           FROM user_users
                           INNER JOIN memberships
                           ON user_users.id = memberships.user_id
@@ -35,7 +35,7 @@ class Member {
     }
 
     public function getTermMembershipByUserId($user_id) {
-        $this->db->query('SELECT start_date, expiry_date, memberships.created_at, memberships.id, display_name, cost
+        $this->db->query('SELECT start_date, expiry_date, memberships.created_at, memberships.id, display_name, memberships.cost
                           FROM memberships
                           INNER JOIN membership_terms
                           ON memberships.term_id = membership_terms.id
@@ -47,14 +47,15 @@ class Member {
         return $this->db->resultSet(PDO::FETCH_ASSOC);
     }
 
-    public function addMembership($startDate, $expiryDate, $user_id, $term_id) {
+    public function addMembership($startDate, $expiryDate, $user_id, $term_id, $cost) {
         // admin_id, user_id, term, expiry_date, start_date
-        $this->db->query('INSERT INTO memberships (admin_id, user_id, term_id, start_date, expiry_Date) VALUE(:admin_id, :user_id, :termId, :start_date, :expiry_date)');
+        $this->db->query('INSERT INTO memberships (admin_id, user_id, term_id, start_date, expiry_date, cost) VALUE(:admin_id, :user_id, :termId, :start_date, :expiry_date, :cost)');
         $this->db->bind(':admin_id', $_SESSION['user_id']);
         $this->db->bind(':user_id', $user_id);
         $this->db->bind(':termId', $term_id);
         $this->db->bind(':start_date', $startDate);
         $this->db->bind(':expiry_date', $expiryDate);
+        $this->db->bind(':cost', $cost);
 
         return $this->db->execute() ? true : false;
     }

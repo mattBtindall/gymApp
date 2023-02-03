@@ -75,7 +75,7 @@ class Members extends Controller {
                     $modal['term_id'] = $this->termModel->addTerm($term, $_SESSION['user_id'], '1');
                 }
 
-                if ($this->membersModel->addMembership($modal['start_date'], $modal['expiry_date'], $modal['user_id'], $modal['term_id'])) {
+                if ($this->membersModel->addMembership($modal['start_date'], $modal['expiry_date'], $modal['user_id'], $modal['term_id'], $modal['cost'])) {
                     $userName = $this->userModel->selectUserById($modal['user_id'], 'User')['name'];
                     $successMsg = "A membership has been successfully added for {$userName}";
                     flash('membership_assignment', $successMsg);
