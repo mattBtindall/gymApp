@@ -47,14 +47,14 @@ class Member {
         return $this->db->resultSet(PDO::FETCH_ASSOC);
     }
 
-    public function addMembership($membershipDates, $user_id, $term_id) {
+    public function addMembership($startDate, $expiryDate, $user_id, $term_id) {
         // admin_id, user_id, term, expiry_date, start_date
         $this->db->query('INSERT INTO memberships (admin_id, user_id, term_id, start_date, expiry_Date) VALUE(:admin_id, :user_id, :termId, :start_date, :expiry_date)');
         $this->db->bind(':admin_id', $_SESSION['user_id']);
         $this->db->bind(':user_id', $user_id);
         $this->db->bind(':termId', $term_id);
-        $this->db->bind(':start_date', $membershipDates['start_date']);
-        $this->db->bind(':expiry_date', $membershipDates['expiry_date']);
+        $this->db->bind(':start_date', $startDate);
+        $this->db->bind(':expiry_date', $expiryDate);
 
         return $this->db->execute() ? true : false;
     }

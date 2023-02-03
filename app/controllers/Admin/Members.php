@@ -16,11 +16,22 @@ class Members extends Controller {
                 'start_date' => trim($_POST['start_date']),
                 'expiry_date' => trim($_POST['expiry_date']),
                 'cost' => trim($_POST['cost']),
+                'term_length' => '',
                 'term_id_err' => '',
                 'start_date_err' => '',
                 'expiry_date_err' => '',
                 'cost_err' => ''
             ];
+
+            // before error checking need to get expiry date as it's not passed from form when term !== custom
+            // in order to get the expiry date we need to get the term length
+            if ($modal['term_id'] !== 'custom') {
+                $term = $this->termModel->getTermById($modal['term_id']);
+                $modal['term_length'] = $term['term_multiplier'] . ' ' . $term['term'];
+                $modal['expiry_date'] = date_create_from_format(HTML_DATE_TIME_FORMAT, $modal['start_date'])->modify('+' . $modal['term_length']);
+            } else {
+                $modal['expiry_date'] = date_create_from_format(HTML_DATE_TIME_FORMAT, $modal['expiry_date']);
+            }
 
             if (empty($modal['term_id']) || $modal['term_id'] === 'please_select') {
                 $modal['term_id_err'] = 'Please select a term.';
@@ -29,7 +40,7 @@ class Members extends Controller {
             if (empty($modal['start_date'])) {
                 $modal['start_date_err'] = 'Please select a start date.';
             }
-            else if ($this->dateOverlap($modal['user_id'], $modal['start_date'])) {
+            else if ($this->dateOverlap($modal['user_id'], $modal['start_date'], $modal['expiry_date'])) {
                 $modal['start_date_err'] = 'Please select a date that begins after the current membership expires';
             }
 
@@ -43,6 +54,10 @@ class Members extends Controller {
                 $modal['cost_err'] = 'Please select a cost.';
             }
 
+            // format dats before passing to db & modals.php for output
+            $modal['expiry_date'] = $modal['expiry_date']->format(SQL_DATE_TIME_FORMAT);
+            $modal['start_date'] = date_create_from_format(HTML_DATE_TIME_FORMAT, $modal['start_date'])->format(SQL_DATE_TIME_FORMAT);
+
             if (empty($modal['term_id_err']) && empty($modal['start_date_err']) && empty($modal['expiry_date_err']) && empty($modal['cost_err'])) {
                 // reset modal state so that it doesn't reopen
                 $_SESSION['user_modal_state']['open'] = false;
@@ -51,7 +66,6 @@ class Members extends Controller {
 
                 // create new trerm if the user has seleted custom dates
                 if ($modal['term_id'] === 'custom') {
-                    $termLength = 'custom';
                     $term = [
                         'display_name' => 'custom',
                         'term' => 'n/a',
@@ -59,16 +73,12 @@ class Members extends Controller {
                         'cost' => $modal['cost']
                     ];
                     $modal['term_id'] = $this->termModel->addTerm($term, $_SESSION['user_id'], '1');
-                } else {
-                    $term = $this->termModel->getTermById($modal['term_id']);
-                    $termLength = $term['term_multiplier'] . ' ' . $term['term'];
                 }
-                $membershipDates = $this->generateMembershipDates($termLength, $modal['start_date'], $modal['expiry_date']);
-                if ($this->membersModel->addMembership($membershipDates, $modal['user_id'], $modal['term_id'])) {
+
+                if ($this->membersModel->addMembership($modal['start_date'], $modal['expiry_date'], $modal['user_id'], $modal['term_id'])) {
                     $userName = $this->userModel->selectUserById($modal['user_id'], 'User')['name'];
                     $successMsg = "A membership has been successfully added for {$userName}";
                     flash('membership_assignment', $successMsg);
-                    $this->memberships = $this->membersModel->getMembers($_SESSION['user_id']); // reload members so newly added member shows
                 } else {
                     flash('membership_assignment', 'Membership assignment failed', 'alert alert-danger');
                 }
@@ -141,28 +151,26 @@ class Members extends Controller {
         echo json_encode($formattedData);
     }
 
-    private function dateOverlap($user_id, $startDate) {
+    private function dateOverlap($user_id, $newStartDate, $newExpiryDate) {
         // get active memberships from the user
         $memberships = $this->membersModel->getMemberById($user_id);
         if (!$memberships) return false;
 
-        $hasOverlap = false;
-        // date here comes in from html so first need to create a date using html dateTime format and then convert it to SQL dateTime format so they can be compared
-        $startDate = date_create_from_format(HTML_DATE_TIME_FORMAT, $startDate);
-        $startDate = $startDate->format(SQL_DATE_TIME_FORMAT);
+        if (!$newStartDate instanceof DateTime) $newStartDate = date_create_from_format(HTML_DATE_TIME_FORMAT, $newStartDate);
 
         foreach ($memberships as $membership) {
-            // date here comes from db so the date object can be created straight from sql dateTime format
+            $startDate = date_create_from_format(SQL_DATE_TIME_FORMAT, $membership['start_date']);
             $expiryDate = date_create_from_format(SQL_DATE_TIME_FORMAT, $membership['expiry_date']);
-            $expiryDate = $expiryDate->format(SQL_DATE_TIME_FORMAT); // need to use this to get the date string
 
-            if (strtotime($startDate) < strtotime($expiryDate)) {
-                $hasOverlap = true;
-                break;
+            // covers start date being in between $membership dates
+            // start and expiryt date going around $membership dates
+            // expiry date between inn between $membership dates
+            if ($newStartDate >= $startDate && $newStartDate <= $expiryDate || $newStartDate < $startDate && $newExpiryDate > $expiryDate || $newExpiryDate >= $startDate && $newExpiryDate < $expiryDate) {
+                return true;
             }
         }
 
-        return $hasOverlap;
+        return false;
     }
 
     public function getMembershipStatus($startDate, $expiryDate) {
@@ -182,22 +190,5 @@ class Members extends Controller {
         else {
             return 'invalid';
         }
-    }
-
-    private function generateMembershipDates($termLength, $startDate, $endDate) {
-        // notice here that when the date comes from html the HTML_DATE_TIME_FORMAT is used
-        // the same goes for when the date comes from the SQL db -> SQL_DATE_TIME_FORMAT is used
-        if ($termLength !== 'custom') {
-            $endDate = date_create_from_format(HTML_DATE_TIME_FORMAT, $startDate);
-            $endDate->modify('+' . $termLength);
-        } else {
-            $endDate = date_create_from_format(HTML_DATE_TIME_FORMAT, $endDate);
-        }
-        $startDate = date_create_from_format(HTML_DATE_TIME_FORMAT, $startDate);
-
-        return [
-            'start_date' => $startDate->format(SQL_DATE_TIME_FORMAT),
-            'expiry_date' => $endDate->format(SQL_DATE_TIME_FORMAT)
-        ];
     }
 }
