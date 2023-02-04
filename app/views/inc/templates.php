@@ -34,7 +34,7 @@
 				</div>
 				<div class="btn-container">
 					<div class="btn btn-outline-secondary">Log</div>
-					<div class="btn btn-secondary">Sign Up</div>
+					<div class="btn btn-secondary add-membership">Sign Up</div>
 				</div>
 			</div>
 		</div>
