@@ -131,7 +131,6 @@ class Users extends Users_base {
                 'password_err' => '',
                 'confirm_password_err' => ''
             ];
-
             $this->view('/users/register', $data);
         }
     }

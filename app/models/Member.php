@@ -5,7 +5,7 @@ class Member {
     }
 
     public function getMembers() {
-        $this->db->query('SELECT user_users.id as user_id, name, email, phone_number, img_url, memberships.expiry_date, memberships.id as membership_id, display_name as term_display_name, memberships.cost
+        $this->db->query('SELECT user_users.id as user_id, name, email, phone_number, img_url, memberships.expiry_date, memberships.start_date, memberships.id as membership_id, display_name as term_display_name, memberships.cost
                           FROM user_users
                           INNER JOIN memberships
                           ON user_users.id = memberships.user_id
@@ -63,6 +63,14 @@ class Member {
     public function deleteMembership($membershipId) {
         $this->db->query('DELETE FROM memberships WHERE id = :membershipId');
         $this->db->bind(':membershipId', $membershipId);
+        return $this->db->execute() ? true : false;
+    }
+
+    public function logUser($user_id, $admin_id, $active_member) {
+        $this->db->query('INSERT INTO activity (user_id, admin_id, is_active) VALUE(:user_id, :admin_id, :is_active)');
+        $this->db->bind(':user_id', $user_id);
+        $this->db->bind(':admin_id', $admin_id);
+        $this->db->bind(':is_active', $active_member);
         return $this->db->execute() ? true : false;
     }
 

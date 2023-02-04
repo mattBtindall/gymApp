@@ -135,6 +135,27 @@ class Members extends Controller {
         echo $jsonData;
     }
 
+    public function logUser($user_id) {
+        // idea here is to get most recent memberships then filter by user_id
+        // to get the current users most recent membership
+        // is it active? pass through to the logUser method
+        $active = 0;
+        $memberships = $this->membersModel->getTermMembershipByUserId($user_id);
+        foreach ($memberships as $membership) {
+            if ($this->getMembershipStatus($membership['start_date'], $membership['expiry_date']) === 'active') {
+                $active = 1;
+                break;
+            }
+        }
+
+        if (!$this->membersModel->logUser($user_id, $_SESSION['user_id'], $active)) {
+            flash('log_user', 'failed to log user', 'alert alert-danger');
+        } else {
+            flash('log_user', 'logged user successfully');
+        }
+        redirect('/members/activity');
+    }
+
     public function getTermMembershipByUserId($user_id) {
         $membershipTerms = $this->membersModel->getTermMembershipByUserId($user_id);
         foreach ($membershipTerms as &$memberTerm) {
@@ -173,7 +194,7 @@ class Members extends Controller {
         return false;
     }
 
-    public function getMembershipStatus($startDate, $expiryDate) {
+    private function getMembershipStatus($startDate, $expiryDate) {
         $today = new DateTime();
         if (!$startDate instanceof DateTime) $startDate = date_create_from_format(SQL_DATE_TIME_FORMAT, $startDate);
         if (!$expiryDate instanceof DateTime) $expiryDate = date_create_from_format(SQL_DATE_TIME_FORMAT, $expiryDate);
