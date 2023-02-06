@@ -10,7 +10,7 @@
 			<div class="navbar-nav">
 				<a class="nav-link" href="<?= URL_ROOT; ?>">Home</a>
 				<a class="nav-link" href="<?= URL_ROOT; ?>/pages/about">About</a>
-				<a class="nav-link" href="<?= URL_ROOT; ?>/members/activity">Activity</a>
+				<a class="nav-link" href="<?= URL_ROOT; ?>/activitys">Activity</a>
 				<a class="nav-link" href="<?= URL_ROOT; ?>/members">Members</a>
 			</div>
 

@@ -114,12 +114,6 @@ class Members extends Controller {
         $this->view('members/index', $data);
     }
 
-    public function activity() {
-        // get activity for this account
-
-        $this->view('members/activity');
-    }
-
     public function deleteMembership($membershipId) {
         if ($this->membersModel->deleteMembership($membershipId)) {
             flash('membership_deleted', 'Membership deleted successfully');
@@ -133,19 +127,6 @@ class Members extends Controller {
         // this is called from an ajax call from the frontend
         $jsonData = $this->memberships ? json_encode(($this->memberships)) : '{}';
         echo $jsonData;
-    }
-
-    public function logUser($user_id) {
-        $active = 0;
-        $memberships = $this->membersModel->getTermMembershipByUserId($user_id);
-        foreach ($memberships as $membership) {
-            if ($this->getMembershipStatus($membership['start_date'], $membership['expiry_date']) === 'active') {
-                $active = 1;
-                break;
-            }
-        }
-
-        $this->membersModel->logUser($user_id, $_SESSION['user_id'], $active);
     }
 
     public function getTermMembershipByUserId($user_id) {
@@ -189,22 +170,4 @@ class Members extends Controller {
         return false;
     }
 
-    private function getMembershipStatus($startDate, $expiryDate) {
-        $today = new DateTime();
-        if (!$startDate instanceof DateTime) $startDate = date_create_from_format(SQL_DATE_TIME_FORMAT, $startDate);
-        if (!$expiryDate instanceof DateTime) $expiryDate = date_create_from_format(SQL_DATE_TIME_FORMAT, $expiryDate);
-
-        if ($today >= $startDate && $today <= $expiryDate) {
-            return 'active';
-        }
-        else if ($today < $startDate) {
-            return 'future';
-        }
-        else if ($today > $expiryDate) {
-            return 'expired';
-        }
-        else {
-            return 'invalid';
-        }
-    }
 }
