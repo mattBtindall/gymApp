@@ -136,9 +136,6 @@ class Members extends Controller {
     }
 
     public function logUser($user_id) {
-        // idea here is to get most recent memberships then filter by user_id
-        // to get the current users most recent membership
-        // is it active? pass through to the logUser method
         $active = 0;
         $memberships = $this->membersModel->getTermMembershipByUserId($user_id);
         foreach ($memberships as $membership) {
@@ -148,12 +145,7 @@ class Members extends Controller {
             }
         }
 
-        if (!$this->membersModel->logUser($user_id, $_SESSION['user_id'], $active)) {
-            flash('log_user', 'failed to log user', 'alert alert-danger');
-        } else {
-            flash('log_user', 'logged user successfully');
-        }
-        redirect('/members/activity');
+        $this->membersModel->logUser($user_id, $_SESSION['user_id'], $active);
     }
 
     public function getTermMembershipByUserId($user_id) {
@@ -186,7 +178,10 @@ class Members extends Controller {
             // covers start date being in between $membership dates
             // start and expiryt date going around $membership dates
             // expiry date between inn between $membership dates
-            if ($newStartDate >= $startDate && $newStartDate <= $expiryDate || $newStartDate < $startDate && $newExpiryDate > $expiryDate || $newExpiryDate >= $startDate && $newExpiryDate < $expiryDate) {
+            if ($newStartDate >= $startDate && $newStartDate <= $expiryDate
+                || $newStartDate < $startDate && $newExpiryDate > $expiryDate
+                || $newExpiryDate >= $startDate && $newExpiryDate < $expiryDate)
+            {
                 return true;
             }
         }
