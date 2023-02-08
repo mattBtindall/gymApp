@@ -11,6 +11,7 @@ class Users extends Users_base {
         ];
 
         $this->memberModel = $this->model('Member');
+        $this->activityModel = $this->model('Activity');
         parent::__construct($profileValuesToShow);
     }
 
@@ -153,12 +154,22 @@ class Users extends Users_base {
 
     private function joinUserMembers($users) {
         $members = $this->memberModel->getMostRecentMemberships();
+        $activity = $this->activityModel->getMembersActivity($_SESSION['user_id']);
         foreach ($users as &$user) {
             foreach($members as $member) {
                 if ($user['id'] === $member['user_id']) {
                     $expiryDate = date_create_from_format(SQL_DATE_TIME_FORMAT, $member['expiry_date']);
                     $expiryDate = $expiryDate->format(OUTPUT_DATE_TIME_FORMAT);
                     $user =  array_merge(['expiry_date' => $expiryDate, 'term_display_name' => $member['term_display_name']], $user);
+                }
+            }
+
+            foreach($activity as &$act) {
+                if ($user['id'] === $act['user_id']) {
+                    $act['date'] = date_create_from_format(SQL_DATE_TIME_FORMAT, $act['created_at'])->format(OUTPUT_DATE_TIME_FORMAT);
+                    $act['time'] = date_create_from_format(SQL_DATE_TIME_FORMAT, $act['created_at'])->format('H:i A');
+                    unset($act['created_at']);
+                    $user['activity'][] = $act; 
                 }
             }
         }

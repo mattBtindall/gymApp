@@ -1,7 +1,20 @@
 <?php
 class Activity {
+    private $db;
+
     public function __construct() {
         $this->db = new Database();
+    }
+
+    public function getMembersActivity($admin_id) {
+        $this->db->query('SELECT * FROM activity WHERE admin_id = :adminId');
+        $this->db->bind(':adminId', $admin_id);
+        return $this->db->resultSet(PDO::FETCH_ASSOC);
+    }
+
+    public function getMemberActivity($admin_id, $user_id) {
+        $activity = $this->getMembersActivity($admin_id);
+        return array_filter($activity, fn($val) => $val['user_id'] == $user_id);
     }
 
     public function logUser($user_id, $admin_id, $active_member) {
