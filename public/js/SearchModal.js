@@ -64,10 +64,13 @@ export class SearchModal extends Modal {
             rowBody.querySelector('.id').textContent = rowData['id'];
 
             // membership details
+            const logBtn = rowBody.querySelector('.log-btn');
+            logBtn.addEventListener('click', () => this.logMember(rowData['id']))
             if (rowData.expiry_date) {
                 rowBody.querySelector('.membership-details .term-display-name').textContent = rowData.term_display_name;
                 rowBody.querySelector('.membership-details .expiry-date').textContent = rowData.expiry_date;
             } else {
+                logBtn.classList.add('disabled');
                 rowBody.querySelector('.membership-details .expiry-date').textContent = 'No membership';
             }
             this.elements.output.appendChild(rowBody);

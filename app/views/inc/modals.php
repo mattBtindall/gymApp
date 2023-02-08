@@ -40,7 +40,7 @@
 				<div class="img-container"><img src="http://localhost/gymApp/public/img/default_img.png" alt=""></div>
 			</div>
 			<div class="col-md-10">
-				<h3 class="name mb-1">False Name Here</h3>
+				<h3 class="name mb-1"></h3>
 				<div class="d-flex flex-wrap">
 					<span class="py-1 px-2 border rounded m-1 ms-0"><i class="bi bi-envelope-fill"></i><span class="email">test@test.com</span></span>
 					<span class="py-1 px-2 border rounded m-1"><i class="bi bi-phone"></i><span class="phone_number">01484650980</span></span>
@@ -51,14 +51,15 @@
 		</div>
 	</header>
 	<div class="user-modal__menu-bar bg-light px-4 py-4 border-top border-bottom">
-		<div class="d-flex gap-5">
+		<div class="d-flex gap-5 align-items-center">
 			<span class="user-modal__menu-item active" data-content-class-name="activity">Activity</span>
 			<span class="user-modal__menu-item" data-content-class-name="membership">Membership</span>
 			<span class="user-modal__menu-item" data-content-class-name="add-membership">Add Membership</span>
+			<span class="btn btn-secondary ms-3 log-btn">Log</span>
 		</div>
 	</div>
 	<div class="user-modal__content px-3 py-2">
-		<!-- Actibity -->
+		<!-- Activity -->
 		<div class="user-modal__item activity active">
 			<div class="row">
 				<div class="col-3 fw-bold">Date</div>

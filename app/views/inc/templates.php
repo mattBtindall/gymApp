@@ -33,7 +33,7 @@
 					<span class="fst-italic expiry-date"></span>
 				</div>
 				<div class="btn-container">
-					<div class="btn btn-outline-secondary">Log</div>
+					<div class="btn btn-outline-secondary log-btn">Log</div>
 					<div class="btn btn-secondary add-membership">Sign Up</div>
 				</div>
 			</div>

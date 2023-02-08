@@ -1,3 +1,5 @@
+import { sendAjax, getPhpMethodUrl } from './utils.js';
+
 export class Modal {
     constructor(spec, parentSelector) {
         this.elements = {};
@@ -32,5 +34,15 @@ export class Modal {
     getCurrentUser(searchElement, parentSelector, data) {
         const currentUserId = searchElement.closest(parentSelector).querySelector('.id').textContent;
         return this.getUserById(currentUserId, data);
+    }
+
+    setHref(element, id) {
+        const href = element.getAttribute('href');
+        element.setAttribute('href', href + id);
+    }
+
+    logMember(id) {
+        const url = getPhpMethodUrl(`/activitys/logUser/${id}`);
+        sendAjax(url);
     }
 }

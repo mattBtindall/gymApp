@@ -96,7 +96,6 @@ img {
     min-height: 6rem;
     display: flex;
     flex-flow: column nowrap;
-    align-items: center;
     justify-content: center;
 }
 

@@ -4,6 +4,7 @@ import { modals, userData, getPhpMethodUrl, getData, sendAjax, isAdmin, capitali
 export class UserModal extends Modal {
     constructor() {
         super({
+            logBtn: '.log-btn',
             name: '.name',
             email: '.email',
             phone_number: '.phone_number',
@@ -145,8 +146,7 @@ export class UserModal extends Modal {
             container.classList.add(...classes);
 
             const deleteBtn = membershipElement.querySelector('.delete');
-            const href = deleteBtn.getAttribute('href');
-            deleteBtn.setAttribute('href', href + membership.id);
+            this.setHref(deleteBtn, membership.id);
 
             membershipElement.querySelector('.display-name-output').textContent = membership.display_name;
             membershipElement.querySelector('.membership-status').textContent = capitalise(membership.status);
@@ -183,6 +183,7 @@ export class UserModal extends Modal {
     }
 
     setUserDetails(user) {
+        this.elements.logBtn.addEventListener('click', () => this.logMember(user.id))
         this.elements.name.textContent = user.name;
         this.elements.email.textContent = user.email;
         this.elements.phone_number.textContent = user.phone_number;
