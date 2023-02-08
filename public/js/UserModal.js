@@ -24,6 +24,7 @@ export class UserModal extends Modal {
             },
             content: {
                 items: document.querySelectorAll('.user-modal__item'),
+                activity: document.querySelector('.user-modal__item.activity .content'),
                 memberships: document.querySelector('.user-modal__item.membership')
             }
         }
@@ -166,6 +167,21 @@ export class UserModal extends Modal {
             });
     }
 
+    setActivityTab(user) {
+        const outputActivity = (activity) => {
+            const activityTemplate = document.getElementById('user-modal-activity');
+            const activityElement = document.importNode(activityTemplate.content, true);
+            const status = parseInt(activity.is_active) ? 'granted' : 'no-entry';
+
+            activityElement.querySelector('.date-output').textContent = activity.date;
+            activityElement.querySelector('.time-output').textContent = activity.time;
+            activityElement.querySelector('.status-output').textContent = status;
+            this.elements.tabs.content.activity.appendChild(activityElement);
+        }
+
+        user.activity.forEach(activity => outputActivity(activity));
+    }
+
     setUserDetails(user) {
         this.elements.name.textContent = user.name;
         this.elements.email.textContent = user.email;
@@ -174,11 +190,12 @@ export class UserModal extends Modal {
         this.elements.id.value = user.id;
     }
 
-    setModalAdmin(userId) {
+    setModalAdmin(user) {
         isAdmin()
             .then(admin => {
                 if (admin.isAdmin) {
-                    this.setMembershipTab(userId);
+                    this.setActivityTab(user);
+                    this.setMembershipTab(user.id);
                 }
             });
     }
@@ -244,9 +261,13 @@ export class UserModal extends Modal {
 
     openModal(user) {
         modals.search.closeModal();
-        this.setModalAdmin(user.id)
+        this.setModalAdmin(user)
         this.setUserDetails(user);
-        super.openModal(user);
+
+        // adds delay in so users can't see the modal before data is loaded  
+        setTimeout(() => {
+            super.openModal(user);
+        }, 100);
     }
 
     closeModal() {
@@ -258,6 +279,7 @@ export class UserModal extends Modal {
         sendAjax(url); // remove modal errors so it doesn't reopen
         this.resetAddMembershipTab();
         this.resetMembershipTab();
+        this.resetActivityTab();
         this.setTabs(this.elements.tabs.menu.activity);
         modals.search.closeModal();
         super.closeModal();
@@ -275,5 +297,9 @@ export class UserModal extends Modal {
 
     resetMembershipTab() {
         this.elements.tabs.content.memberships.innerText = "";
+    }
+
+    resetActivityTab() {
+        this.elements.tabs.content.activity.innerText = "";
     }
 }

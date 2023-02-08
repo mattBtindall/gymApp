@@ -60,12 +60,18 @@
 	<div class="user-modal__content px-3 py-2">
 		<!-- Actibity -->
 		<div class="user-modal__item activity active">
-			<h5>Activity</h5>
+			<div class="row">
+				<div class="col-3 fw-bold">Date</div>
+				<div class="col-3 fw-bold">Time</div>
+				<div class="col-4 fw-bold">Access</div>
+			</div>
+			<div class="content">
+
+			</div>
 		</div>
 
 		<!-- Membership -->
-		<div class="user-modal__item membership">
-		</div>
+		<div class="user-modal__item membership"></div>
 
 		<!-- Add membership -->
 		<div class="user-modal__item add-membership">

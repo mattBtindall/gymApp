@@ -7,7 +7,7 @@ class Activity {
     }
 
     public function getMembersActivity($admin_id) {
-        $this->db->query('SELECT * FROM activity WHERE admin_id = :adminId');
+        $this->db->query('SELECT * FROM activity WHERE admin_id = :adminId ORDER BY created_at DESC');
         $this->db->bind(':adminId', $admin_id);
         return $this->db->resultSet(PDO::FETCH_ASSOC);
     }

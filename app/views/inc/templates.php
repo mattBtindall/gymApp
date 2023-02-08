@@ -88,3 +88,11 @@
 		</div>
 	</div>
 </template>
+
+<template id="user-modal-activity">
+	<div class="row">
+		<div class="col-3"><div class="date-output py-2"></div></div>
+		<div class="col-3"><div class="time-output py-2"></div></div>
+		<div class="col-4"><div class="status-output py-2"></div></div>
+	</div>
+</template>

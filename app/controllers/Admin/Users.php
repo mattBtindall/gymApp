@@ -170,7 +170,7 @@ class Users extends Users_base {
             foreach($activity as &$act) {
                 if ($user['id'] === $act['user_id']) {
                     $act['date'] = DateTime::createFromFormat(SQL_DATE_TIME_FORMAT, $act['created_at'])->format(OUTPUT_DATE_TIME_FORMAT);
-                    $act['time'] = DateTime::createFromFormat(SQL_DATE_TIME_FORMAT, $act['created_at'])->format('H:i A');
+                    $act['time'] = DateTime::createFromFormat(SQL_DATE_TIME_FORMAT, $act['created_at'])->format('H:i:s A');
                     unset($act['created_at']);
                     $user['activity'][] = $act; 
                 }
