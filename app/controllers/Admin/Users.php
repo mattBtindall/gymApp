@@ -1,5 +1,8 @@
 <?php
 class Users extends Users_base {
+    private $memberModel;
+    private $activityModel;
+
     public function __construct() {
         // Used to filter through the whole data array when displaying account detials in profile
         $profileValuesToShow = [
@@ -158,7 +161,7 @@ class Users extends Users_base {
         foreach ($users as &$user) {
             foreach($members as $member) {
                 if ($user['id'] === $member['user_id']) {
-                    $expiryDate = date_create_from_format(SQL_DATE_TIME_FORMAT, $member['expiry_date']);
+                    $expiryDate = DateTime::createFromFormat(SQL_DATE_TIME_FORMAT, $member['expiry_date']);
                     $expiryDate = $expiryDate->format(OUTPUT_DATE_TIME_FORMAT);
                     $user =  array_merge(['expiry_date' => $expiryDate, 'term_display_name' => $member['term_display_name']], $user);
                 }
@@ -166,8 +169,8 @@ class Users extends Users_base {
 
             foreach($activity as &$act) {
                 if ($user['id'] === $act['user_id']) {
-                    $act['date'] = date_create_from_format(SQL_DATE_TIME_FORMAT, $act['created_at'])->format(OUTPUT_DATE_TIME_FORMAT);
-                    $act['time'] = date_create_from_format(SQL_DATE_TIME_FORMAT, $act['created_at'])->format('H:i A');
+                    $act['date'] = DateTime::createFromFormat(SQL_DATE_TIME_FORMAT, $act['created_at'])->format(OUTPUT_DATE_TIME_FORMAT);
+                    $act['time'] = DateTime::createFromFormat(SQL_DATE_TIME_FORMAT, $act['created_at'])->format('H:i A');
                     unset($act['created_at']);
                     $user['activity'][] = $act; 
                 }

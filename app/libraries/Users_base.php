@@ -1,5 +1,8 @@
 <?php
 class Users_base extends Controller {
+    protected $userModel;
+    protected $profileValuesToShow;
+
     public function __construct($profileValuesToShow) {
         parent::__construct();
 

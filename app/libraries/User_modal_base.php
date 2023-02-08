@@ -10,6 +10,6 @@ class User_modal_base {
     public function disable() {
         $_SESSION['user_modal_state']['open'] = false;
         $_SESSION['user_modal_state']['user_id'] = 0;
-                $_SESSION['user_modal_state']['selected'] = '';
+        $_SESSION['user_modal_state']['selected'] = '';
     }
 }

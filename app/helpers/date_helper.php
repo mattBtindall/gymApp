@@ -1,8 +1,8 @@
 <?php
 function getMembershipStatus($startDate, $expiryDate) {
     $today = new DateTime();
-    if (!$startDate instanceof DateTime) $startDate = date_create_from_format(SQL_DATE_TIME_FORMAT, $startDate);
-    if (!$expiryDate instanceof DateTime) $expiryDate = date_create_from_format(SQL_DATE_TIME_FORMAT, $expiryDate);
+    if (!$startDate instanceof DateTime) $startDate = DateTime::createFromFormat(SQL_DATE_TIME_FORMAT, $startDate);
+    if (!$expiryDate instanceof DateTime) $expiryDate = DateTime::createFromFormat(SQL_DATE_TIME_FORMAT, $expiryDate);
 
     if ($today >= $startDate && $today <= $expiryDate) {
         return 'active';

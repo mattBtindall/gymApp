@@ -54,7 +54,7 @@
         <?php foreach($data['active_terms'] as $term): ?>
             <?php
                 // format the expiry date to d/m/y
-                $dateCreated= date_create_from_format(SQL_DATE_TIME_FORMAT, $term['created_at']);
+                $dateCreated= DateTime::createFromFormat(SQL_DATE_TIME_FORMAT, $term['created_at']);
                 $dateCreated = $dateCreated->format(OUTPUT_DATE_TIME_FORMAT);
 
                 $combinedTermMultiplier = $term['term_multiplier'] . ' ' . $term['term'];

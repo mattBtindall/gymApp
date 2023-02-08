@@ -1,10 +1,12 @@
 <?php
 /*
-    * Base controller
-    * Loads the models and views
-    */
+* Base controller
+* Loads the models and views
+*/
 
 class Controller {
+    private $userModel;
+
     public function __construct() {
         $this->userModel = $this->model('User');
         // if user is logged in but doesn't exist in the current areas database

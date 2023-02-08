@@ -36,7 +36,7 @@ class Activity {
         $this->db->bind(':userId', $userId);
         $row = $this->db->single(PDO::FETCH_ASSOC);
         if (!$row) return 10;
-        $lastInsertTime = date_create_from_format(SQL_DATE_TIME_FORMAT, $row['created_at'])->format(SQL_DATE_TIME_FORMAT);;
+        $lastInsertTime = DateTime::createFromFormat(SQL_DATE_TIME_FORMAT, $row['created_at'])->format(SQL_DATE_TIME_FORMAT);;
         $now = new DateTime();
         return abs(strtotime($now->format(SQL_DATE_TIME_FORMAT)) - strtotime($lastInsertTime));
     }

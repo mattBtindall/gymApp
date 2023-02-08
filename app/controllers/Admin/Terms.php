@@ -1,5 +1,8 @@
 <?php
 class Terms extends Controller {
+    private $termsModel;
+    private $activeTerms;
+
     public function __construct() {
         $this->termsModel = $this->model('Term');
         $this->activeTerms = $this->termsModel->getActiveTerms($_SESSION['user_id']);

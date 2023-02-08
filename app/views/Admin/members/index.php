@@ -16,7 +16,7 @@
             <?php foreach($data['members'] as $row): ?>
                 <?php
                     // format the expiry date to d/m/y
-                    $expiryDate = date_create_from_format(SQL_DATE_TIME_FORMAT, $row['expiry_date']);
+                    $expiryDate = DateTime::createFromFormat(SQL_DATE_TIME_FORMAT, $row['expiry_date']);
                     $expiryDate = $expiryDate->format(OUTPUT_DATE_TIME_FORMAT);
                 ?>
                 <tr class="border-bottom border-top account-link">

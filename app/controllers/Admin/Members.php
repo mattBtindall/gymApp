@@ -1,5 +1,10 @@
 <?php
 class Members extends Controller {
+    private $membersModel;
+    private $userModel;
+    private $termModel;
+    private $memberships;
+
     public function __construct() {
         $this->membersModel = $this->model('Member');
         $this->userModel = $this->model('User');
@@ -28,9 +33,9 @@ class Members extends Controller {
             if ($modal['term_id'] !== 'custom') {
                 $term = $this->termModel->getTermById($modal['term_id']);
                 $modal['term_length'] = $term['term_multiplier'] . ' ' . $term['term'];
-                $modal['expiry_date'] = date_create_from_format(HTML_DATE_TIME_FORMAT, $modal['start_date'])->modify('+' . $modal['term_length']);
+                $modal['expiry_date'] = DateTime::createFromFormat(HTML_DATE_TIME_FORMAT, $modal['start_date'])->modify('+' . $modal['term_length']);
             } else {
-                $modal['expiry_date'] = date_create_from_format(HTML_DATE_TIME_FORMAT, $modal['expiry_date']);
+                $modal['expiry_date'] = DateTime::createFromFormat(HTML_DATE_TIME_FORMAT, $modal['expiry_date']);
             }
 
             if (empty($modal['term_id']) || $modal['term_id'] === 'please_select') {
@@ -56,7 +61,7 @@ class Members extends Controller {
 
             // format dats before passing to db & modals.php for output
             $modal['expiry_date'] = $modal['expiry_date']->format(SQL_DATE_TIME_FORMAT);
-            $modal['start_date'] = date_create_from_format(HTML_DATE_TIME_FORMAT, $modal['start_date'])->format(SQL_DATE_TIME_FORMAT);
+            $modal['start_date'] = DateTime::createFromFormat(HTML_DATE_TIME_FORMAT, $modal['start_date'])->format(SQL_DATE_TIME_FORMAT);
 
             if (empty($modal['term_id_err']) && empty($modal['start_date_err']) && empty($modal['expiry_date_err']) && empty($modal['cost_err'])) {
                 // reset modal state so that it doesn't reopen
@@ -133,12 +138,12 @@ class Members extends Controller {
         $membershipTerms = $this->membersModel->getTermMembershipByUserId($user_id);
         foreach ($membershipTerms as &$memberTerm) {
             // + 1 day becuase the comparison includes time so if its on the same day we don't want it to have expired
-            $modifiedDate = date_create_from_format(SQL_DATE_TIME_FORMAT, $memberTerm['expiry_date'])->modify('+ 1 day');
+            $modifiedDate = DateTime::createFromFormat(SQL_DATE_TIME_FORMAT, $memberTerm['expiry_date'])->modify('+ 1 day');
             $memberTerm['is_expired'] = $modifiedDate < new DateTime('now');
             $memberTerm['cost'] = convertNumberToPrice($memberTerm['cost']);
-            $memberTerm['expiry_date'] = date_create_from_format(SQL_DATE_TIME_FORMAT, $memberTerm['expiry_date'])->format(OUTPUT_DATE_TIME_FORMAT);
-            $memberTerm['start_date'] = date_create_from_format(SQL_DATE_TIME_FORMAT, $memberTerm['start_date'])->format(OUTPUT_DATE_TIME_FORMAT);
-            $memberTerm['created_at'] = date_create_from_format(SQL_DATE_TIME_FORMAT, $memberTerm['created_at'])->format(OUTPUT_DATE_TIME_FORMAT);
+            $memberTerm['expiry_date'] = DateTime::createFromFormat(SQL_DATE_TIME_FORMAT, $memberTerm['expiry_date'])->format(OUTPUT_DATE_TIME_FORMAT);
+            $memberTerm['start_date'] = DateTime::createFromFormat(SQL_DATE_TIME_FORMAT, $memberTerm['start_date'])->format(OUTPUT_DATE_TIME_FORMAT);
+            $memberTerm['created_at'] = DateTime::createFromFormat(SQL_DATE_TIME_FORMAT, $memberTerm['created_at'])->format(OUTPUT_DATE_TIME_FORMAT);
         }
 
         $formattedData = !empty($membershipTerms) ? $membershipTerms : '{}';
@@ -150,11 +155,11 @@ class Members extends Controller {
         $memberships = $this->membersModel->getMemberById($user_id);
         if (!$memberships) return false;
 
-        if (!$newStartDate instanceof DateTime) $newStartDate = date_create_from_format(HTML_DATE_TIME_FORMAT, $newStartDate);
+        if (!$newStartDate instanceof DateTime) $newStartDate = DateTime::createFromFormat(HTML_DATE_TIME_FORMAT, $newStartDate);
 
         foreach ($memberships as $membership) {
-            $startDate = date_create_from_format(SQL_DATE_TIME_FORMAT, $membership['start_date']);
-            $expiryDate = date_create_from_format(SQL_DATE_TIME_FORMAT, $membership['expiry_date']);
+            $startDate = DateTime::createFromFormat(SQL_DATE_TIME_FORMAT, $membership['start_date']);
+            $expiryDate = DateTime::createFromFormat(SQL_DATE_TIME_FORMAT, $membership['expiry_date']);
 
             // covers start date being in between $membership dates
             // start and expiryt date going around $membership dates
