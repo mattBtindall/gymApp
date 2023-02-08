@@ -19,11 +19,20 @@ class Member {
         return $this->db->resultSet(PDO::FETCH_ASSOC);
     }
 
-    public function getMostRecentMemberships() {
-        // when displaying the members regardless of how many memberships a user has had we only want to show the most recent
+    public function getRelevantMemberships() {
+        // gets either the active membership or the most recent
         $memberships = $this->getMembers();
         $mostRecentMemberships = [];
-        foreach ($memberships as $membership) {
+        $excludeIds = [];
+        foreach ($memberships as &$membership) {
+            if (in_array($membership['user_id'], $excludeIds)) continue;
+
+            if (getMembershipStatus($membership['start_date'], $membership['expiry_date']) === "active") {
+                $mostRecentMemberships[$membership['user_id']] = $membership;
+                array_push($excludeIds, $membership['user_id']);
+                continue;
+            }
+
             if (in_array($membership['user_id'], $mostRecentMemberships)) {
                 if (strtotime($mostRecentMemberships[$membership['user_id']]['expiry_date']) < strtotime($membership['expiry_date'])) {
                     $mostRecentMemberships[$membership['user_id']] = $membership;
@@ -50,7 +59,6 @@ class Member {
     }
 
     public function addMembership($startDate, $expiryDate, $user_id, $term_id, $cost) {
-        // admin_id, user_id, term, expiry_date, start_date
         $this->db->query('INSERT INTO memberships (admin_id, user_id, term_id, start_date, expiry_date, cost) VALUE(:admin_id, :user_id, :termId, :start_date, :expiry_date, :cost)');
         $this->db->bind(':admin_id', $_SESSION['user_id']);
         $this->db->bind(':user_id', $user_id);

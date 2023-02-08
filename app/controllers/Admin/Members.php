@@ -114,7 +114,7 @@ class Members extends Controller {
             ];
         }
 
-        $mostRecentMemberships = $this->membersModel->getMostRecentMemberships();
+        $mostRecentMemberships = $this->membersModel->getRelevantMemberships();
         $data['members'] = $mostRecentMemberships;
         $this->view('members/index', $data);
     }
