@@ -168,6 +168,8 @@ export class UserModal extends Modal {
     }
 
     setActivityTab(user) {
+        if (!user.activity) return;
+
         const outputActivity = (activity) => {
             const activityTemplate = document.getElementById('user-modal-activity');
             const activityElement = document.importNode(activityTemplate.content, true);
@@ -184,6 +186,9 @@ export class UserModal extends Modal {
 
     setUserDetails(user) {
         this.elements.logBtn.addEventListener('click', () => this.logMember(user.id))
+        if (!user.status || !user.status === 'active') {
+            this.elements.logBtn.classList.add('disabled');
+        }
         this.elements.name.textContent = user.name;
         this.elements.email.textContent = user.email;
         this.elements.phone_number.textContent = user.phone_number;
