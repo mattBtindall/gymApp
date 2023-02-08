@@ -36,3 +36,14 @@ export function isAdmin() {
     const url = getPhpMethodUrl('/Users/isAdmin');
     return getData(url);
 }
+
+export function capitalise(str) {
+    const words = str.split(' ');
+    let capitalisedWords = '';
+    words.forEach(word => {
+        const firstLetter = word.charAt(0).toUpperCase();
+        const restOfWord = word.slice(1);
+        capitalisedWords += firstLetter + restOfWord + ' ';
+    });
+    return capitalisedWords.trim();
+}

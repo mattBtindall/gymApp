@@ -1,5 +1,5 @@
 import { Modal } from './Modal.js';
-import { modals, userData, getPhpMethodUrl, getData, sendAjax, isAdmin } from './utils.js';
+import { modals, userData, getPhpMethodUrl, getData, sendAjax, isAdmin, capitalise } from './utils.js';
 
 export class UserModal extends Modal {
     constructor() {
@@ -127,22 +127,28 @@ export class UserModal extends Modal {
             const membershipTemplate = document.getElementById('user-modal-membership');
             const membershipElement = document.importNode(membershipTemplate.content, true);
             const container = membershipElement.querySelector('.user-modal__membership');
-            let hasExpired = null;
-
-            if (membership.is_expired) {
-                hasExpired = 'expired';
-                container.classList.add('bg-danger', 'border-danger');
-            } else {
-                hasExpired = 'active';
-                container.classList.add('bg-success', 'border-success');
+            const classes = [];
+            switch (membership.status) {
+                case 'expired' : 
+                    classes.push('bg-danger', 'border-danger');
+                    break;
+                case 'future' :
+                    classes.push('bg-info', 'border-info');
+                    break;
+                case 'active' :
+                    classes.push('bg-success', 'border-success', 'active');
+                    break;
+                default :
+                    classes.push('bg-light', 'border-light');
             }
+            container.classList.add(...classes);
 
             const deleteBtn = membershipElement.querySelector('.delete');
             const href = deleteBtn.getAttribute('href');
             deleteBtn.setAttribute('href', href + membership.id);
 
             membershipElement.querySelector('.display-name-output').textContent = membership.display_name;
-            membershipElement.querySelector('.membership-status').textContent = hasExpired;
+            membershipElement.querySelector('.membership-status').textContent = capitalise(membership.status);
             membershipElement.querySelector('.start-date-output').textContent = membership.start_date;
             membershipElement.querySelector('.expiry-date-output').textContent = membership.expiry_date;
             membershipElement.querySelector('.created-at-output').textContent = membership.created_at;
@@ -153,14 +159,10 @@ export class UserModal extends Modal {
         this.getMembershipData(userId)
             .then(memberships => {
                 if (memberships === '{}') return;
-
+                
                 for (const key in memberships) {
                     setMembership(memberships[key]);
                 }
-
-                // 'open' first membership if actice
-                const firstMembership = document.querySelector('.user-modal__membership');
-                if (firstMembership.classList.contains('bg-success')) firstMembership.classList.add('active');
             });
     }
 
