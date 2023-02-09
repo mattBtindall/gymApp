@@ -48,15 +48,11 @@
         <tr>
             <th>Display name</th>
             <th>Term</th>
-            <th>Cost (£)</th>
+            <th>Cost (<?= CURRENCY_SYMBOL; ?>)</th>
             <th>Date created</th>
         </tr>
         <?php foreach($data['active_terms'] as $term): ?>
             <?php
-                // format the expiry date to d/m/y
-                $dateCreated= DateTime::createFromFormat(SQL_DATE_TIME_FORMAT, $term['created_at']);
-                $dateCreated = $dateCreated->format(OUTPUT_DATE_TIME_FORMAT);
-
                 $combinedTermMultiplier = $term['term_multiplier'] . ' ' . $term['term'];
                 $displayName = $term['display_name'];
                 $cost = $term['cost'];
@@ -103,7 +99,7 @@
                         <input type="number" step="0.05" value="<?= $cost; ?>" class="form-control form-control-lg w-50 terms-edit__cost <?= $errClassName['cost']; ?>" name="cost" disabled data-term-number="<?= $i; ?>">
                         <span class="invalid-feedback"><?= $data['term_update']['cost_err']; ?></span>
                     </td>
-                    <td><?= $dateCreated;?></td>
+                    <td><?= formatForOutput($term['created_at']);?></td>
                     <td><input class="btn btn-success terms-edit__submit" disabled data-term-number="<?= $i; ?>" type="submit" value="submit"></td>
                     <td><a href="" class="btn btn-warning terms-edit__edit" data-term-number="<?= $i; ?>">Edit</a></td>
                     <td><a href="<?= URL_ROOT; ?>/terms/delete/<?= $term['id']; ?>" class="btn btn-danger">Delete</a></td>

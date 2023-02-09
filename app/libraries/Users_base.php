@@ -106,10 +106,8 @@ class Users_base extends Controller {
                 }
                 redirect('/users/profile');
             }
-        } else {
-            $data = $this->seperateProfileData($data);
-            $this->view('/users/profile', $data);
         }
+        return $this->seperateProfileData($data);
     }
 
     public function profile_edit($id) {

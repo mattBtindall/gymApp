@@ -17,3 +17,7 @@ function getMembershipStatus($startDate, $expiryDate) {
         return 'invalid';
     }
 }
+
+function formatForOutput($dateTime, $outputFormat = OUTPUT_DATE_TIME_FORMAT) {
+    return DateTime::createFromFormat(SQL_DATE_TIME_FORMAT, $dateTime)->format($outputFormat);
+}

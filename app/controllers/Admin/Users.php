@@ -2,6 +2,7 @@
 class Users extends Users_base {
     private $memberModel;
     private $activityModel;
+    private $termModel;
 
     public function __construct() {
         // Used to filter through the whole data array when displaying account detials in profile
@@ -15,6 +16,7 @@ class Users extends Users_base {
 
         $this->memberModel = $this->model('Member');
         $this->activityModel = $this->model('Activity');
+        $this->termModel = $this->model('Term');
         parent::__construct($profileValuesToShow);
     }
 
@@ -139,6 +141,18 @@ class Users extends Users_base {
         }
     }
 
+    public function profile() {
+        $data = parent::profile();
+        $terms = $this->termModel->getActiveTerms($_SESSION['user_id']);
+        foreach($terms as &$term) {
+            $term['created_at'] = formatForOutput($term['created_at']) ;
+            $plural = $term['term_multiplier'] > 1 ? 's' : '';
+            $term['term_output'] = $term['term_multiplier'] . ' ' . $term['term'] . $plural;
+        }
+        $data['terms'] = $terms;
+        $this->view('/users/profile', $data);
+    }
+
     public function searchDb($query) {
         $users = parent::searchDb($query);
         echo $this->joinUserMembers($users);
@@ -162,18 +176,17 @@ class Users extends Users_base {
             foreach($members as $member) {
                 if ($user['id'] === $member['user_id']) {
                     $status = getMembershipStatus($member['start_date'], $member['expiry_date']);
-                    $expiryDate = DateTime::createFromFormat(SQL_DATE_TIME_FORMAT, $member['expiry_date']);
-                    $expiryDate = $expiryDate->format(OUTPUT_DATE_TIME_FORMAT);
+                    $expiryDate = formatForOutput($member['expiry_date']);
                     $user =  array_merge(['expiry_date' => $expiryDate, 'term_display_name' => $member['term_display_name'], 'status' => $status], $user);
                 }
             }
 
             foreach($activity as &$act) {
                 if ($user['id'] === $act['user_id']) {
-                    $act['date'] = DateTime::createFromFormat(SQL_DATE_TIME_FORMAT, $act['created_at'])->format(OUTPUT_DATE_TIME_FORMAT);
-                    $act['time'] = DateTime::createFromFormat(SQL_DATE_TIME_FORMAT, $act['created_at'])->format('H:i:s A');
+                    $act['date'] = formatForOutput($act['created_at']);
+                    $act['time'] = formatForOutput($act['created_at'], 'H:i:s');
                     unset($act['created_at']);
-                    $user['activity'][] = $act; 
+                    $user['activity'][] = $act;
                 }
             }
         }

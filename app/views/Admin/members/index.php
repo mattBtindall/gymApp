@@ -14,11 +14,6 @@
                 <th>Expiry Date</th>
             </tr>
             <?php foreach($data['members'] as $row): ?>
-                <?php
-                    // format the expiry date to d/m/y
-                    $expiryDate = DateTime::createFromFormat(SQL_DATE_TIME_FORMAT, $row['expiry_date']);
-                    $expiryDate = $expiryDate->format(OUTPUT_DATE_TIME_FORMAT);
-                ?>
                 <tr class="border-bottom border-top account-link">
                     <td>
                         <div class="img-container"><img src="<?= $row['img_url']; ?>"></div>
@@ -27,7 +22,7 @@
                     <td class="d-none d-lg-table-cell"><?= $row['email']; ?></td>
                     <td class="d-none d-lg-table-cell"><?= $row['phone_number']; ?></td>
                     <td><?= $row['term_display_name']; ?></td>
-                    <td><?= $expiryDate; ?></td>
+                    <td><?= formatForOutput($row['expiry_date']); ?></td>
                     <td class="id" style="display: none;"><?= $row['user_id']; ?></td>
                 </tr>
             <?php endforeach; ?>

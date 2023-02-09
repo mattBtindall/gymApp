@@ -32,7 +32,7 @@
                 </div>
                 <div class="row">
                     <div class="col-6">
-                        <input type="submit" value="Update" class="btn btn-success btn-block" disabled>
+                        <input type="submit" value="Update" class="btn btn-success btn-block">
                     </div>
                     <div class="col-6 d-flex justify-content-end">
                         <a href="<?= URL_ROOT; ?>/users/profile_edit/<?= $data['backend']['id']; ?>" class="btn btn-secondary">Reset</a>

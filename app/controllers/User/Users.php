@@ -127,6 +127,11 @@ class Users extends Users_base {
         }
     }
 
+    public function profile() {
+        $data = parent::profile();
+        $this->view('/users/profile', $data);
+    }
+
     public function searchDb($query) {
         $results = parent::searchDb($query);
         $results = $results ? $results : '{}';

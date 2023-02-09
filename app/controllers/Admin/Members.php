@@ -142,9 +142,9 @@ class Members extends Controller {
             $memberTerm['is_expired'] = $modifiedDate < new DateTime('now');
             $memberTerm['status'] = getMembershipStatus($memberTerm['start_date'], $memberTerm['expiry_date']);
             $memberTerm['cost'] = convertNumberToPrice($memberTerm['cost']);
-            $memberTerm['expiry_date'] = DateTime::createFromFormat(SQL_DATE_TIME_FORMAT, $memberTerm['expiry_date'])->format(OUTPUT_DATE_TIME_FORMAT);
-            $memberTerm['start_date'] = DateTime::createFromFormat(SQL_DATE_TIME_FORMAT, $memberTerm['start_date'])->format(OUTPUT_DATE_TIME_FORMAT);
-            $memberTerm['created_at'] = DateTime::createFromFormat(SQL_DATE_TIME_FORMAT, $memberTerm['created_at'])->format(OUTPUT_DATE_TIME_FORMAT);
+            $memberTerm['expiry_date'] = formatForOutput($memberTerm['expiry_date']);
+            $memberTerm['start_date'] = formatForOutput($memberTerm['start_date']);
+            $memberTerm['created_at'] = formatForOutput($memberTerm['created_at']);
         }
 
         $formattedData = !empty($membershipTerms) ? $membershipTerms : '{}';
