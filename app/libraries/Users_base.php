@@ -96,7 +96,8 @@ class Users_base extends Controller {
             $fileDestination = PUB_ROOT . '/img/' . $fileNameNew;
             $fileLocation = URL_ROOT_BASE . '/img/' . $fileNameNew;
             move_uploaded_file($fileTmpName, $fileDestination);
-            $oldImgUrl = PUB_ROOT . '/img' . explode('img', $data['img_url'])[1]; // converts from url to location
+
+            $oldImgUrl = PUB_ROOT . '/img/' . explode('img/', $data['img_url'])[1]; // converts from url to location
 
             if ($this->userModel->uploadImg($fileLocation, $_SESSION['user_id'])) {
                 flash('img_upload_success', 'Image uploaded successfully');
