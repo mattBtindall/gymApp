@@ -131,7 +131,7 @@ export class UserModal extends Modal {
             const container = membershipElement.querySelector('.user-modal__membership');
             const classes = [];
             switch (membership.status) {
-                case 'expired' : 
+                case 'expired' :
                     classes.push('bg-danger', 'border-danger');
                     break;
                 case 'future' :
@@ -160,7 +160,7 @@ export class UserModal extends Modal {
         this.getMembershipData(userId)
             .then(memberships => {
                 if (memberships === '{}') return;
-                
+
                 for (const key in memberships) {
                     setMembership(memberships[key]);
                 }
@@ -173,11 +173,18 @@ export class UserModal extends Modal {
         const outputActivity = (activity) => {
             const activityTemplate = document.getElementById('user-modal-activity');
             const activityElement = document.importNode(activityTemplate.content, true);
-            const status = parseInt(activity.is_active) ? 'granted' : 'no-entry';
+            const container = activityElement.querySelector('.row-container')
+            const status = parseInt(activity.is_active) ? 'granted <i class="bi bi-check-circle"></i>' : 'no-entry <i class="bi bi-x-circle"></i>';
+
+            if (activity.is_active) {
+                container.classList.add('text-success');
+            } else {
+                container.classList.add('text-danger');
+            }
 
             activityElement.querySelector('.date-output').textContent = activity.date;
             activityElement.querySelector('.time-output').textContent = activity.time;
-            activityElement.querySelector('.status-output').textContent = status;
+            activityElement.querySelector('.status-output').innerHTML = status;
             this.elements.tabs.content.activity.appendChild(activityElement);
         }
 
@@ -186,7 +193,7 @@ export class UserModal extends Modal {
 
     setUserDetails(user) {
         this.elements.logBtn.addEventListener('click', () => this.logMember(user.id))
-        if (!user.status || !user.status === 'active') {
+        if (!user.status || user.status !== 'active') {
             this.elements.logBtn.classList.add('disabled');
         }
         this.elements.name.textContent = user.name;
@@ -270,7 +277,7 @@ export class UserModal extends Modal {
         this.setModalAdmin(user)
         this.setUserDetails(user);
 
-        // adds delay in so users can't see the modal before data is loaded  
+        // adds delay in so users can't see the modal before data is loaded
         setTimeout(() => {
             super.openModal(user);
         }, 100);
@@ -283,6 +290,7 @@ export class UserModal extends Modal {
 
         const url = getPhpMethodUrl('/userModal/disable');
         sendAjax(url); // remove modal errors so it doesn't reopen
+        this.elements.logBtn.classList.remove('disabled');
         this.resetAddMembershipTab();
         this.resetMembershipTab();
         this.resetActivityTab();
