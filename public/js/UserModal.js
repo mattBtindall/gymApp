@@ -192,7 +192,11 @@ export class UserModal extends Modal {
     }
 
     setUserDetails(user) {
-        this.elements.logBtn.addEventListener('click', () => this.logMember(user.id))
+        this.elements.logBtn.addEventListener('click', () => {
+            this.logMember(user.id)
+                .then(data => console.log(data));
+        })
+
         if (!user.status || user.status !== 'active') {
             this.elements.logBtn.classList.add('disabled');
         }

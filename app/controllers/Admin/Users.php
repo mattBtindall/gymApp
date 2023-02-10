@@ -183,9 +183,7 @@ class Users extends Users_base {
 
             foreach($activity as &$act) {
                 if ($user['id'] === $act['user_id']) {
-                    $act['date'] = formatForOutput($act['created_at']);
-                    $act['time'] = formatForOutput($act['created_at'], 'H:i:s');
-                    unset($act['created_at']);
+                    $act = formatActivity($act);
                     $user['activity'][] = $act;
                 }
             }

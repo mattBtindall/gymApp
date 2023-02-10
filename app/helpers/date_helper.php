@@ -21,3 +21,10 @@ function getMembershipStatus($startDate, $expiryDate) {
 function formatForOutput($dateTime, $outputFormat = OUTPUT_DATE_TIME_FORMAT) {
     return DateTime::createFromFormat(SQL_DATE_TIME_FORMAT, $dateTime)->format($outputFormat);
 }
+
+function formatActivity($activity) {
+    $activity['date'] = formatForOutput($activity['created_at']);
+    $activity['time'] = formatForOutput($activity['created_at'], 'H:i:s');
+    unset($activity['created_at']);
+    return $activity;
+}

@@ -29,7 +29,12 @@ class Activitys extends Controller {
         }
 
         $row = $this->activityModel->logUser($user_id, $_SESSION['user_id'], $active);
-        echo $row ? json_encode($row) : '{}';
+        if ($row) {
+            $row = json_encode(formatActivity($row));
+        } else {
+            $row = '{}';
+        }
+        echo $row;
     }
 
     public function getMembersActivity($admin_id) {

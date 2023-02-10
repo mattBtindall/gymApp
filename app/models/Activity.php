@@ -20,7 +20,7 @@ class Activity {
     public function getActivityById($id) {
         $this->db->query('SELECT * FROM activity WHERE id = :id');
         $this->db->bind(':id', $id);
-        return $this->db->single();
+        return $this->db->single(PDO::FETCH_ASSOC);
     }
 
     public function logUser($user_id, $admin_id, $active_member) {
