@@ -1,4 +1,4 @@
-import { sendAjax, getPhpMethodUrl } from './utils.js';
+import { getPhpMethodUrl, getData } from './utils.js';
 
 export class Modal {
     constructor(spec, parentSelector) {
@@ -43,6 +43,6 @@ export class Modal {
 
     logMember(id) {
         const url = getPhpMethodUrl(`/activitys/logUser/${id}`);
-        sendAjax(url);
+        return getData(url);
     }
 }

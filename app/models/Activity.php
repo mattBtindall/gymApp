@@ -17,6 +17,12 @@ class Activity {
         return array_filter($activity, fn($val) => $val['user_id'] == $user_id);
     }
 
+    public function getActivityById($id) {
+        $this->db->query('SELECT * FROM activity WHERE id = :id');
+        $this->db->bind(':id', $id);
+        return $this->db->single();
+    }
+
     public function logUser($user_id, $admin_id, $active_member) {
         // if the last entry was same as this entries user_id and less than 5 seconds ago don't log the user
         if (!empty($_SESSION['last_insert_id']) && $this->getLastInsertTime($_SESSION['last_insert_id'], $user_id) <= 5) return;
@@ -24,9 +30,11 @@ class Activity {
         $this->db->bind(':user_id', $user_id);
         $this->db->bind(':admin_id', $admin_id);
         $this->db->bind(':is_active', $active_member);
-        $has_logged = $this->db->execute() ? true : false;
-        $_SESSION['last_insert_id'] = $this->db->getLastInsertedId();
-        return $has_logged;
+        if ($this->db->execute()) {
+            $_SESSION['last_insert_id'] = $this->db->getLastInsertedId();
+            return $this->getActivityById($_SESSION['last_insert_id']);
+        }
+        return false;
     }
 
     private function getLastInsertTime($lastId, $userId) {

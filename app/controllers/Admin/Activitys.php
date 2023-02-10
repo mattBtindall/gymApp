@@ -28,7 +28,8 @@ class Activitys extends Controller {
             }
         }
 
-        $this->activityModel->logUser($user_id, $_SESSION['user_id'], $active);
+        $row = $this->activityModel->logUser($user_id, $_SESSION['user_id'], $active);
+        echo $row ? json_encode($row) : '{}';
     }
 
     public function getMembersActivity($admin_id) {
