@@ -8,7 +8,17 @@
             </div>
         </div>
         <div class="activity-output">
+            <?php foreach($data as $activity): ?>
+                <?php var_dump($activity); ?>
+                <div class="row">
+                    <div class="col-3">
 
+                    </div>
+                    <div class="col-3">
+
+                    </div>
+                </div>
+            <?php endforeach; ?>
         </div>
     </div>
 <?php require APP_ROOT . '/views/inc/footer.php'; ?>

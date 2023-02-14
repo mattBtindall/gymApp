@@ -9,13 +9,8 @@ class Activitys extends Controller {
     }
 
     public function index() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-        } else {
-
-        }
-
-        $this->view('/activity/index');
+        $data = $this->activityModel->getMembersUserActivity($_SESSION['user_id']);
+        $this->view('/activity/index', $data);
     }
 
     public function logUser($user_id) {
@@ -29,11 +24,7 @@ class Activitys extends Controller {
         }
 
         $row = $this->activityModel->logUser($user_id, $_SESSION['user_id'], $active);
-        if ($row) {
-            $row = json_encode(formatActivity($row));
-        } else {
-            $row = '{}';
-        }
+        $row = $row ? json_encode(formatActivity($row)) : '{}';
         echo $row;
     }
 

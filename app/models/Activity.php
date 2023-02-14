@@ -17,6 +17,16 @@ class Activity {
         return array_filter($activity, fn($val) => $val['user_id'] == $user_id);
     }
 
+    public function getMembersUserActivity($admin_id) {
+        $this->db->query('SELECT name, img_url, is_active, activity.created_at 
+                          FROM user_users
+                          INNER JOIN activity
+                          ON user_users.id = activity.user_id
+                          WHERE admin_id = :adminId');
+        $this->db->bind(':adminId', $admin_id);
+        return $this->db->resultSet(PDO::FETCH_ASSOC);
+    }
+
     public function getActivityById($id) {
         $this->db->query('SELECT * FROM activity WHERE id = :id');
         $this->db->bind(':id', $id);
