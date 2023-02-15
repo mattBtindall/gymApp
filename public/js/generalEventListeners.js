@@ -31,3 +31,7 @@ export function setBodyClick() {
         }
     });
 }
+
+export function setHtmlDateDefault() {
+    document.querySelector('.activity-date').valueAsDate = new Date();
+}

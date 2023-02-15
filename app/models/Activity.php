@@ -17,12 +17,14 @@ class Activity {
         return array_filter($activity, fn($val) => $val['user_id'] == $user_id);
     }
 
-    public function getMembersUserActivity($admin_id) {
-        $this->db->query('SELECT name, img_url, is_active, activity.created_at 
+    public function getMembersUserActivity($admin_id, $date = "NOW()") {
+        // $date = the date to get the activity for, this must be wrapped in single quotes e.g. "'2023-02-08'"
+        $this->db->query("SELECT name, img_url, is_active, activity.created_at 
                           FROM user_users
                           INNER JOIN activity
                           ON user_users.id = activity.user_id
-                          WHERE admin_id = :adminId');
+                          WHERE admin_id = :adminId
+                          AND DATE(activity.created_at) = DATE({$date})");
         $this->db->bind(':adminId', $admin_id);
         return $this->db->resultSet(PDO::FETCH_ASSOC);
     }

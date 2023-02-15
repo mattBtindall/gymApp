@@ -32,4 +32,9 @@ function contentSpecificJs() {
     if (document.querySelector('.terms-table')) {
         const term = new Terms();
     }
+
+    // if on activity page
+    if (document.querySelector('.activity-container')) {
+        eventListeners.setHtmlDateDefault();
+    }
 }
