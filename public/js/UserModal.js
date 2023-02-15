@@ -174,9 +174,8 @@ export class UserModal extends Modal {
             const activityTemplate = document.getElementById('user-modal-activity');
             const activityElement = document.importNode(activityTemplate.content, true);
             const container = activityElement.querySelector('.row-container')
-            const status = parseInt(activity.is_active) ? 'granted <i class="bi bi-check-circle"></i>' : 'no-entry <i class="bi bi-x-circle"></i>';
 
-            if (activity.is_active) {
+            if (activity.status.includes('granted')) {
                 container.classList.add('text-success');
             } else {
                 container.classList.add('text-danger');
@@ -184,7 +183,7 @@ export class UserModal extends Modal {
 
             activityElement.querySelector('.date-output').textContent = activity.date;
             activityElement.querySelector('.time-output').textContent = activity.time;
-            activityElement.querySelector('.status-output').innerHTML = status;
+            activityElement.querySelector('.status-output').innerHTML = activity.status;
             this.elements.tabs.content.activity.appendChild(activityElement);
         }
 

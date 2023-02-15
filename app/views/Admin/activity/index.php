@@ -7,15 +7,27 @@
                 <input type="date" class="form-control form-control-lg w-auto">
             </div>
         </div>
-        <div class="activity-output">
-            <?php foreach($data as $activity): ?>
-                <?php var_dump($activity); ?>
-                <div class="row">
-                    <div class="col-3">
-
-                    </div>
-                    <div class="col-3">
-
+        <div class="activity-output py-3">  
+            <?php foreach($data['activity'] as $userActivity): ?>
+                <?php
+                    $statusClass = str_contains($userActivity['status'], 'granted') ? 'success' : 'danger';
+                ?>
+                <div class="p-3 mt-3 border border-<?= $statusClass; ?> rounded">
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="d-flex align-items-center">
+                                <div class="img-container w-25 me-3">
+                                    <img src="<?= $userActivity['img_url'] ;?>" alt="">
+                                </div>
+                                <strong><?= $userActivity['name']; ?></strong>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="h-100 d-flex align-items-center"><?= $userActivity['time']; ?></div>
+                        </div>
+                        <div class="col-4">
+                            <div class="h-100 d-flex align-items-center text-<?= $statusClass; ?>"><?= $userActivity['status']; ?></div>
+                        </div>
                     </div>
                 </div>
             <?php endforeach; ?>

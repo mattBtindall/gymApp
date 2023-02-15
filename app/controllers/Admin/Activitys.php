@@ -9,7 +9,10 @@ class Activitys extends Controller {
     }
 
     public function index() {
-        $data = $this->activityModel->getMembersUserActivity($_SESSION['user_id']);
+        $data['activity'] = $this->activityModel->getMembersUserActivity($_SESSION['user_id']);
+        foreach ($data['activity'] as &$userActivity) {
+            $userActivity = formatActivity($userActivity);
+        }
         $this->view('/activity/index', $data);
     }
 
