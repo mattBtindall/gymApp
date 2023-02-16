@@ -70,6 +70,11 @@ export class UserModal extends Modal {
                 }
             });
 
+            this.elements.logBtn.addEventListener('click', (e) => {
+                this.logMember(e.target.dataset.userId)
+                    .then(data => console.log(data));
+            })
+
             // open and close memberships in user modal
             this.elements.tabs.content.memberships.addEventListener('click', (e) => {
                 const parent = e.target.closest('.user-modal__membership');
@@ -191,13 +196,9 @@ export class UserModal extends Modal {
     }
 
     setUserDetails(user) {
-        this.elements.logBtn.addEventListener('click', () => {
-            this.logMember(user.id)
-                .then(data => console.log(data));
-        })
-
+        this.elements.logBtn.dataset.userId = user.id;
         if (!user.status || user.status !== 'active') {
-            this.elements.logBtn.classList.add('disabled');
+            this.elements.logBtn.disabled = true;
         }
         this.elements.name.textContent = user.name;
         this.elements.email.textContent = user.email;
@@ -293,7 +294,7 @@ export class UserModal extends Modal {
 
         const url = getPhpMethodUrl('/userModal/disable');
         sendAjax(url); // remove modal errors so it doesn't reopen
-        this.elements.logBtn.classList.remove('disabled');
+        this.elements.logBtn.disabled = false;
         this.resetAddMembershipTab();
         this.resetMembershipTab();
         this.resetActivityTab();
