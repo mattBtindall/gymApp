@@ -8,8 +8,9 @@ class Activitys extends Controller {
         $this->membersModel = $this->model('Member');
     }
 
-    public function index() {
-        $data['activity'] = $this->activityModel->getMembersUserActivity($_SESSION['user_id']);
+    public function index($date = NULL) {
+        $date = $date ?? 'NOW()';
+        $data['activity'] = $this->activityModel->getMembersUserActivity($_SESSION['user_id'], $date);
         foreach ($data['activity'] as &$userActivity) {
             $userActivity = formatActivity($userActivity);
         }

@@ -4,7 +4,10 @@
             <h2>Daily acitivty</h2>
             <div class="form-group">
                 <label class="mb-1" for="date">Day</label>
-                <input type="date" class="form-control form-control-lg w-auto activity-date" default="today">
+                <!-- Date is added onto the end of this in JS -->
+                <form action="<?= URL_ROOT; ?>/activitys/index/" method="POST" class="activity-form">
+                    <input type="date" class="form-control form-control-lg w-auto activity-date" default="today">
+                </form>
             </div>
         </div>
         <div class="activity-output py-3">  
