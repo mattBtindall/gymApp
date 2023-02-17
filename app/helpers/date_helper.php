@@ -27,7 +27,7 @@ function formatActivity($activity) {
     $activity['time'] = formatForOutput($activity['created_at'], 'H:i:s');
     unset($activity['created_at']);
 
-    $activity['status'] = $activity['is_active'] ? '<i class="bi bi-check-circle"></i>granted' : '<i class="bi bi-x-circle"></i>no-entry';
+    $activity['status'] = ($activity['membership_status'] == 'active') ? '<i class="bi bi-check-circle"></i>granted' : '<i class="bi bi-x-circle"></i>no-entry';
     unset($activity['is_active']);
     return $activity;
 }

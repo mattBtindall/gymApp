@@ -10,10 +10,14 @@
                 </form>
             </div>
         </div>
-        <div class="activity-output py-3">  
+        <div class="activity-output py-3">
             <?php foreach($data['activity'] as $userActivity): ?>
                 <?php
                     $statusClass = str_contains($userActivity['status'], 'granted') ? 'success' : 'danger';
+                    $termDisplay = '';
+                    if ($userActivity['membership_status'] === 'active') $termDisplay = $userActivity['term_display_name'];
+                    else if ($userActivity['membership_status'] === 'expired') $termDisplay = 'expired - ' . formatForOutput($userActivity['membership_expiry_date']);
+                    else $termDisplay = 'future membership, starts on - ' . formatForOutput($userActivity['membership_start_date']);
                 ?>
                 <div class="p-3 mt-3 border border-<?= $statusClass; ?> rounded">
                     <div class="row">
@@ -25,11 +29,14 @@
                                 <strong><?= $userActivity['name']; ?></strong>
                             </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                             <div class="h-100 d-flex align-items-center"><?= $userActivity['time']; ?></div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                             <div class="h-100 d-flex align-items-center text-<?= $statusClass; ?>"><?= $userActivity['status']; ?></div>
+                        </div>
+                        <div class="col-3">
+                            <div class="h-100 d-flex align-items-center text-<?= $statusClass; ?>"><?= $termDisplay; ?></div>
                         </div>
                     </div>
                 </div>

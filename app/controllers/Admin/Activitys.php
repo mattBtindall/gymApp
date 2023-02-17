@@ -18,16 +18,18 @@ class Activitys extends Controller {
     }
 
     public function logUser($user_id) {
-        $active = 0;
-        $memberships = $this->membersModel->getTermMembershipByUserId($user_id);
-        foreach ($memberships as $membership) {
-            if (getMembershipStatus($membership['start_date'], $membership['expiry_date']) === 'active') {
-                $active = 1;
-                break;
-            }
-        }
+        $memberships = $this->membersModel->getRelevantMemberships();
+        $membership = array_values(array_filter($memberships, fn($value) => $value['user_id'] == $user_id))[0];
+        $data = [
+            'status' => getMembershipStatus($membership['start_date'], $membership['expiry_date']),
+            'user_id' => $user_id,
+            'admin_id' => $_SESSION['user_id'],
+            'term_display_name' => $membership['term_display_name'],
+            'membership_start_date' => $membership['start_date'],
+            'membership_expiry_date' => $membership['expiry_date'],
+        ];
 
-        $row = $this->activityModel->logUser($user_id, $_SESSION['user_id'], $active);
+        $row = $this->activityModel->logUser($data);
         $row = $row ? json_encode(formatActivity($row)) : '{}';
         echo $row;
     }

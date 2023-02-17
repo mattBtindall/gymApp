@@ -19,12 +19,13 @@ class Activity {
 
     public function getMembersUserActivity($admin_id, $date = "NOW()") {
         // $date = the date to get the activity for, this must be wrapped in single quotes e.g. "'2023-02-08'"
-        $this->db->query("SELECT name, img_url, is_active, activity.created_at 
+        $this->db->query("SELECT name, img_url, membership_status, activity.created_at, activity.term_display_name, membership_start_date, membership_expiry_date
                           FROM user_users
                           INNER JOIN activity
                           ON user_users.id = activity.user_id
                           WHERE admin_id = :adminId
-                          AND DATE(activity.created_at) = DATE({$date})");
+                          AND DATE(activity.created_at) = DATE({$date})
+                          ORDER BY activity.created_at DESC");
         $this->db->bind(':adminId', $admin_id);
         return $this->db->resultSet(PDO::FETCH_ASSOC);
     }
@@ -35,13 +36,18 @@ class Activity {
         return $this->db->single(PDO::FETCH_ASSOC);
     }
 
-    public function logUser($user_id, $admin_id, $active_member) {
+    public function logUser($data) {
+        // in here instead of storing the membership date within the table, simple store the membership id and then
+        // when getting the data do a simple join on the membership table
         // if the last entry was same as this entries user_id and less than 5 seconds ago don't log the user
-        if (!empty($_SESSION['last_insert_id']) && $this->getLastInsertTime($_SESSION['last_insert_id'], $user_id) <= 5) return;
-        $this->db->query('INSERT INTO activity (user_id, admin_id, is_active) VALUE(:user_id, :admin_id, :is_active)');
-        $this->db->bind(':user_id', $user_id);
-        $this->db->bind(':admin_id', $admin_id);
-        $this->db->bind(':is_active', $active_member);
+        if (!empty($_SESSION['last_insert_id']) && $this->getLastInsertTime($_SESSION['last_insert_id'], $data['user_id']) <= 5) return;
+        $this->db->query('INSERT INTO activity (user_id, admin_id, membership_status, term_display_name, membership_start_date, membership_expiry_date) VALUE(:user_id, :admin_id, :membership_status, :term_display_name, :membership_start_date, :membership_expiry_date)');
+        $this->db->bind(':user_id', $data['user_id']);
+        $this->db->bind(':admin_id', $data['admin_id']);
+        $this->db->bind(':membership_status', $data['status']);
+        $this->db->bind(':term_display_name', $data['term_display_name']);
+        $this->db->bind(':membership_start_date', $data['membership_start_date']);
+        $this->db->bind(':membership_expiry_date', $data['membership_expiry_date']);
         if ($this->db->execute()) {
             $_SESSION['last_insert_id'] = $this->db->getLastInsertedId();
             return $this->getActivityById($_SESSION['last_insert_id']);
