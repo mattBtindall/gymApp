@@ -7,6 +7,7 @@ class Member {
     }
 
     public function getMembers() {
+        /* Gets all NON REVOKED memberships for the current admin account */
         $this->db->query('SELECT user_users.id as user_id, name, email, phone_number, img_url, memberships.expiry_date, memberships.start_date, memberships.id as membership_id, display_name as term_display_name, memberships.cost
                           FROM user_users
                           INNER JOIN memberships
@@ -14,6 +15,7 @@ class Member {
                           INNER JOIN membership_terms
                           ON memberships.term_id = membership_terms.id
                           WHERE memberships.admin_id = :admin_id
+                          AND memberships.revoked = 0
                         ');
         $this->db->bind(':admin_id', $_SESSION['user_id']);
         return $this->db->resultSet(PDO::FETCH_ASSOC);
@@ -46,7 +48,7 @@ class Member {
     }
 
     public function getTermMembershipByUserId($user_id) {
-        $this->db->query('SELECT start_date, expiry_date, memberships.created_at, memberships.id, display_name, memberships.cost
+        $this->db->query('SELECT start_date, expiry_date, memberships.created_at, memberships.id, revoked, display_name, memberships.cost
                           FROM memberships
                           INNER JOIN membership_terms
                           ON memberships.term_id = membership_terms.id
@@ -70,14 +72,14 @@ class Member {
         return $this->db->execute() ? true : false;
     }
 
-    public function deleteMembership($membershipId) {
-        $this->db->query('DELETE FROM memberships WHERE id = :membershipId');
+    public function revokeMembership($membershipId) {
+        $this->db->query('UPDATE memberships SET revoked = 1 WHERE id = :membershipId');
         $this->db->bind(':membershipId', $membershipId);
         return $this->db->execute() ? true : false;
     }
 
     public function getMemberById($user_id) {
-        $this->db->query('SELECT * from memberships WHERE user_id = :userId AND admin_id = :adminId');
+        $this->db->query('SELECT * from memberships WHERE user_id = :userId AND admin_id = :adminId AND revoked = 0');
         $this->db->bind(':userId', $user_id);
         $this->db->bind(':adminId', $_SESSION['user_id']);
         return $this->db->resultSet(PDO::FETCH_ASSOC);

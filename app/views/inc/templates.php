@@ -82,7 +82,7 @@
 			<div class="col-6">
 				<div class="d-flex justify-content-end">
 					<!-- Id is inserted onto the href from JavaScript -->
-					<a href="<?= URL_ROOT; ?>/members/deleteMembership/" class="btn btn-danger delete">Delete</a>
+					<a href="<?= URL_ROOT; ?>/members/revokeMembership/" class="btn btn-danger revoke">Revoke</a>
 				</div>
 			</div>
 		</div>

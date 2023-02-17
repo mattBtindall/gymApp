@@ -145,13 +145,19 @@ export class UserModal extends Modal {
                 case 'active' :
                     classes.push('bg-success', 'border-success', 'active');
                     break;
+                case 'revoked' :
+                    classes.push('bg-warning', 'border-danger');
+                    break;
                 default :
                     classes.push('bg-light', 'border-light');
             }
             container.classList.add(...classes);
 
-            const deleteBtn = membershipElement.querySelector('.delete');
-            this.setHref(deleteBtn, membership.id);
+            const revokeBtn = membershipElement.querySelector('.revoke');
+            if (membership.status === 'revoked') {
+                revokeBtn.style.display = 'none';
+            }
+            this.setHref(revokeBtn, membership.id);
 
             membershipElement.querySelector('.display-name-output').textContent = membership.display_name;
             membershipElement.querySelector('.membership-status').textContent = capitalise(membership.status);

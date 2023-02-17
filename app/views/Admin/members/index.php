@@ -3,7 +3,7 @@
     <div class="container">
         <div class="flash-container mt-3">
             <?= flash('membership_assignment'); ?>
-            <?= flash('membership_deleted'); ?>
+            <?= flash('membership_revoked'); ?>
         </div>
         <table>
             <tr>

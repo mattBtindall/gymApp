@@ -119,11 +119,11 @@ class Members extends Controller {
         $this->view('members/index', $data);
     }
 
-    public function deleteMembership($membershipId) {
-        if ($this->membersModel->deleteMembership($membershipId)) {
-            flash('membership_deleted', 'Membership deleted successfully');
+    public function revokeMembership($membershipId) {
+        if ($this->membersModel->revokeMembership($membershipId)) {
+            flash('membership_revoked', 'Membership revoked successfully');
         } else {
-            flash('membership_deleted', 'Failed to delete membership, please try again', 'alert alert-danger');
+            flash('membership_revoked', 'Failed to revoke membership, please try again', 'alert alert-danger');
         }
         redirect('/members/index');
     }
@@ -140,7 +140,7 @@ class Members extends Controller {
             // + 1 day becuase the comparison includes time so if its on the same day we don't want it to have expired
             $modifiedDate = DateTime::createFromFormat(SQL_DATE_TIME_FORMAT, $memberTerm['expiry_date'])->modify('+ 1 day');
             $memberTerm['is_expired'] = $modifiedDate < new DateTime('now');
-            $memberTerm['status'] = getMembershipStatus($memberTerm['start_date'], $memberTerm['expiry_date']);
+            $memberTerm['status'] = $memberTerm['revoked'] ? 'revoked' : getMembershipStatus($memberTerm['start_date'], $memberTerm['expiry_date']);
             $memberTerm['cost'] = convertNumberToPrice($memberTerm['cost']);
             $memberTerm['expiry_date'] = formatForOutput($memberTerm['expiry_date']);
             $memberTerm['start_date'] = formatForOutput($memberTerm['start_date']);
