@@ -6,6 +6,7 @@
     require_once 'helpers/session_helper.php';
     require_once 'helpers/price_helper.php';
     require_once 'helpers/date_helper.php';
+    require_once 'helpers/testing.php';
 
     // Autoload libraries
     spl_autoload_register(function($className) {
