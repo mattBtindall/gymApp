@@ -8,7 +8,7 @@ class Member {
 
     public function getMembers() {
         /* Gets all NON REVOKED memberships for the current admin account */
-        $this->db->query('SELECT user_users.id as user_id, name, email, phone_number, img_url, memberships.expiry_date, memberships.start_date, memberships.id as membership_id, display_name as term_display_name, memberships.cost
+        $this->db->query('SELECT user_users.id as user_id, name, email, phone_number, img_url, memberships.expiry_date, memberships.start_date, memberships.id as membership_id, display_name as term_display_name, term_id, memberships.cost
                           FROM user_users
                           INNER JOIN memberships
                           ON user_users.id = memberships.user_id

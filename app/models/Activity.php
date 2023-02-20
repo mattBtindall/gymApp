@@ -19,11 +19,15 @@ class Activity {
 
     public function getMembersUserActivity($admin_id, $date = "NOW()") {
         // $date = the date to get the activity for, this must be wrapped in single quotes e.g. "'2023-02-08'"
-        $this->db->query("SELECT name, img_url, membership_status, activity.created_at, activity.term_display_name, membership_start_date, membership_expiry_date
-                          FROM user_users
-                          INNER JOIN activity
-                          ON user_users.id = activity.user_id
-                          WHERE admin_id = :adminId
+        $this->db->query("SELECT membership_status, activity.created_at, display_name as term_display_name, start_date as membership_start_date, expiry_date as membership_expiry_date, name, img_url
+                          FROM activity
+                          INNER JOIN membership_terms
+                          ON activity.term_id = membership_terms.id
+                          INNER JOIN memberships
+                          ON activity.membership_id = memberships.id
+                          INNER JOIN user_users
+                          ON activity.user_id = user_users.id
+                          WHERE activity.admin_id = :adminId
                           AND DATE(activity.created_at) = DATE({$date})
                           ORDER BY activity.created_at DESC");
         $this->db->bind(':adminId', $admin_id);
@@ -31,7 +35,15 @@ class Activity {
     }
 
     public function getActivityById($id) {
-        $this->db->query('SELECT * FROM activity WHERE id = :id');
+        $this->db->query('SELECT membership_status, activity.created_at, display_name as term_display_name, start_date as membership_start_date, expiry_date as membership_expiry_date, name, img_url
+                          FROM activity
+                          INNER JOIN membership_terms
+                          ON activity.term_id = membership_terms.id
+                          INNER JOIN memberships
+                          ON activity.membership_id = memberships.id
+                          INNER JOIN user_users
+                          ON activity.user_id = user_users.id
+                          WHERE activity.id = :id');
         $this->db->bind(':id', $id);
         return $this->db->single(PDO::FETCH_ASSOC);
     }
@@ -41,13 +53,12 @@ class Activity {
         // when getting the data do a simple join on the membership table
         // if the last entry was same as this entries user_id and less than 5 seconds ago don't log the user
         if (!empty($_SESSION['last_insert_id']) && $this->getLastInsertTime($_SESSION['last_insert_id'], $data['user_id']) <= 5) return;
-        $this->db->query('INSERT INTO activity (user_id, admin_id, membership_status, term_display_name, membership_start_date, membership_expiry_date) VALUE(:user_id, :admin_id, :membership_status, :term_display_name, :membership_start_date, :membership_expiry_date)');
+        $this->db->query('INSERT INTO activity (user_id, admin_id, membership_status, term_id, membership_id) VALUE(:user_id, :admin_id, :membership_status, :term_id, :membership_id)');
         $this->db->bind(':user_id', $data['user_id']);
         $this->db->bind(':admin_id', $data['admin_id']);
         $this->db->bind(':membership_status', $data['status']);
-        $this->db->bind(':term_display_name', $data['term_display_name']);
-        $this->db->bind(':membership_start_date', $data['membership_start_date']);
-        $this->db->bind(':membership_expiry_date', $data['membership_expiry_date']);
+        $this->db->bind(':term_id', $data['term_id']);
+        $this->db->bind(':membership_id', $data['membership_id']);
         if ($this->db->execute()) {
             $_SESSION['last_insert_id'] = $this->db->getLastInsertedId();
             return $this->getActivityById($_SESSION['last_insert_id']);

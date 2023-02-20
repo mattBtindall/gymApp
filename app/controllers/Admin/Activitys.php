@@ -24,9 +24,8 @@ class Activitys extends Controller {
             'status' => getMembershipStatus($membership['start_date'], $membership['expiry_date']),
             'user_id' => $user_id,
             'admin_id' => $_SESSION['user_id'],
-            'term_display_name' => $membership['term_display_name'],
-            'membership_start_date' => $membership['start_date'],
-            'membership_expiry_date' => $membership['expiry_date'],
+            'term_id' => $membership['term_id'],
+            'membership_id' => $membership['membership_id'],
         ];
 
         $row = $this->activityModel->logUser($data);
