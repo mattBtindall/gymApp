@@ -72,7 +72,9 @@ export class UserModal extends Modal {
 
             this.elements.logBtn.addEventListener('click', (e) => {
                 this.logMember(e.target.dataset.userId)
-                    .then(data => console.log(data));
+                    .then(data => {
+                        if (data !== '{}') this.outputActivity(data);
+                    });
             })
 
             // open and close memberships in user modal
@@ -178,27 +180,26 @@ export class UserModal extends Modal {
             });
     }
 
-    setActivityTab(user) {
-        if (!user.activity) return;
+    outputActivity(activity) {
+        const activityTemplate = document.getElementById('user-modal-activity');
+        const activityElement = document.importNode(activityTemplate.content, true);
+        const container = activityElement.querySelector('.row-container')
 
-        const outputActivity = (activity) => {
-            const activityTemplate = document.getElementById('user-modal-activity');
-            const activityElement = document.importNode(activityTemplate.content, true);
-            const container = activityElement.querySelector('.row-container')
-
-            if (activity.status.includes('granted')) {
-                container.classList.add('text-success');
-            } else {
-                container.classList.add('text-danger');
-            }
-
-            activityElement.querySelector('.date-output').textContent = activity.date;
-            activityElement.querySelector('.time-output').textContent = activity.time;
-            activityElement.querySelector('.status-output').innerHTML = activity.status;
-            this.elements.tabs.content.activity.appendChild(activityElement);
+        if (activity.status.includes('granted')) {
+            container.classList.add('text-success');
+        } else {
+            container.classList.add('text-danger');
         }
 
-        user.activity.forEach(activity => outputActivity(activity));
+        activityElement.querySelector('.date-output').textContent = activity.date;
+        activityElement.querySelector('.time-output').textContent = activity.time;
+        activityElement.querySelector('.status-output').innerHTML = activity.status;
+        this.elements.tabs.content.activity.prepend(activityElement);
+    }
+
+    setActivityTab(user) {
+        if (!user.activity) return;
+        user.activity.forEach(activity => this.outputActivity(activity));
     }
 
     setUserDetails(user) {
