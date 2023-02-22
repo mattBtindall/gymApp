@@ -98,3 +98,27 @@
 		</div>
 	</div>
 </template>
+
+<template id="activity-template">
+	<div class="p-3 mt-3 border rounded activity-container">
+		<div class="row">
+			<div class="col-3">
+				<div class="d-flex align-items-center">
+					<div class="img-container w-25 me-3">
+						<img src="" alt="">
+					</div>
+					<strong class="name"></strong>
+				</div>
+			</div>
+			<div class="col-3">
+				<div class="h-100 d-flex align-items-center time"></div>
+			</div>
+			<div class="col-3">
+				<div class="h-100 d-flex align-items-center status"></div>
+			</div>
+			<div class="col-3">
+				<div class="h-100 d-flex align-items-center term"></div>
+			</div>
+		</div>
+	</div>
+</template>

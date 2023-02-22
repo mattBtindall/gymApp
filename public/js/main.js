@@ -3,6 +3,7 @@ import { UserModal } from "./UserModal.js";
 import { Terms } from "./Terms.js";
 import { modals, getData, userData, getPhpMethodUrl } from "./utils.js";
 import * as eventListeners from "./generalEventListeners.js";
+import { Activity } from "./Activity.js";
 
 window.onload = function() {
     const url = getPhpMethodUrl("/Users/getUserData");
@@ -34,7 +35,10 @@ function contentSpecificJs() {
     }
 
     // if on activity page
-    if (document.querySelector('.activity-container')) {
-        eventListeners.setHtmlDateDefault();
+    if (document.querySelector('.activity-output')) {
+        const activity = new Activity({
+            container: '.activity-output',
+            template: '#activity-template'
+        });
     }
 }

@@ -244,7 +244,9 @@ img {
     display: table-row;
 }
 
-
+.activity-container {
+    cursor: pointer;
+}
 
 @media (min-width: 992px) {
     .profile-right-container {

@@ -1,5 +1,5 @@
 <?php require APP_ROOT . '/views/inc/header.php'; ?>
-    <div class="activity-container card card-body bg-light mt-5 w-75">
+    <div class="card card-body bg-light mt-5 w-75">
         <div class="lead">
             <h2>Daily acitivty</h2>
             <div class="form-group">
@@ -19,7 +19,7 @@
                     else if ($userActivity['membership_status'] === 'expired') $termDisplay = 'expired - ' . formatForOutput($userActivity['membership_expiry_date']);
                     else $termDisplay = 'future membership, starts on - ' . formatForOutput($userActivity['membership_start_date']);
                 ?>
-                <div class="p-3 mt-3 border border-<?= $statusClass; ?> rounded">
+                <div class="p-3 mt-3 border border-<?= $statusClass; ?> rounded activity-container">
                     <div class="row">
                         <div class="col-3">
                             <div class="d-flex align-items-center">
@@ -39,6 +39,7 @@
                             <div class="h-100 d-flex align-items-center text-<?= $statusClass; ?>"><?= $termDisplay; ?></div>
                         </div>
                     </div>
+                    <div class="id" style="display: none"><?= $userActivity['user_id']; ?></div>
                 </div>
             <?php endforeach; ?>
         </div>
