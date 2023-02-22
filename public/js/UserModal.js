@@ -41,24 +41,10 @@ export class UserModal extends Modal {
 
     setEventListeners() {
         const membershipTable = document.querySelector('.membership-table');
-        const searchOutput = document.querySelector('.search-bar-modal__output');
         const userModalMenuBar = document.querySelector('.user-modal__menu-bar');
 
         if (membershipTable)
             membershipTable.addEventListener('click', (e) => this.openModalOnClick(e.target, '.account-link', userData.get()));
-
-        if (searchOutput) {
-            searchOutput.addEventListener('click', (e) => {
-                if (e.target.classList.contains('account-link')) {
-                    this.openModalOnClick(e.target, '.search-modal__row', userData.get());
-                }
-
-                if (e.target.classList.contains('add-membership', 'btn')) {
-                    this.openModalOnClick(e.target, '.search-modal__row', userData.get());
-                    this.setTabs(this.elements.tabs.menu.addMembership);
-                }
-            });
-        }
 
         document.querySelector('.exit-modal-container i').addEventListener('click', () => this.closeModal());
 
@@ -277,10 +263,14 @@ export class UserModal extends Modal {
         this.openModal(user);
     }
 
-    openModalOnClick(element, parentSelector, data) {
+    openModalOnClick(element, parentSelector, data, tab = null) {
+        // tab should be the name of the tab element e.g. addMembership
         modals.search.closeModal();
         const user = this.getCurrentUser(element, parentSelector, data);
         this.openModal(user);
+        if (tab) {
+            this.setTabs(this.elements.tabs.menu[tab]);
+        }
     }
 
     openModal(user) {

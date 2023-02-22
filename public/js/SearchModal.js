@@ -1,5 +1,5 @@
 import { Modal } from './Modal.js';
-import { getData, getPhpMethodUrl } from './utils.js';
+import { userData, getData, getPhpMethodUrl, modals } from './utils.js';
 
 export class SearchModal extends Modal {
     constructor() {
@@ -12,6 +12,7 @@ export class SearchModal extends Modal {
     }
 
     setEventListeners() {
+        const searchOutput = document.querySelector('.search-bar-modal__output');
         this.elements.searchBar.addEventListener('focus', (e) => this.openModal());
 
         this.elements.searchBar.addEventListener('keyup', e => {
@@ -26,6 +27,18 @@ export class SearchModal extends Modal {
                     this.setModal(data)
                 });
         });
+
+        if (searchOutput) {
+            searchOutput.addEventListener('click', (e) => {
+                if (e.target.classList.contains('account-link')) {
+                    modals.user.openModalOnClick(e.target, '.search-modal__row', userData.get());
+                }
+
+                if (e.target.classList.contains('add-membership', 'btn')) {
+                    modals.user.openModalOnClick(e.target, '.search-modal__row', userData.get(), 'addMembership');
+                }
+            });
+        }
     }
 
     setEmptyModalMessage(message) {
