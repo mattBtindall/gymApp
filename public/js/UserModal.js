@@ -58,8 +58,11 @@ export class UserModal extends Modal {
 
             this.elements.logBtn.addEventListener('click', (e) => {
                 this.logMember(e.target.dataset.userId)
-                    .then(data => {
-                        if (data !== '{}') this.outputActivity(data);
+                    .then(activity => {
+                        if (activity !== '{}') {
+                            this.outputActivity(activity);
+                            if (this.activity) this.activity.addActivityElement(activity);
+                        };
                     });
             })
 

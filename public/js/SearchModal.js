@@ -78,7 +78,13 @@ export class SearchModal extends Modal {
 
             // membership details
             const logBtn = rowBody.querySelector('.log-btn');
-            logBtn.addEventListener('click', () => this.logMember(rowData['id']))
+            logBtn.addEventListener('click', () => {
+                this.logMember(rowData['id'])
+                    .then(activity => {
+                        if (activity !== '{}' && this.activity) this.activity.addActivityElement(activity);
+                    });
+            })
+
             if (rowData.expiry_date) {
                 rowBody.querySelector('.membership-details .term-display-name').textContent = rowData.term_display_name;
                 rowBody.querySelector('.membership-details .expiry-date').textContent = rowData.expiry_date;

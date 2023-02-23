@@ -1,8 +1,14 @@
-export let userData = {
+export const userData = {
     get() {return this.userDataStorage},
     set(newUserData) {this.userDataStorage = newUserData},
     userDataStorage: 0
 };
+
+export const activity = {
+    get() {return this.activityStorage},
+    set(newActivity) {this.activityStorage = newActivity},
+    activityStorage: 0
+}
 
 export const modals = {};
 

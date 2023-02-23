@@ -1,9 +1,10 @@
-import { getPhpMethodUrl, getData } from './utils.js';
+import { getPhpMethodUrl, getData, activity } from './utils.js';
 
 export class Modal {
     constructor(spec, parentSelector) {
         this.elements = {};
         this.open = false;
+        this.activity = activity.get();
 
         this.setElements(spec, parentSelector);
     }

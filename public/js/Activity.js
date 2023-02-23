@@ -1,10 +1,11 @@
+/* Error when clicking on element that was added via js on activity index */
+
 import { modals, userData } from "./utils.js";
 
 export class Activity {
     constructor(spec) {
         this.elements = {
             container: document.querySelector(spec.container),
-            template: document.getElementById(spec.template),
             date: document.querySelector('.activity-date')
         }
 
@@ -39,8 +40,28 @@ export class Activity {
         });
     }
 
-    addActivityElement() {
+    addActivityElement(activity) {
+        const activityTemplate = document.getElementById('activity-template');
+        const activityElement = document.importNode(activityTemplate.content, true);
+        const container = activityElement.querySelector('.activity-container')
+        const status = activityElement.querySelector('.status');
+        const term = activityElement.querySelector('.term');
+        let termDisplay = activity.membership_status === 'active'
+                          ? activity.term_display_name
+                          : `expired - ${activity.date}`;
+        let statusClass = activity.status.includes('granted') ? 'success' : 'danger';
 
+        activityElement.querySelector('.id').textContent = activity.user_id;
+        activityElement.querySelector('img').src = activity.img_url;
+        activityElement.querySelector('.name').textContent = activity.name;
+        activityElement.querySelector('.time').textContent = activity.time;
+        status.innerHTML = activity.status;
+        term.textContent = termDisplay;
+
+        container.classList.add(`border-${statusClass}`);
+        status.classList.add(`text-${statusClass}`);
+        term.classList.add(`text-${statusClass}`);
+        this.elements.container.prepend(activityElement);
     }
 
     setEventListeners() {

@@ -1,7 +1,7 @@
 import { SearchModal } from "./SearchModal.js";
 import { UserModal } from "./UserModal.js";
 import { Terms } from "./Terms.js";
-import { modals, getData, userData, getPhpMethodUrl } from "./utils.js";
+import { modals, getData, userData, getPhpMethodUrl, activity } from "./utils.js";
 import * as eventListeners from "./generalEventListeners.js";
 import { Activity } from "./Activity.js";
 
@@ -22,6 +22,13 @@ function contentSpecificJs() {
         eventListeners.setImgUpload();
     }
 
+    // if on activity page
+    if (document.querySelector('.activity-output')) {
+        activity.set(new Activity({
+            container: '.activity-output',
+        }));
+    }
+
     // if there is a search bar load the searchbar Modal class
     if (document.querySelector('.search-bar')) {
         modals.search = new SearchModal();
@@ -32,13 +39,5 @@ function contentSpecificJs() {
     // if there is a terms table lead the setTermsTable from genEventListeners
     if (document.querySelector('.terms-table')) {
         const term = new Terms();
-    }
-
-    // if on activity page
-    if (document.querySelector('.activity-output')) {
-        const activity = new Activity({
-            container: '.activity-output',
-            template: '#activity-template'
-        });
     }
 }
