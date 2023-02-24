@@ -53,3 +53,24 @@ export function capitalise(str) {
     });
     return capitalisedWords.trim();
 }
+
+export function getMembershipStatusClasses(status, type) {
+    let htmlClass = '';
+    switch (status) {
+        case 'expired' :
+           htmlClass = 'danger';
+            break;
+        case 'future' :
+            htmlClass = 'info';
+            break;
+        case 'active' :
+            htmlClass = 'success';
+            break;
+        case 'revoked' :
+            htmlClass = 'warning';
+            break;
+        default :
+            htmlClass = 'danger';
+    }
+    return type.map(type => type + '-' + htmlClass);
+}

@@ -1,5 +1,5 @@
 import { Modal } from './Modal.js';
-import { modals, userData, getPhpMethodUrl, getData, sendAjax, isAdmin, capitalise } from './utils.js';
+import { modals, userData, getPhpMethodUrl, getData, sendAjax, isAdmin, capitalise, getMembershipStatusClasses } from './utils.js';
 
 export class UserModal extends Modal {
     constructor() {
@@ -125,24 +125,9 @@ export class UserModal extends Modal {
             const membershipTemplate = document.getElementById('user-modal-membership');
             const membershipElement = document.importNode(membershipTemplate.content, true);
             const container = membershipElement.querySelector('.user-modal__membership');
-            const classes = [];
-            switch (membership.status) {
-                case 'expired' :
-                    classes.push('bg-danger', 'border-danger');
-                    break;
-                case 'future' :
-                    classes.push('bg-info', 'border-info');
-                    break;
-                case 'active' :
-                    classes.push('bg-success', 'border-success', 'active');
-                    break;
-                case 'revoked' :
-                    classes.push('bg-warning', 'border-danger');
-                    break;
-                default :
-                    classes.push('bg-light', 'border-light');
-            }
-            container.classList.add(...classes);
+            const htmlClasses = getMembershipStatusClasses(membership.status, ['bg', 'border']);
+            if (membership.status === 'active') htmlClasses.push('active');
+            container.classList.add(...htmlClasses);
 
             const revokeBtn = membershipElement.querySelector('.revoke');
             if (membership.status === 'revoked') {
