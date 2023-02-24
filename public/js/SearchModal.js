@@ -1,5 +1,5 @@
 import { Modal } from './Modal.js';
-import { userData, getData, getPhpMethodUrl, modals } from './utils.js';
+import { userData, getData, getPhpMethodUrl, modals, getMembershipStatusClasses } from './utils.js';
 
 export class SearchModal extends Modal {
     constructor() {
@@ -76,7 +76,6 @@ export class SearchModal extends Modal {
             rowBody.querySelector('.phone_number').textContent = rowData['phone_number'];
             rowBody.querySelector('.id').textContent = rowData['id'];
 
-            // membership details
             const logBtn = rowBody.querySelector('.log-btn');
             logBtn.addEventListener('click', () => {
                 this.logMember(rowData['id'])
@@ -85,13 +84,29 @@ export class SearchModal extends Modal {
                     });
             })
 
-            if (rowData.expiry_date) {
-                rowBody.querySelector('.membership-details .term-display-name').textContent = rowData.term_display_name;
-                rowBody.querySelector('.membership-details .expiry-date').textContent = rowData.expiry_date;
-            } else {
-                logBtn.classList.add('disabled');
-                rowBody.querySelector('.membership-details .expiry-date').textContent = 'No membership';
+            // set membership section
+            let membershipStatus = '';
+            switch (rowData.status) {
+                case 'active' :
+                    membershipStatus = rowData.term_display_name;
+                    break;
+                case 'expired' :
+                    membershipStatus = 'Expired'
+                    logBtn.classList.add('disabled');
+                    break;
+                case 'future' :
+                    membershipStatus = 'Starts'
+                    logBtn.classList.add('disabled');
+                    break;
+                default :
+                    membershipStatus = '';
+                    logBtn.classList.add('disabled');
             }
+            rowBody.querySelector('.term-display-name').textContent = membershipStatus;
+            rowBody.querySelector('.expiry-date').textContent = rowData.status ? rowData.expiry_date : 'No membership';
+            const htmlClasses = getMembershipStatusClasses(rowData.status, ['text']);
+            rowBody.querySelector('.membership-details').classList.add(...htmlClasses);
+
             this.elements.output.appendChild(rowBody);
         }
 
