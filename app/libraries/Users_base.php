@@ -141,7 +141,7 @@ class Users_base extends Controller {
         }
     }
 
-    public function searchDb($searchQuery) {
+    public function searchDb($searchQuery, $filter = 'all') {
         // this is called via an ajax call when an admin user types in the search bar
         // data is sent back to javascript
         // strip searchQuery maybe use specailChars

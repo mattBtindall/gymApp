@@ -153,9 +153,25 @@ class Users extends Users_base {
         $this->view('/users/profile', $data);
     }
 
-    public function searchDb($query) {
-        $users = parent::searchDb($query);
-        echo $this->joinUserMembers($users);
+    public function searchDb($query, $filter = 'all')  {
+        $users = parent::searchDb($query, $filter);
+        $users = $this->joinUserMembers($users);
+        if ($filter === 'clients') { 
+            $users = $this->searchFilterClients($users);
+        } else if ($filter === 'active-members') {
+            $users = $this->searchFilterActiveMembers($users);
+        }
+        echo json_encode($users);
+    }
+
+    private function searchFilterClients($users) {
+        // all members - clients have a status key
+        return array_values(array_filter($users, fn($user) => array_key_exists('status', $user)));
+    }
+
+    private function searchFilterActiveMembers($users) {
+        // wrapped in array_values as array_filter: 'Array keys are preserved, and may result in gaps if the array was indexed. The result array can be reindexed using the array_values() function'
+        return array_values(array_filter($users, fn($user) => array_key_exists('status', $user) && $user['status'] === 'active'));
     }
 
     public function getUserData() {
@@ -166,7 +182,7 @@ class Users extends Users_base {
         }
 
         $users = parent::getUserData();
-        echo $this->joinUserMembers($users);
+        echo json_encode($this->joinUserMembers($users));
     }
 
     private function joinUserMembers($users) {
@@ -189,6 +205,6 @@ class Users extends Users_base {
             }
         }
         $users = $users ? $users : '{}';
-        return json_encode($users);
+        return $users;
     }
 }

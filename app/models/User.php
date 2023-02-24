@@ -93,7 +93,6 @@ class User {
 
     public function selectUserBySearchQuery($searchQuery, $area) {
         // select everything but password
-        // name or email below
         $this->db->query('SELECT id, name, email, phone_number, img_url FROM ' . $area . '_users WHERE name LIKE :searchQuery');
         $this->db->bind(':searchQuery', $searchQuery . '%');
         return $this->db->resultSet(PDO::FETCH_ASSOC);

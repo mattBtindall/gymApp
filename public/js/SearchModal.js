@@ -145,6 +145,7 @@ export class SearchModal extends Modal {
             this.setEmptyModalMessage('No user found with this name');
             return;
         }
+        console.log(data);
         this.elements.output.innerHTML = "";
         data.forEach(userData => this.createRow(userData));
     }

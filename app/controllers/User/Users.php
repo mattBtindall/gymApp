@@ -132,8 +132,8 @@ class Users extends Users_base {
         $this->view('/users/profile', $data);
     }
 
-    public function searchDb($query) {
-        $results = parent::searchDb($query);
+    public function searchDb($query, $filter = 'all') {
+        $results = parent::searchDb($query, $filter);
         $results = $results ? $results : '{}';
         echo json_encode($results);
     }
