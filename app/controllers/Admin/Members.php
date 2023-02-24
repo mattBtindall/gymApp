@@ -59,9 +59,9 @@ class Members extends Controller {
                 $modal['cost_err'] = 'Please select a cost.';
             }
 
-            // format dats before passing to db & modals.php for output
-            $modal['expiry_date'] = $modal['expiry_date']->format(SQL_DATE_TIME_FORMAT);
-            $modal['start_date'] = DateTime::createFromFormat(HTML_DATE_TIME_FORMAT, $modal['start_date'])->format(SQL_DATE_TIME_FORMAT);
+            // format dats before passing to db & modals.php for output, resets time as we don't need this when comparing memberships
+            $modal['expiry_date'] = $modal['expiry_date']->setTime(0, 0, 0)->format(SQL_DATE_TIME_FORMAT);
+            $modal['start_date'] = DateTime::createFromFormat(HTML_DATE_TIME_FORMAT, $modal['start_date'])->setTime(0, 0, 0)->format(SQL_DATE_TIME_FORMAT);
 
             if (empty($modal['term_id_err']) && empty($modal['start_date_err']) && empty($modal['expiry_date_err']) && empty($modal['cost_err'])) {
                 // reset modal state so that it doesn't reopen
@@ -160,7 +160,7 @@ class Members extends Controller {
 
         foreach ($memberships as $membership) {
             $startDate = DateTime::createFromFormat(SQL_DATE_TIME_FORMAT, $membership['start_date']);
-            $expiryDate = DateTime::createFromFormat(SQL_DATE_TIME_FORMAT, $membership['expiry_date']);
+            $expiryDate = DateTime::createFromFormat(SQL_DATE_TIME_FORMAT, $membership['expiry_date'])->modify('+1 day');
 
             // covers start date being in between $membership dates
             // start and expiryt date going around $membership dates
