@@ -18,10 +18,10 @@
 <div class="search-bar-modal">
 	<div class="container">
 		<header class="border-bottom">
-			<ul>
-				<li class="active">All</li>
-				<li>Clients</li>
-				<li>Active Members</li>
+			<ul class="search-filters">
+				<li class="active filter" data-filter-type="all">All</li>
+				<li class="filter" data-filter-type="clients">Clients</li>
+				<li class="filter" data-filter-type="active-members">Active Members</li>
 			</ul>
 		</header>
 		<div class="search-bar-modal__output">

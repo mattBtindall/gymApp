@@ -8,7 +8,11 @@ export class SearchModal extends Modal {
             '.search-bar-modal'
         );
 
+        this.filter = 'all'; // set default filter to all
+        this.searchInputText = '';
         this.elements.searchBar = document.querySelector('.search-bar');
+        this.elements.filtersContainer = document.querySelector('.search-filters');
+        this.elements.filters = document.querySelectorAll('.filter');
         this.setEventListeners();
     }
 
@@ -16,6 +20,11 @@ export class SearchModal extends Modal {
         const searchOutput = document.querySelector('.search-bar-modal__output');
         this.elements.searchBar.addEventListener('focus', (e) => this.openModal());
         this.elements.searchBar.addEventListener('keyup', e => this.keyUpEventListener(e));
+        this.elements.filtersContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('filter') && !e.target.classList.contains('active')) {
+                this.filterClick(e.target);
+            }
+        })
 
         if (searchOutput) {
             searchOutput.addEventListener('click', (e) => {
@@ -36,11 +45,36 @@ export class SearchModal extends Modal {
             return;
         }
 
-        const url = getPhpMethodUrl("/Users/searchDb/", e.target.value);
+        this.searchInputText = e.target.value;
+        this.getUserData(this.searchInputText);
+    }
+
+    getUserData(searchQuery) {
+        const url = getPhpMethodUrl('/Users/searchDb/', `${searchQuery}/${this.filter}`);
         getData(url)
             .then(data => {
                 this.setModal(data)
             });
+    }
+
+    filterClick(currentFilter) {
+        this.setFilter(currentFilter);
+
+        // if there data already present fetch data again but with new filter
+        if (this.searchInputText) {
+            this.elements.output.innerHTML = "";
+            this.getUserData(this.searchInputText);
+        }
+        // if there isn't data do nothing
+    }
+
+    setFilter(currentFilter) {
+        // if currentFilter not dom node it will be a string of filter type
+        currentFilter = currentFilter instanceof Element ? currentFilter : document.querySelector(`[data-filter-type=${currentFilter}]`);
+        this.elements.filters.forEach(filter => filter.classList.remove('active'));
+        currentFilter.classList.add('active');
+
+        this.filter = currentFilter.dataset.filterType;
     }
 
     setEmptyModalMessage(message) {
@@ -58,6 +92,8 @@ export class SearchModal extends Modal {
 
         this.elements.searchBar.value = "";
         this.setEmptyModalMessage('Type a name in the search bar');
+        this.setFilter('all');
+        this.searchInputText = '';
         super.closeModal();
     }
 
