@@ -74,3 +74,14 @@ export function getMembershipStatusClasses(status, type) {
     }
     return type.map(type => type + '-' + htmlClass);
 }
+
+// date is a string value e.g. '2023-02-20'
+export function isDateToday(date) {
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    const yymmdd = date.split('-');
+    yymmdd[1] -= 1; // the month is zero indexed
+    const formattedDate = new Date(...yymmdd);
+    formattedDate.setHours(0,0,0,0);
+    return today.getTime() === formattedDate.getTime();
+}

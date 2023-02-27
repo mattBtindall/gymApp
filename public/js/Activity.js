@@ -1,6 +1,6 @@
 /* Error when clicking on element that was added via js on activity index */
 
-import { modals, userData } from "./utils.js";
+import { modals, userData, isDateToday } from "./utils.js";
 
 export class Activity {
     constructor(spec) {
@@ -41,6 +41,8 @@ export class Activity {
     }
 
     addActivityElement(activity) {
+        if (!isDateToday(this.elements.date.value)) return;
+
         const activityTemplate = document.getElementById('activity-template');
         const activityElement = document.importNode(activityTemplate.content, true);
         const container = activityElement.querySelector('.activity-container')
