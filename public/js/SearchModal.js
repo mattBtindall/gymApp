@@ -4,7 +4,7 @@ import { userData, getData, getPhpMethodUrl, modals, getMembershipStatusClasses 
 export class SearchModal extends Modal {
     constructor() {
         super(
-            { output: '.search-bar-modal__output'},
+            { output: '.search-bar-modal__output' },
             '.search-bar-modal'
         );
 
@@ -90,6 +90,7 @@ export class SearchModal extends Modal {
             return;
         }
 
+        this.elements.searchBar.blur();
         this.elements.searchBar.value = "";
         this.setEmptyModalMessage('Type a name in the search bar');
         this.setFilter('all');
@@ -117,18 +118,18 @@ export class SearchModal extends Modal {
         // set membership section
         let membershipStatus = '';
         switch (userData.status) {
-            case 'active' :
+            case 'active':
                 membershipStatus = userData.term_display_name;
                 break;
-            case 'expired' :
+            case 'expired':
                 membershipStatus = 'Expired'
                 logBtn.classList.add('disabled');
                 break;
-            case 'future' :
+            case 'future':
                 membershipStatus = 'Starts'
                 logBtn.classList.add('disabled');
                 break;
-            default :
+            default:
                 membershipStatus = '';
                 logBtn.classList.add('disabled');
         }
@@ -145,7 +146,6 @@ export class SearchModal extends Modal {
             this.setEmptyModalMessage('No user found with this name');
             return;
         }
-        console.log(data);
         this.elements.output.innerHTML = "";
         data.forEach(userData => this.createRow(userData));
     }

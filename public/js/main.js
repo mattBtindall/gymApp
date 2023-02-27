@@ -14,6 +14,8 @@ window.onload = function() {
             eventListeners.setBodyClick();
             contentSpecificJs();
         });
+
+    eventListeners.keyPress();
 }
 
 function contentSpecificJs() {

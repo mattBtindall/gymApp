@@ -31,3 +31,15 @@ export function setBodyClick() {
         }
     });
 }
+
+export function keyPress() {
+    document.addEventListener('keydown', e => {
+        if (e.code === 'Escape') {
+            if (modals.search.open) {
+                modals.search.closeModal();
+            } else if (modals.user.open) {
+                modals.user.closeModal();
+            }
+        }
+    });
+}
