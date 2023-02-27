@@ -17,7 +17,20 @@
             '/users/getUsersFromOppositeArea',
             '/members',
             '/members/index',
-            '/members/getMembersData'
+            '/members/getMembersData',
+            '/members/getTermMembershipByUserId',
+            '/activitys',
+            '/activitys/index',
+            '/activitys/logUser',
+            '/activitys/getMembersActivity',
+            '/activitys/getMemberActivity',
+            '/terms',
+            '/terms/index',
+            '/terms/add',
+            '/terms/edit',
+            '/terms/delete',
+            '/terms/getErrorStatus',
+            '/terms/getTerms',
         ];
 
         public function __construct() {

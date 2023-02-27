@@ -175,5 +175,4 @@ class Members extends Controller {
 
         return false;
     }
-
 }
