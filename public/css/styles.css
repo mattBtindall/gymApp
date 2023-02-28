@@ -248,6 +248,20 @@ img {
     cursor: pointer;
 }
 
+/* Dashboard */
+.revenue-filters {
+    cursor: pointer;
+}
+
+.member-overview-container h3 {
+    cursor: pointer;
+    color: #cecece;
+}
+
+.member-overview-container h3.active {
+    color: var(--body-color);
+}
+
 @media (min-width: 992px) {
     .profile-right-container {
         width: 60%;

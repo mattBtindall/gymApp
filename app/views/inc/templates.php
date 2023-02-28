@@ -123,3 +123,22 @@
 		<div style="display: none;" class="id"></div>
 	</div>
 </template>
+
+<!-- dashboard newest/expiring members -->
+<template id="dashboard-member-row">
+	<div class="p-3 mb-3 border rounded">
+		<div class="d-flex justify-content-between">
+			<div class="d-flex align-items-center gap-3">
+				<div class="img-container" style="max-width: 50px;">
+					<img src="" alt="" class="img">
+				</div>
+				<span class="name fw-bold"></span>
+				<span class="time fst-italic fw-light"></span>
+			</div>
+			<div class="d-flex flex-column">
+				<span class="email"></span>
+				<span class="user_id"></span>
+			</div>
+		</div>
+	</div>
+</template>
