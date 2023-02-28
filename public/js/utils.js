@@ -85,3 +85,8 @@ export function isDateToday(date) {
     formattedDate.setHours(0,0,0,0);
     return today.getTime() === formattedDate.getTime();
 }
+
+export function setActiveElement(allElements, currentElement) {
+    allElements.forEach(element => element.classList.remove('active'));
+    currentElement.classList.add('active');
+}

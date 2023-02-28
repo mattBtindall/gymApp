@@ -19,11 +19,11 @@
                             <div class="col-4">
                                 <h3>Revenue: </h3>
                                 <ul class="revenue-filters list-group">
-                                    <li class="list-group-item">1 Week</li>
-                                    <li class="active list-group-item">4 Weeks</li>
-                                    <li class="list-group-item">3 Months</li>
-                                    <li class="list-group-item">6 Months</li>
-                                    <li class="list-group-item">12 Months</li>
+                                    <li class="list-group-item" data-filter-value="1 week">1 Week</li>
+                                    <li class="active list-group-item" data-filter-value="4 weeks">4 Weeks</li>
+                                    <li class="list-group-item" data-filter-value="3 month">3 Months</li>
+                                    <li class="list-group-item" data-filter-value="6 month">6 Months</li>
+                                    <li class="list-group-item" data-filter-value="12 month">12 Months</li>
                                 </ul>
                             </div>
                             <div class="col-8">
@@ -41,13 +41,19 @@
                 <div class="visits-container p-3 border bg-light rounded h-100">
                     <header>
                         <h3>Number of visits:</h3>
-                        <ul class="visits-filters">
-                            <li>1 Week</li>
-                            <li>4 weeks</li>
-                            <li>3 Months</li>
-                            <li>6 Months</li>
-                            <li>12 Months</li>
-                        </ul>
+                        <div class="visits-filters">
+                            <div class="d-flex">
+                                <i class="bi bi-chevron-left"></i>
+                                <ul>
+                                    <li class="active" data-filter-value="1 week">1 Week</li>
+                                    <li data-filter-value="4 week">4 weeks</li>
+                                    <li data-filter-value="3 month">3 Months</li>
+                                    <li data-filter-value="6 month">6 Months</li>
+                                    <li data-filter-value="12 month">12 Months</li>
+                                </ul>
+                                <i class="bi bi-chevron-right"></i>
+                            </div>
+                        </div>
                     </header>
                     <div class="visits-chart-output"></div>
                 </div>

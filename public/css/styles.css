@@ -262,6 +262,31 @@ img {
     color: var(--body-color);
 }
 
+.visits-filters {
+    position: relative;
+    list-style-type: none;
+}
+
+.visits-filters ul {
+    padding-left: 0;
+    min-width: 5rem;
+    display: flex;
+    justify-content: center;
+}
+
+.visits-filters li {
+    display: none;
+}
+
+.visits-filters li.active {
+    display: inline-block;
+}
+
+.visits-container i {
+    cursor: pointer;
+    margin: 0;
+}
+
 @media (min-width: 992px) {
     .profile-right-container {
         width: 60%;
