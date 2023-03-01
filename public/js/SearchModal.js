@@ -1,5 +1,5 @@
 import { Modal } from './Modal.js';
-import { userData, getData, getPhpMethodUrl, modals, getMembershipStatusClasses } from './utils.js';
+import { userData, getData, getPhpMethodUrl, modals, getMembershipStatusClasses, setActiveElement } from './utils.js';
 
 export class SearchModal extends Modal {
     constructor() {
@@ -71,9 +71,7 @@ export class SearchModal extends Modal {
     setFilter(currentFilter) {
         // if currentFilter not dom node it will be a string of filter type
         currentFilter = currentFilter instanceof Element ? currentFilter : document.querySelector(`[data-filter-type=${currentFilter}]`);
-        this.elements.filters.forEach(filter => filter.classList.remove('active'));
-        currentFilter.classList.add('active');
-
+        setActiveElement(this.elements.filters, currentFilter);
         this.filter = currentFilter.dataset.filterType;
     }
 

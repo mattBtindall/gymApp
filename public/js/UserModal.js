@@ -1,5 +1,5 @@
 import { Modal } from './Modal.js';
-import { modals, userData, getPhpMethodUrl, getData, sendAjax, isAdmin, capitalise, getMembershipStatusClasses } from './utils.js';
+import { modals, userData, getPhpMethodUrl, getData, sendAjax, isAdmin, capitalise, getMembershipStatusClasses, setActiveElement } from './utils.js';
 
 export class UserModal extends Modal {
     constructor() {
@@ -81,8 +81,7 @@ export class UserModal extends Modal {
     }
 
     setTabs(menuItem) {
-        this.elements.tabs.menu.items.forEach(menuItem => menuItem.classList.remove('active'));
-        menuItem.classList.add('active');
+        setActiveElement(this.elements.tabs.menu.items, menuItem);
         this.elements.tabs.content.items.forEach(item => item.classList.remove('active'));
         document.querySelector(`.${menuItem.dataset.contentClassName}`).classList.add('active');
     }
