@@ -23,7 +23,7 @@ class Users extends Users_base {
     public function index() {
         // dashboard
 
-        $this->view('/users/index');
+        redirect('/dashboard/index');
     }
 
     public function register() {
@@ -156,7 +156,7 @@ class Users extends Users_base {
     public function searchDb($query, $filter = 'all')  {
         $users = parent::searchDb($query, $filter);
         $users = $this->joinUserMembers($users);
-        if ($filter === 'clients') { 
+        if ($filter === 'clients') {
             $users = $this->searchFilterClients($users);
         } else if ($filter === 'active-members') {
             $users = $this->searchFilterActiveMembers($users);
