@@ -31,6 +31,9 @@
             '/terms/delete',
             '/terms/getErrorStatus',
             '/terms/getTerms',
+            '/dashboard',
+            '/dashboard/index',
+            '/dashboard/getNumberOfActiveMembers'
         ];
 
         public function __construct() {
