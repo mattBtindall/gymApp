@@ -45,11 +45,10 @@
                             <div class="d-flex">
                                 <i class="bi bi-chevron-left"></i>
                                 <ul>
-                                    <li class="active" data-filter-value="1 week">1 Week</li>
-                                    <li data-filter-value="4 week">4 weeks</li>
-                                    <li data-filter-value="3 month">3 Months</li>
-                                    <li data-filter-value="6 month">6 Months</li>
-                                    <li data-filter-value="12 month">12 Months</li>
+                                    <li class="active" data-filter-value="today">today</li>
+                                    <li data-filter-value="week">This week</li>
+                                    <li data-filter-value="month">This month</li>
+                                    <li data-filter-value="year">This year</li>
                                 </ul>
                                 <i class="bi bi-chevron-right"></i>
                             </div>

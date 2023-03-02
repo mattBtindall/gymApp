@@ -26,7 +26,7 @@ export class Dashboard {
             revenue: '4 weeks',
             visits: '1 week',
         }
-        this.visitsFilterNumber = 0;
+        this.visitsFilterNumber = 1;
 
         this.setEventListeners();
     }
