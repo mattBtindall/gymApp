@@ -20,4 +20,11 @@ class Dashboard {
         }
         return $numberOfAactiveMembers;
     }
+
+    public function getNumberOfVisits($adminId, $furthestDate, $closestDate) {
+        $this->db->query("SELECT * FROM activity WHERE created_at >= '{$furthestDate}' AND created_at <= '{$closestDate}' AND admin_id = :adminId AND membership_status = 'active'");
+        $this->db->bind(':adminId', $adminId);
+        $activity = $this->db->resultSet(PDO::FETCH_ASSOC);
+        return count($activity);
+    }
 }
