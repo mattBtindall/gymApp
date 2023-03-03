@@ -18,32 +18,59 @@ class Dashboards extends Controller {
     public function getNumberOfVisits($timeFrame) {
         // $timeFrame: today, this week, this month, this year
         $dateBoundaries = $this->calculateDates($timeFrame);
-        return $this->dashboardModel->getNumberOfVisits($_SESSION['user_id'], $dateBoundaries['furthestDate'], $dateBoundaries['closestDate']);
+        var_dump([
+            'current' => $this->dashboardModel->getNumberOfVisits($_SESSION['user_id'], $dateBoundaries['current']['furthestDate'], $dateBoundaries['current']['closestDate']),
+            'comparison' => $this->dashboardModel->getNumberOfVisits($_SESSION['user_id'], $dateBoundaries['comparison']['furthestDate'], $dateBoundaries['comparison']['closestDate']),
+        ]);
     }
 
     private function calculateDates($timeFrame) {
         // this works out the ranges for the dates e.g. for today date1 00:00:00 is today
-        // this morning and date2 is today at 23:59:59
-        $furthestDate = new DateTime();
-        $closestDate = new DateTime();
+        // this morning and date2 is today at the current time
+        $current = [
+            'furthestDate' => new DateTime(),
+            'closestDate' => new DateTime()
+        ];
+        $comparison = [
+            'furthestDate' => new DateTime(),
+            'closestDate' => new DateTime()
+        ];
+
         switch ($timeFrame) {
             case 'today' :
-                $closestDate->setTime(23,59,59);
+                $comparison['furthestDate']->modify('-1 day');
+                $comparison['closestDate']->modify('-1 day');
                 break;
             case 'week' :
-                $furthestDate->modify('last monday');
+                if ($current['furthestDate']->format('l') !== 'Monday') {
+                    $current['furthestDate']->modify('last monday');
+                    $comparison['furthestDate']->modify('-2 monday');
+                    $comparison['closestDate']->modify('-1 week');
+                } else {
+                    $comparison['furthestDate']->modify('last monday');
+                    $comparison['closestDate']->modify('last monday');
+                }
                 break;
             case 'month' :
-                $furthestDate->modify('first day of this month');
+                $current['furthestDate']->modify('first day of this month');
+                $comparison['furthestDate']->modify('first day of last month');
+                $comparison['closestDate']->modify('-1 month');
                 break;
             case 'year' :
-                $furthestDate->modify('first day of January');
+                $current['furthestDate']->modify('first day of January');
+                $comparison['furthestDate']->modify('first day of January ' . ($comparison['furthestDate']->format('Y') - 1) . ' 00:00:00');
+                $comparison['closestDate']->modify('-1 year');
                 break;
         }
 
+        $current['furthestDate'] = $current['furthestDate']->setTime(0,0,0,0)->format(SQL_DATE_TIME_FORMAT);
+        $current['closestDate'] = $current['closestDate']->format(SQL_DATE_TIME_FORMAT);
+        $comparison['furthestDate'] = $comparison['furthestDate']->setTime(0,0,0,0)->format(SQL_DATE_TIME_FORMAT);
+        $comparison['closestDate'] = $comparison['closestDate']->format(SQL_DATE_TIME_FORMAT);
+
         return [
-            'furthestDate' => $furthestDate->setTime(0,0,0,0)->format(SQL_DATE_TIME_FORMAT),
-            'closestDate' => $closestDate->format(SQL_DATE_TIME_FORMAT)
+            'current' => $current,
+            'comparison' => $comparison
         ];
     }
 }
