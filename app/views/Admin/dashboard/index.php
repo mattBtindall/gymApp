@@ -9,7 +9,7 @@
                 <div class="col-4">
                     <div class="number-active-members-container d-flex flex-column justify-content-between p-3 border bg-light rounded h-100">
                         <h3>Active Members: </h3>
-                        <span class="output"></span>
+                        <span class="active-members-output"></span>
                         <a href="<?= URL_ROOT ?>/members" class="btn btn-success btn-lg">View all members</a>
                     </div>
                 </div>
@@ -38,7 +38,7 @@
         <div class="row">
             <div class="col-4">
                 <!-- number of visits - can calculate through the activity table -->
-                <div class="visits-container p-3 border bg-light rounded h-100">
+                <div class="visits-container p-3 border bg-light rounded h-100 d-flex flex-column justify-content-between p-3 border bg-light rounded h-100">
                     <header>
                         <h3>Number of visits:</h3>
                         <div class="visits-filters">
@@ -54,7 +54,8 @@
                             </div>
                         </div>
                     </header>
-                    <div class="visits-chart-output"></div>
+                    <div class="visits-output"></div>
+                    <a href="<?= URL_ROOT ?>/activitys" class="btn btn-success btn-lg">View all activity</a>
                 </div>
             </div>
             <div class="col-8">
