@@ -287,6 +287,11 @@ img {
     margin: 0;
 }
 
+.member-overview-container {
+    max-height: 300px;
+    min-height: 300px;
+}
+
 @media (min-width: 992px) {
     .profile-right-container {
         width: 60%;

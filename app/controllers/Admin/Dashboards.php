@@ -11,6 +11,29 @@ class Dashboards extends Controller {
         $this->view('/dashboard/index');
     }
 
+    public function getRelevantMembers() {
+        $recentMembers = $this->getRecentMembers($_SESSION['user_id']);
+        printArray($recentMembers);
+    }
+
+    private function getRecentMembers($adminId) {
+        $recentMembers = $this->dashboardModel->getRecentMembers($adminId);
+        $memberIds = [];
+        // remove any duplicated user_ids
+        $filteredRecentMembers = array_filter($recentMembers, function($member) use(&$memberIds) {
+            if (!in_array($member['user_id'], $memberIds)) {
+                $memberIds[] = $member['user_id'];
+                return true;
+            }
+            return false;
+        });
+        return $filteredRecentMembers;
+    }
+
+    private function getExpiringMembers() {
+        return $this->dashboardModel->getExpiringMembers();
+    }
+
     public function getNumberOfActiveMembers() {
         return $this->dashboardModel->getNumberOfActiveMembers($_SESSION['user_id']);
     }
@@ -18,10 +41,13 @@ class Dashboards extends Controller {
     public function getNumberOfVisits($timeFrame) {
         // $timeFrame: today, this week, this month, this year
         $dateBoundaries = $this->calculateDates($timeFrame);
-        var_dump([
-            'current' => $this->dashboardModel->getNumberOfVisits($_SESSION['user_id'], $dateBoundaries['current']['furthestDate'], $dateBoundaries['current']['closestDate']),
-            'comparison' => $this->dashboardModel->getNumberOfVisits($_SESSION['user_id'], $dateBoundaries['comparison']['furthestDate'], $dateBoundaries['comparison']['closestDate']),
-        ]);
+        $current = $this->dashboardModel->getNumberOfVisits($_SESSION['user_id'], $dateBoundaries['current']['furthestDate'], $dateBoundaries['current']['closestDate']);
+        $comparison = $this->dashboardModel->getNumberOfVisits($_SESSION['user_id'], $dateBoundaries['comparison']['furthestDate'], $dateBoundaries['comparison']['closestDate']);
+        $percentageDifference = $this->calculateDifference($current, $comparison);
+        return [
+            'current' => $current,
+            'percentageDifference' => $percentageDifference
+        ];
     }
 
     private function calculateDates($timeFrame) {
@@ -72,5 +98,11 @@ class Dashboards extends Controller {
             'current' => $current,
             'comparison' => $comparison
         ];
+    }
+
+    private function calculateDifference($newValue, $oldValue) {
+        // calculates the percentage difference of two numbers
+        $value = ($newValue - $oldValue) / (($newValue + $oldValue) / 2) * 100;
+        echo round($value, 2);
     }
 }
