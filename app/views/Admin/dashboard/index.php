@@ -20,7 +20,7 @@
                                 <h3>Revenue: </h3>
                                 <ul class="revenue-filters list-group">
                                     <li class="list-group-item" data-filter-value="1 week">1 Week</li>
-                                    <li class="active list-group-item" data-filter-value="4 weeks">4 Weeks</li>
+                                    <li class="active list-group-item" data-filter-value="4 week">4 Weeks</li>
                                     <li class="list-group-item" data-filter-value="3 month">3 Months</li>
                                     <li class="list-group-item" data-filter-value="6 month">6 Months</li>
                                     <li class="list-group-item" data-filter-value="12 month">12 Months</li>
