@@ -12,8 +12,10 @@ class Dashboards extends Controller {
     }
 
     public function getRelevantMembers() {
-        $recentMembers = $this->getRecentMembers($_SESSION['user_id']);
-        printArray($recentMembers);
+        return [
+            'recentMembers' => $this->getRecentMembers($_SESSION['user_id']),
+            'expiringMembers' => $this->dashboardModel->getExpiringMembers($_SESSION['user_id'])
+        ];
     }
 
     private function getRecentMembers($adminId) {
@@ -28,10 +30,6 @@ class Dashboards extends Controller {
             return false;
         });
         return $filteredRecentMembers;
-    }
-
-    private function getExpiringMembers() {
-        return $this->dashboardModel->getExpiringMembers();
     }
 
     public function getNumberOfActiveMembers() {
