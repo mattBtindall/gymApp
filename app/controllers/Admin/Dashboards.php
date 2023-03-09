@@ -103,4 +103,10 @@ class Dashboards extends Controller {
         $value = ($newValue - $oldValue) / (($newValue + $oldValue) / 2) * 100;
         echo round($value, 2);
     }
+
+    public function getRevenue($timeFrame) {
+        // timeFrame can be: '1 week', '4 week', '3 month', '6 month', '12 month'
+        return $this->dashboardModel->getRevenue($timeFrame, $_SESSION['user_id']);
+    }
+
 }

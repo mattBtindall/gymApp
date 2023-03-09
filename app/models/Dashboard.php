@@ -53,4 +53,22 @@ class Dashboard {
         $this->db->bind(':today', $now->modify(date('Y-m-d'))->format(SQL_DATE_TIME_FORMAT));
         return $this->db->resultSet(PDO::FETCH_ASSOC);
     }
+
+    public function getRevenue($timeFrame, $adminId) {
+        // timeFrame can be: '1 week', '4 week', '3 month', '6 month', '12 month'
+        $totalRevenue = 0;
+        $now = new DateTime();
+        $date = $now->modify('-' . $timeFrame . 's 00:00:00')->format(SQL_DATE_TIME_FORMAT);
+        $this->db->query("SELECT cost
+                          from memberships
+                          WHERE admin_id = :adminId
+                          AND created_at > :dateValue");
+        $this->db->bind(':adminId', $adminId);
+        $this->db->bind(':dateValue', $date);
+        $costs = $this->db->resultSet(PDO::FETCH_ASSOC);
+        if ($costs) {
+            $totalRevenue = array_reduce($costs, fn($accumulator, $currentValue) => $accumulator + $currentValue['cost'], 0);
+        }
+        echo $totalRevenue;
+    }
 }
