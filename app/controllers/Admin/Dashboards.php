@@ -108,5 +108,4 @@ class Dashboards extends Controller {
         // timeFrame can be: '1 week', '4 week', '3 month', '6 month', '12 month'
         return $this->dashboardModel->getRevenue($timeFrame, $_SESSION['user_id']);
     }
-
 }

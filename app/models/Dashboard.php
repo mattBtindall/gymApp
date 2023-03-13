@@ -3,6 +3,12 @@
 class Dashboard {
     private $db;
 
+    /**
+     * the amount of points on the revenue chart
+     * this is how many segmenets we need when calculating the revenue
+     */
+    const REVENUE_POINTS = 4;
+
     public function __construct() {
         $this->db = new Database();
     }
@@ -54,21 +60,52 @@ class Dashboard {
         return $this->db->resultSet(PDO::FETCH_ASSOC);
     }
 
-    public function getRevenue($timeFrame, $adminId) {
+    private function getMembershipsInTimeFrame($date, $adminId) {
         // timeFrame can be: '1 week', '4 week', '3 month', '6 month', '12 month'
-        $totalRevenue = 0;
-        $now = new DateTime();
-        $date = $now->modify('-' . $timeFrame . 's 00:00:00')->format(SQL_DATE_TIME_FORMAT);
-        $this->db->query("SELECT cost
+        $this->db->query("SELECT cost, created_at
                           from memberships
                           WHERE admin_id = :adminId
                           AND created_at > :dateValue");
         $this->db->bind(':adminId', $adminId);
         $this->db->bind(':dateValue', $date);
-        $costs = $this->db->resultSet(PDO::FETCH_ASSOC);
-        if ($costs) {
-            $totalRevenue = array_reduce($costs, fn($accumulator, $currentValue) => $accumulator + $currentValue['cost'], 0);
+        return $this->db->resultSet(PDO::FETCH_ASSOC);
+    }
+
+    private function getQuateredTimeFrame($date) {
+        $formattedDate = $date->format(SQL_DATE_TIME_FORMAT);
+        // ceil becuase we want to get rid of decimals and it doesn't matter if the time is a bit later today
+        // as memberships can't be created in the future
+        $timeDifferenceHours = (strtotime('now') - strtotime($formattedDate))/60/60;
+        $timeDifferenceQuarter = ceil($timeDifferenceHours / self::REVENUE_POINTS);
+        $dates = [];
+        for ($i = 0; $i < self::REVENUE_POINTS; $i++) {
+            $dates[] = [
+                'oldest' => $date->format(SQL_DATE_TIME_FORMAT),
+                'newest' => $date->modify('+' . $timeDifferenceQuarter . ' hours')->format(SQL_DATE_TIME_FORMAT)
+            ];
         }
-        echo $totalRevenue;
+        return $dates;
+    }
+
+    public function getRevenue($timeFrame, $adminId) {
+        $now = new DateTime();
+        $date = $now->modify('-' . $timeFrame . 's 00:00:00');
+        $memberships = $this->getMembershipsInTimeFrame($date->format(SQL_DATE_TIME_FORMAT), $adminId);
+        $quarteredTimeFrames = $this->getQuateredTimeFrame($date);
+        $quarteredMemberships = [];
+        $quarteredRevenues = [];
+
+        foreach ($quarteredTimeFrames as $qtf) {
+            $quarteredMemberships[] = array_filter($memberships, function($membership) use($qtf) {
+                if (strtotime($membership['created_at']) > strtotime($qtf['oldest']) && strtotime($membership['created_at']) < strtotime($qtf['newest'])) {
+                    return true;
+                }
+            });
+        }
+
+        foreach($quarteredMemberships as $quarteredMembership) {
+            $quarteredRevenues[] = array_reduce($quarteredMembership, fn($accumulator, $currentValue) => $accumulator + $currentValue['cost'], 0);
+        }
+        return $quarteredRevenues;
     }
 }
