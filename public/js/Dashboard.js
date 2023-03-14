@@ -3,6 +3,9 @@ import { setActiveElement, getPhpMethodUrl, getData } from "./utils.js";
 export class Dashboard {
     constructor() {
         this.elements = {
+            activeMembers : {
+                output: document.querySelector('.active-members-output')
+            },
             revenue: {
                 filtersContainer: document.querySelector('.revenue-filters'),
                 filters: document.querySelectorAll('.revenue-filters li'),
@@ -18,7 +21,7 @@ export class Dashboard {
                 percentageDifferenceOutput: document.querySelector('.percentage-difference-output'),
                 percentageDifferenceIcon: document.querySelector('.percentage-difference-icon'),
                 upPercentageIcon: '<i class="bi bi-arrow-up-square-fill"></i>',
-                downPercentageIcon: '<i class="bi bi-down-square-fill"></i>'
+                downPercentageIcon: '<i class="bi bi-arrow-down-square-fill"></i>'
             },
             membersOverview: {
                 container: document.querySelector('.member-overview-container'),
@@ -37,6 +40,7 @@ export class Dashboard {
         this.getAllData()
             .then(data => {
                 this.setVisits(data.numberOfVisits);
+                this.setActiveMembers(data.activeMembers);
             });
     }
 
@@ -44,6 +48,10 @@ export class Dashboard {
         this.elements.revenue.filtersContainer.addEventListener('click', (e) => this.revenueFilterClick(e.target));
         this.elements.visits.filtersContainer.addEventListener('click', (e) => this.visitsFilterClick(e.target))
         this.elements.membersOverview.titlesContainer.addEventListener('click', (e) => this.membersOverviewClick(e.target));
+    }
+
+    setActiveMembers(numberOfActiveMembers) {
+        this.elements.activeMembers.output.textContent = numberOfActiveMembers;
     }
 
     setVisits(visitsSpec) {
@@ -56,6 +64,7 @@ export class Dashboard {
             colourClass = 'text-success';
         }
         this.elements.visits.percentageDifferenceIcon.innerHTML = icon;
+        this.elements.visits.percentageDifferenceContainer.className = "";
         this.elements.visits.percentageDifferenceContainer.classList.add(colourClass);
     }
 

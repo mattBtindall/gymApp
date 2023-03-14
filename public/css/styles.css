@@ -292,7 +292,8 @@ img {
     min-height: 300px;
 }
 
-.visits-output {
+.visits-output,
+.active-members-output {
     font-size: 6rem;
     line-height: initial;
 }
