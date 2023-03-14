@@ -113,7 +113,7 @@ class Dashboards extends Controller {
 
     private function calculateDifference($newValue, $oldValue) {
         // calculates the percentage difference of two numbers
-        if (!$newValue || !$oldValue) {
+        if (!$newValue) {
             return 0;
         }
         $value = ($newValue - $oldValue) / (($newValue + $oldValue) / 2) * 100;

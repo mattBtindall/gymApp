@@ -11,9 +11,14 @@ export class Dashboard {
             visits: {
                 filtersContainer: document.querySelector('.visits-filters'),
                 filters: document.querySelectorAll('.visits-filters li'),
-                chartOutput: document.querySelector('.vists-chart-output'),
+                output: document.querySelector('.visits-output'),
                 rightArrow: document.querySelectorAll('.visits-filters i')[1],
-                leftArrow: document.querySelectorAll('.visits-filters i')[0]
+                leftArrow: document.querySelectorAll('.visits-filters i')[0],
+                percentageDifferenceContainer: document.querySelector('.percentage-difference-container'),
+                percentageDifferenceOutput: document.querySelector('.percentage-difference-output'),
+                percentageDifferenceIcon: document.querySelector('.percentage-difference-icon'),
+                upPercentageIcon: '<i class="bi bi-arrow-up-square-fill"></i>',
+                downPercentageIcon: '<i class="bi bi-down-square-fill"></i>'
             },
             membersOverview: {
                 container: document.querySelector('.member-overview-container'),
@@ -24,19 +29,34 @@ export class Dashboard {
 
         this.filters = {
             revenue: '4 weeks',
-            visits: '1 week',
+            visits: 'today',
         }
         this.visitsFilterNumber = 1;
 
         this.setEventListeners();
         this.getAllData()
-            .then(data => console.log(data));
+            .then(data => {
+                this.setVisits(data.numberOfVisits);
+            });
     }
 
     setEventListeners() {
         this.elements.revenue.filtersContainer.addEventListener('click', (e) => this.revenueFilterClick(e.target));
         this.elements.visits.filtersContainer.addEventListener('click', (e) => this.visitsFilterClick(e.target))
         this.elements.membersOverview.titlesContainer.addEventListener('click', (e) => this.membersOverviewClick(e.target));
+    }
+
+    setVisits(visitsSpec) {
+        let colourClass = 'text-danger';
+        let icon = this.elements.visits.downPercentageIcon;
+        this.elements.visits.output.textContent = visitsSpec.current;
+        this.elements.visits.percentageDifferenceOutput.textContent = visitsSpec.percentageDifference + '%';
+        if (visitsSpec.percentageDifference >= 0) {
+            icon = this.elements.visits.upPercentageIcon;
+            colourClass = 'text-success';
+        }
+        this.elements.visits.percentageDifferenceIcon.innerHTML = icon;
+        this.elements.visits.percentageDifferenceContainer.classList.add(colourClass);
     }
 
     revenueFilterClick(currentElement) {

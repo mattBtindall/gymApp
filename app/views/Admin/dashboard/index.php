@@ -54,7 +54,13 @@
                             </div>
                         </div>
                     </header>
-                    <div class="visits-output"></div>
+                    <div class="visits-output-container">
+                        <span class="visits-output"></span>
+                        <span class="percentage-difference-container fs-5 opacity-50">
+                            <span class="percentage-difference-output"></span>
+                            <span class="percentage-difference-icon"></span>
+                        </span>
+                    </div>
                     <a href="<?= URL_ROOT ?>/activitys" class="btn btn-success btn-lg">View all activity</a>
                 </div>
             </div>

@@ -292,6 +292,11 @@ img {
     min-height: 300px;
 }
 
+.visits-output {
+    font-size: 6rem;
+    line-height: initial;
+}
+
 @media (min-width: 992px) {
     .profile-right-container {
         width: 60%;
