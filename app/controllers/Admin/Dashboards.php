@@ -11,7 +11,20 @@ class Dashboards extends Controller {
         $this->view('/dashboard/index');
     }
 
-    public function getRelevantMembers() {
+    /**
+     * Gets all the data for the dashboard on load
+     * Called from AJAX
+     */
+    public function getData($revenueTimeFrame, $visitsTimeFrame) {
+        echo json_encode([
+            'activeMembers' => $this->getNumberOfActiveMembers(),
+            'relevantMembers' => $this->getRelevantMembers(),
+            'revenue' => $this->getRevenue($revenueTimeFrame),
+            'numberOfVisits' => $this->getNumberOfVisits($visitsTimeFrame)
+        ]) ;
+    }
+
+    private function getRelevantMembers() {
         return [
             'recentMembers' => $this->getRecentMembers($_SESSION['user_id']),
             'expiringMembers' => $this->dashboardModel->getExpiringMembers($_SESSION['user_id'])
@@ -32,7 +45,7 @@ class Dashboards extends Controller {
         return $filteredRecentMembers;
     }
 
-    public function getNumberOfActiveMembers() {
+    private function getNumberOfActiveMembers() {
         return $this->dashboardModel->getNumberOfActiveMembers($_SESSION['user_id']);
     }
 

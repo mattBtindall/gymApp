@@ -1,4 +1,4 @@
-import { setActiveElement } from "./utils.js";
+import { setActiveElement, getPhpMethodUrl, getData } from "./utils.js";
 
 export class Dashboard {
     constructor() {
@@ -29,6 +29,8 @@ export class Dashboard {
         this.visitsFilterNumber = 1;
 
         this.setEventListeners();
+        this.getAllData()
+            .then(data => console.log(data));
     }
 
     setEventListeners() {
@@ -80,5 +82,10 @@ export class Dashboard {
 
     setVisitsChart() {
 
+    }
+
+    getAllData() {
+        const url = getPhpMethodUrl(`/Dashboards/getData/${this.filters.revenue}/${this.filters.visits}`);
+        return getData(url);
     }
 }
