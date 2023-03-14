@@ -100,8 +100,11 @@ class Dashboards extends Controller {
 
     private function calculateDifference($newValue, $oldValue) {
         // calculates the percentage difference of two numbers
+        if (!$newValue || !$oldValue) {
+            return 0;
+        }
         $value = ($newValue - $oldValue) / (($newValue + $oldValue) / 2) * 100;
-        echo round($value, 2);
+        return round($value, 2);
     }
 
     public function getRevenue($timeFrame) {
