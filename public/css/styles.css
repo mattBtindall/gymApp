@@ -290,6 +290,11 @@ img {
 .member-overview-container {
     max-height: 300px;
     min-height: 300px;
+    overflow-y: scroll;
+}
+
+.relevant-member-container {
+    cursor: pointer;
 }
 
 .visits-output,

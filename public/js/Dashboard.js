@@ -1,4 +1,4 @@
-import { setActiveElement, getPhpMethodUrl, getData } from "./utils.js";
+import { setActiveElement, getPhpMethodUrl, getData, modals, userData } from "./utils.js";
 
 export class Dashboard {
     constructor() {
@@ -41,6 +41,7 @@ export class Dashboard {
             .then(data => {
                 this.setVisits(data.numberOfVisits);
                 this.setActiveMembers(data.activeMembers);
+                this.setRelevantMembers(data.relevantMembers.recentMembers);
             });
     }
 
@@ -48,6 +49,9 @@ export class Dashboard {
         this.elements.revenue.filtersContainer.addEventListener('click', (e) => this.revenueFilterClick(e.target));
         this.elements.visits.filtersContainer.addEventListener('click', (e) => this.visitsFilterClick(e.target))
         this.elements.membersOverview.titlesContainer.addEventListener('click', (e) => this.membersOverviewClick(e.target));
+        this.elements.membersOverview.container.addEventListener('click', (e) =>
+            modals.user.openModalOnClick(e.target, '.relevant-member-container', userData.get())
+        );
     }
 
     setActiveMembers(numberOfActiveMembers) {
@@ -66,6 +70,22 @@ export class Dashboard {
         this.elements.visits.percentageDifferenceIcon.innerHTML = icon;
         this.elements.visits.percentageDifferenceContainer.className = "";
         this.elements.visits.percentageDifferenceContainer.classList.add(colourClass);
+    }
+
+    setMemberRow(member) {
+        const memberRowTemplate = document.getElementById('dashboard-member-row');
+        const memberRowContainer = document.importNode(memberRowTemplate.content, true);
+
+        memberRowContainer.querySelector('img').src = member.img_url;
+        memberRowContainer.querySelector('.name').textContent = member.name;
+        memberRowContainer.querySelector('.days').textContent = member.days_difference;
+        memberRowContainer.querySelector('.email').textContent = member.email;
+        memberRowContainer.querySelector('.id').textContent = member.user_id;
+        this.elements.membersOverview.container.appendChild(memberRowContainer);
+    }
+
+    setRelevantMembers(members) {
+        members.forEach(member => this.setMemberRow(member));
     }
 
     revenueFilterClick(currentElement) {
@@ -106,10 +126,6 @@ export class Dashboard {
     }
 
     setRevenueChart() {
-
-    }
-
-    setVisitsChart() {
 
     }
 
