@@ -32,3 +32,7 @@ function formatActivity($activity) {
     unset($activity['is_active']);
     return $activity;
 }
+
+function convertUnixTimeToDays($unixTime) {
+    return $unixTime/60/60/24;
+}

@@ -25,10 +25,25 @@ class Dashboards extends Controller {
     }
 
     private function getRelevantMembers() {
+        $recentMembers = $this->getRecentMembers($_SESSION['user_id']);
+        $expiringMembers = $this->dashboardModel->getExpiringMembers($_SESSION['user_id']);
         return [
-            'recentMembers' => $this->getRecentMembers($_SESSION['user_id']),
-            'expiringMembers' => $this->dashboardModel->getExpiringMembers($_SESSION['user_id'])
+            'recentMembers' => $this->addDaysDifference($recentMembers, 'created_at'),
+            'expiringMembers' => $this->addDaysDifference($expiringMembers, 'expiry_date')
         ];
+    }
+
+    private function addDaysDifference($members, $type) {
+        // $type is 'expiry_date' for expiring members and 'created_at' for recentMembers
+        $prefix = $type === 'expiry_date' ? 'expiring in ' : 'created ';
+        $postfix = $type === 'expiry_date' ? ' days' : ' days ago';
+        $now = new DateTime();
+        $formattedNow = strtotime($now->setTime(0,0,0,0)->format(SQL_DATE_TIME_FORMAT));
+        foreach ($members as &$member) {
+            $differenceDays = abs(strtotime($member[$type]) - $formattedNow);
+            $member['days_difference'] = $prefix . ceil(convertUnixTimeToDays($differenceDays)) . $postfix;
+        }
+        return $members;
     }
 
     private function getRecentMembers($adminId) {
