@@ -27,7 +27,8 @@
                                 </ul>
                             </div>
                             <div class="col-8">
-                                <div class="revenue-chart-output"></div>
+                                <!-- <div class="revenue-chart-output"></div> -->
+                                <canvas id="myChart"></canvas>
                             </div>
                         </div>
                     </div>

@@ -1,9 +1,10 @@
 import { setActiveElement, getPhpMethodUrl, getData, modals, userData } from "./utils.js";
+import { Chart } from "chart.js/auto";
 
 export class Dashboard {
     constructor() {
         this.elements = {
-            activeMembers : {
+            activeMembers: {
                 output: document.querySelector('.active-members-output')
             },
             revenue: {
@@ -37,6 +38,7 @@ export class Dashboard {
         this.visitsFilterNumber = 1;
 
         this.setEventListeners();
+        this.setRevenueChart();
         this.getAllData()
             .then(data => {
                 this.setVisits(data.numberOfVisits);
@@ -97,7 +99,7 @@ export class Dashboard {
 
     visitsFilterClick(currentElement) {
         // need to increment/decrement and wrap here
-        const { leftArrow, rightArrow, filters} = this.elements.visits;
+        const { leftArrow, rightArrow, filters } = this.elements.visits;
 
         if (currentElement === leftArrow) {
             this.visitsFilterNumber = this.decrement(this.visitsFilterNumber, filters.length, 0);
@@ -126,6 +128,26 @@ export class Dashboard {
     }
 
     setRevenueChart() {
+        const ctx = document.getElementById('myChart');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                datasets: [{
+                    label: '# of Votes',
+                    data: [12, 19, 3, 5, 2, 3],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
 
     }
 
