@@ -1,0 +1,24 @@
+{
+  "name": "gymapp",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mattBtindall/gymApp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mattBtindall/gymApp/issues"
+  },
+  "homepage": "https://github.com/mattBtindall/gymApp#readme",
+  "devDependencies": {
+    "webpack": "^5.76.2",
+    "webpack-cli": "^5.0.1"
+  }
+}

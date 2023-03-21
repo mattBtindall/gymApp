@@ -1,3 +1,5 @@
 app/config/config.php
 public/img/*
 .vscode/*
+node_modules
+public/dist
