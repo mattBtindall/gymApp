@@ -1,4 +1,3 @@
 app/config/config.php
 public/img/*
 .vscode/*
-public/js/libs/*
