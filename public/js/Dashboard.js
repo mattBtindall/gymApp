@@ -3,6 +3,7 @@ import { Chart, LineController, LineElement, PointElement, LinearScale, Category
 
 export class Dashboard {
     constructor() {
+        console.log('badger cocks')
         this.elements = {
             activeMembers: {
                 output: document.querySelector('.active-members-output')

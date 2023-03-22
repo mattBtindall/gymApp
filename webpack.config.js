@@ -1,6 +1,10 @@
 const path = require('path');
 
 module.exports = {
+    watch: true,
+    watchOptions: {
+        ignored: /node_modules/,
+    },
     mode: 'development',
     entry: './public/js/main.js',
     output: {
