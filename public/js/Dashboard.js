@@ -38,7 +38,7 @@ export class Dashboard {
         this.visitsFilterNumber = 1;
 
         this.setEventListeners();
-        this.getAllData()
+        this.getData('getData', [this.filters.revenue, this.filters.visits])
             .then(data => {
                 this.setVisits(data.numberOfVisits);
                 this.setRevenueChart(data.revenue);
@@ -111,6 +111,8 @@ export class Dashboard {
 
         setActiveElement(filters, filters[this.visitsFilterNumber]);
         this.filters.visits = filters[this.visitsFilterNumber].dataset.filterValue;
+        this.getData('getNumberOfVisitsJson', this.filters.visits)
+            .then(visitsSpecs => this.setVisits(visitsSpecs));
     }
 
     membersOverviewClick(currentElement) {
@@ -164,8 +166,9 @@ export class Dashboard {
         });
     }
 
-    getAllData() {
-        const url = getPhpMethodUrl(`/Dashboards/getData/${this.filters.revenue}/${this.filters.visits}`);
+    getData(type, args) {
+        if (args.constructor === Array) args = args.join('/');
+        const url = getPhpMethodUrl(`/Dashboards/${type}/${args}`);
         return getData(url);
     }
 }

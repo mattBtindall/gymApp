@@ -64,7 +64,7 @@ class Dashboards extends Controller {
         return $this->dashboardModel->getNumberOfActiveMembers($_SESSION['user_id']);
     }
 
-    public function getNumberOfVisits($timeFrame) {
+    private function getNumberOfVisits($timeFrame) {
         // $timeFrame: today, this week, this month, this year
         $dateBoundaries = $this->calculateDates($timeFrame);
         $current = $this->dashboardModel->getNumberOfVisits($_SESSION['user_id'], $dateBoundaries['current']['furthestDate'], $dateBoundaries['current']['closestDate']);
@@ -74,6 +74,14 @@ class Dashboards extends Controller {
             'current' => $current,
             'percentageDifference' => $percentageDifference
         ];
+    }
+
+    public function getNumberOfVisitsJson($timeFrame) {
+        echo json_encode($this->getNumberOfVisits($timeFrame));
+    }
+
+    public function getRevenueJson($timeFrame) {
+        echo json_encode($this->getRevenue($timeFrame));
     }
 
     private function calculateDates($timeFrame) {
@@ -135,7 +143,7 @@ class Dashboards extends Controller {
         return round($value, 2);
     }
 
-    public function getRevenue($timeFrame) {
+    private function getRevenue($timeFrame) {
         // timeFrame can be: '1 week', '4 week', '3 month', '6 month', '12 month'
         return $this->dashboardModel->getRevenue($timeFrame, $_SESSION['user_id']);
     }
