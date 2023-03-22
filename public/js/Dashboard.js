@@ -31,6 +31,7 @@ export class Dashboard {
             }
         }
 
+        this.chart = null;
         this.filters = {
             revenue: '4 weeks',
             visits: 'today',
@@ -94,6 +95,8 @@ export class Dashboard {
         if (currentElement.tagName === 'LI') {
             setActiveElement(this.elements.revenue.filters, currentElement);
             this.filters.revenue = currentElement.dataset.filterValue;
+            this.getData('getRevenueJson', this.filters.revenue)
+                .then(revenue => this.setRevenueChart(revenue));
         }
     }
 
@@ -130,10 +133,12 @@ export class Dashboard {
     }
 
     setRevenueChart(revenuePoints) {
+        console.log(revenuePoints);
+        if (this.chart) this.chart.destroy();
         Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Filler);
         const ctx = document.getElementById('myChart');
 
-        var chart = new Chart(ctx, {
+        this.chart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: [0, 1, 2, 3],
