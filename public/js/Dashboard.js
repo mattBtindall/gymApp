@@ -25,12 +25,13 @@ export class Dashboard {
                 downPercentageIcon: '<i class="bi bi-arrow-down-square-fill"></i>'
             },
             membersOverview: {
-                container: document.querySelector('.member-overview-container'),
+                container: document.querySelector('.member-overview-output'),
                 titlesContainer: document.querySelector('.member-overview-container .titles'),
                 titles: document.querySelectorAll('.member-overview-container h3')
             }
         }
 
+        this.relevantMembers = null;
         this.chart = null;
         this.filters = {
             revenue: '4 weeks',
@@ -45,6 +46,7 @@ export class Dashboard {
                 this.setRevenueChart(data.revenue);
                 this.setActiveMembers(data.activeMembers);
                 this.setRelevantMembers(data.relevantMembers.recentMembers);
+                this.relevantMembers = data.relevantMembers;
             });
     }
 
@@ -88,6 +90,7 @@ export class Dashboard {
     }
 
     setRelevantMembers(members) {
+        this.elements.membersOverview.container.innerHTML = "";
         members.forEach(member => this.setMemberRow(member));
     }
 
@@ -121,6 +124,7 @@ export class Dashboard {
     membersOverviewClick(currentElement) {
         if (currentElement.tagName === 'H3') {
             setActiveElement(this.elements.membersOverview.titles, currentElement);
+            this.setRelevantMembers(this.relevantMembers[currentElement.dataset.name]);
         }
     }
 
@@ -133,7 +137,6 @@ export class Dashboard {
     }
 
     setRevenueChart(revenuePoints) {
-        console.log(revenuePoints);
         if (this.chart) this.chart.destroy();
         Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Filler);
         const ctx = document.getElementById('myChart');

@@ -27,7 +27,6 @@
                                 </ul>
                             </div>
                             <div class="col-8">
-                                <!-- <div class="revenue-chart-output"></div> -->
                                 <canvas id="myChart"></canvas>
                             </div>
                         </div>
@@ -68,8 +67,8 @@
             <div class="col-8">
                 <div class="member-overview-container p-3 border bg-light rounded h-100">
                     <header class="titles d-flex gap-3 pb-3">
-                        <h3 class="active">Newest Members</h3>
-                        <h3>Expiring Members</h3>
+                        <h3 class="active" data-name="recentMembers">Newest Members</h3>
+                        <h3 data-name="expiringMembers">Expiring Members</h3>
                     </header>
                     <div class="member-overview-output"></div>
                 </div>
