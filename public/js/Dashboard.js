@@ -1,5 +1,5 @@
 import { setActiveElement, getPhpMethodUrl, getData, modals, userData } from "./utils.js";
-import { Chart } from "chart.js/auto";
+import { Chart, LineController, LineElement, PointElement, LinearScale, CategoryScale, Filler } from "chart.js";
 
 export class Dashboard {
     constructor() {
@@ -38,10 +38,10 @@ export class Dashboard {
         this.visitsFilterNumber = 1;
 
         this.setEventListeners();
-        this.setRevenueChart();
         this.getAllData()
             .then(data => {
                 this.setVisits(data.numberOfVisits);
+                this.setRevenueChart(data.revenue);
                 this.setActiveMembers(data.activeMembers);
                 this.setRelevantMembers(data.relevantMembers.recentMembers);
             });
@@ -127,28 +127,41 @@ export class Dashboard {
         return (n ? n : maxValue) - 1;
     }
 
-    setRevenueChart() {
+    setRevenueChart(revenuePoints) {
+        Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Filler);
         const ctx = document.getElementById('myChart');
 
-        new Chart(ctx, {
-            type: 'bar',
+        var chart = new Chart(ctx, {
+            type: 'line',
             data: {
-                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                labels: [0, 1, 2, 3],
                 datasets: [{
-                    label: '# of Votes',
-                    data: [12, 19, 3, 5, 2, 3],
-                    borderWidth: 1
+                    label: 'My Dataset',
+                    data: revenuePoints,
+                    borderWidth: 2,
+                    borderColor: 'rgb(138, 138, 138)',
+                    fill: true,
+                    backgroundColor: 'rgb(221, 221, 221)'
                 }]
             },
             options: {
                 scales: {
+                    x: {
+                        ticks: {
+                            display: false
+                        },
+                        grid : {
+                            display:false
+                        }
+                    },
                     y: {
-                        beginAtZero: true
+                        grid: {
+                            display: false
+                        }
                     }
                 }
             }
         });
-
     }
 
     getAllData() {
