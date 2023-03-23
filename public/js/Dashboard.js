@@ -3,7 +3,6 @@ import { Chart, LineController, LineElement, PointElement, LinearScale, Category
 
 export class Dashboard {
     constructor() {
-        console.log('badger cocks')
         this.elements = {
             activeMembers: {
                 output: document.querySelector('.active-members-output')
@@ -41,6 +40,7 @@ export class Dashboard {
         this.visitsFilterNumber = 1;
 
         this.setEventListeners();
+        Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Filler);
         this.getData('getData', [this.filters.revenue, this.filters.visits])
             .then(data => {
                 this.setVisits(data.numberOfVisits);
@@ -133,13 +133,12 @@ export class Dashboard {
         return ++n % maxValue;
     }
 
-    decrement(n, maxValue, minValue) { // and wrap
+    decrement(n, maxValue) { // and wrap
         return (n ? n : maxValue) - 1;
     }
 
     setRevenueChart(revenuePoints) {
         if (this.chart) this.chart.destroy();
-        Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Filler);
         const ctx = document.getElementById('myChart');
 
         this.chart = new Chart(ctx, {
@@ -166,6 +165,7 @@ export class Dashboard {
                         }
                     },
                     y: {
+                        beginAtZero: true,
                         grid: {
                             display: false
                         }
