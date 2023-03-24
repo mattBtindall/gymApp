@@ -6,24 +6,69 @@ class Member {
         $this->db = new Database();
     }
 
-    public function getMembers() {
-        /* Gets all NON REVOKED memberships for the current admin account */
-        $this->db->query('SELECT user_users.id as user_id, name, email, phone_number, img_url, memberships.expiry_date, memberships.start_date, memberships.id as membership_id, display_name as term_display_name, term_id, memberships.cost
+    /**
+     * $area is the database column for the admin_id or user_id
+     * gets either all members for a certain admin account
+     * or all members for a specific user account determined by $area
+     */
+    public function getMembersById($area) {
+        $this->db->query("SELECT user_users.id as user_id, user_users.name as user_name, user_users.email, user_users.phone_number, user_users.img_url,
+                          memberships.expiry_date, memberships.start_date, memberships.id as membership_id, memberships.cost,
+                          display_name as term_display_name, term_id,
+                          admin_users.name as admin_name, admin_users.id as admin_id
                           FROM user_users
                           INNER JOIN memberships
                           ON user_users.id = memberships.user_id
                           INNER JOIN membership_terms
                           ON memberships.term_id = membership_terms.id
-                          WHERE memberships.admin_id = :admin_id
+                          INNER JOIN admin_users
+                          ON memberships.admin_id = admin_users.id
+                          WHERE memberships.{$area} = :{$area}
                           AND memberships.revoked = 0
-                        ');
-        $this->db->bind(':admin_id', $_SESSION['user_id']);
+                        ");
+        $this->db->bind(":{$area}", $_SESSION['user_id']);
         return $this->db->resultSet(PDO::FETCH_ASSOC);
     }
 
-    public function getRelevantMemberships() {
+    public function getUserRelevantMemberships() {
+        $memberships = $this->getMembersById('user_id');
+        $memberships = $this->changeKeyName($memberships, 'admin_name', 'name');
+        $userId = $memberships[0]['user_id'];
+
+        // split memberships up into admin accounts
+        $membershipsByAdminId = [];
+        foreach ($memberships as $membership) {
+            if (!array_key_exists($membership['admin_id'], $membershipsByAdminId)) {
+                $membershipsByAdminId[$membership['admin_id']] = [];
+            }
+            array_push($membershipsByAdminId[$membership['admin_id']], $membership);
+        }
+
+        $relevantMemberships = [];
+        foreach ($membershipsByAdminId as $groupedMemberships) {
+            $relevantMemberships[] = $this->getRelevantMemberships($groupedMemberships)[$userId];
+        }
+        $relevantMemberships = $this->changeKeyName($relevantMemberships, 'admin_id', 'user_id'); // so when id is outputted in elements it's for the correct account
+        return $relevantMemberships;
+    }
+
+    public function getAllRelevantMemberships() {
+        // have to change the name of the user_name key to name
+        $memberships = $this->getMembersById('admin_id');
+        $memberships = $this->changeKeyName($memberships, 'user_name', 'name');
+        return $this->getRelevantMemberships($memberships);
+    }
+
+    private function changeKeyName($memberships, $oldKeyName, $newKeyName) {
+        foreach($memberships as &$membership) {
+            $membership[$newKeyName] = $membership[$oldKeyName];
+            unset($membership[$oldKeyName]);
+        }
+        return $memberships;
+    }
+
+    private function getRelevantMemberships($memberships) {
         // gets either the active membership or the most recent
-        $memberships = $this->getMembers();
         $mostRecentMemberships = [];
         $excludeIds = [];
         foreach ($memberships as &$membership) {

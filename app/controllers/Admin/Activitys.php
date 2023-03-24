@@ -18,7 +18,7 @@ class Activitys extends Controller {
     }
 
     public function logUser($user_id) {
-        $memberships = $this->membersModel->getRelevantMemberships();
+        $memberships = $this->membersModel->getAllRelevantMemberships();
         $membership = array_values(array_filter($memberships, fn($value) => $value['user_id'] == $user_id))[0];
         $data = [
             'status' => getMembershipStatus($membership['start_date'], $membership['expiry_date']),

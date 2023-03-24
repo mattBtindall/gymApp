@@ -76,7 +76,7 @@
 
 		<!-- Add membership -->
 		<div class="user-modal__item add-membership">
-			<form action="<?= URL_ROOT; ?>/members" method="POST" class="d-flex flex-column justify-content-between">
+			<form action="<?= URL_ROOT; ?>/members/addMembership" method="POST" class="d-flex flex-column justify-content-between">
 				<div class="row">
 					<div class="col-6">
 						<div class="form-group">

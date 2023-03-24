@@ -186,7 +186,7 @@ class Users extends Users_base {
     }
 
     private function joinUserMembers($users) {
-        $members = $this->memberModel->getRelevantMemberships();
+        $members = $this->memberModel->getAllRelevantMemberships();
         $activity = $this->activityModel->getMembersActivity($_SESSION['user_id']);
         foreach ($users as &$user) {
             foreach($members as $member) {
