@@ -18,12 +18,25 @@ class Activity {
     }
 
     public function getMembersActivityUser($user_id, $date = "NOW()") {
-
+        $activity = $this->getAllActivity($user_id, 'user_id', $date);
+        $activity = changeKeyName($activity, 'admin_name', 'name');
+        $activity = changeKeyName($activity, 'admin_id', 'user_id');
+        return $activity;
     }
 
     public function getMembersActivityAdmin($admin_id, $date = "NOW()") {
+        $activity = $this->getAllActivity($admin_id, 'admin_id', $date);
+        $activity = changeKeyName($activity, 'user_name', 'name');
+        return $activity;
+    }
+
+    public function getAllActivity($admin_id, $areaType, $date = "NOW()") {
         // $date = the date to get the activity for, this must be wrapped in single quotes e.g. "'2023-02-08'"
-        $this->db->query("SELECT membership_status, activity.created_at, display_name as term_display_name, start_date as membership_start_date, expiry_date as membership_expiry_date, name, img_url, user_users.id as user_id
+        $this->db->query("SELECT membership_status,
+                          activity.created_at, display_name as term_display_name,
+                          start_date as membership_start_date, expiry_date as membership_expiry_date,
+                          user_users.name as user_name, user_users.img_url, user_users.id as user_id,
+                          admin_users.name as admin_name, admin_users.id as admin_id
                           FROM activity
                           INNER JOIN membership_terms
                           ON activity.term_id = membership_terms.id
@@ -31,10 +44,12 @@ class Activity {
                           ON activity.membership_id = memberships.id
                           INNER JOIN user_users
                           ON activity.user_id = user_users.id
-                          WHERE activity.admin_id = :adminId
+                          INNER JOIN admin_users
+                          ON activity.admin_id = admin_users.id
+                          WHERE activity.{$areaType}= :{$areaType}
                           AND DATE(activity.created_at) = DATE({$date})
                           ORDER BY activity.created_at DESC");
-        $this->db->bind(':adminId', $admin_id);
+        $this->db->bind(":{$areaType}", $admin_id);
         return $this->db->resultSet(PDO::FETCH_ASSOC);
     }
 
