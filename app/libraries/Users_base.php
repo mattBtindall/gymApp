@@ -190,6 +190,27 @@ class Users_base extends Controller {
         return $this->userModel->getAllUsersFromOppositeArea();
     }
 
+    public function joinUserMembers($users, $members, $activity) {
+        foreach ($users as &$user) {
+            foreach($members as $member) {
+                if ($user['id'] === $member['user_id']) {
+                    $status = getMembershipStatus($member['start_date'], $member['expiry_date']);
+                    $expiryDate = formatForOutput($member['expiry_date']);
+                    $user =  array_merge(['expiry_date' => $expiryDate, 'term_display_name' => $member['term_display_name'], 'status' => $status], $user);
+                }
+            }
+
+            foreach($activity as &$act) {
+                if ($user['id'] === $act['user_id']) {
+                    $act = formatActivity($act);
+                    $user['activity'][] = $act;
+                }
+            }
+        }
+        $users = $users ? $users : '{}';
+        return $users;
+    }
+
     public function isAdmin() {
         // called from ajax
         $data = ['isAdmin' => $this->userModel->isAdmin()];

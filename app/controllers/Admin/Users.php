@@ -155,7 +155,9 @@ class Users extends Users_base {
 
     public function searchDb($query, $filter = 'all')  {
         $users = parent::searchDb($query, $filter);
-        $users = $this->joinUserMembers($users);
+        $members = $this->memberModel->getAllRelevantMemberships();
+        $activity = $this->activityModel->getMembersActivityById($_SESSION['user_id'], 'admin_id');
+        $users = $this->joinUserMembers($users, $members, $activity);
         if ($filter === 'clients') {
             $users = $this->searchFilterClients($users);
         } else if ($filter === 'active-members') {
@@ -182,29 +184,8 @@ class Users extends Users_base {
         }
 
         $users = parent::getUserData();
-        echo json_encode($this->joinUserMembers($users));
-    }
-
-    private function joinUserMembers($users) {
         $members = $this->memberModel->getAllRelevantMemberships();
-        $activity = $this->activityModel->getMembersActivity($_SESSION['user_id']);
-        foreach ($users as &$user) {
-            foreach($members as $member) {
-                if ($user['id'] === $member['user_id']) {
-                    $status = getMembershipStatus($member['start_date'], $member['expiry_date']);
-                    $expiryDate = formatForOutput($member['expiry_date']);
-                    $user =  array_merge(['expiry_date' => $expiryDate, 'term_display_name' => $member['term_display_name'], 'status' => $status], $user);
-                }
-            }
-
-            foreach($activity as &$act) {
-                if ($user['id'] === $act['user_id']) {
-                    $act = formatActivity($act);
-                    $user['activity'][] = $act;
-                }
-            }
-        }
-        $users = $users ? $users : '{}';
-        return $users;
+        $activity = $this->activityModel->getMembersActivityById($_SESSION['user_id'], 'admin_id');
+        echo json_encode($this->joinUserMembers($users, $members, $activity));
     }
 }

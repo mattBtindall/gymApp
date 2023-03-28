@@ -1,5 +1,8 @@
 <?php
 class Users extends Users_base {
+    private $activityModel;
+    private $memberModel;
+
     public function __construct() {
         // Used to filter through the whole data array when displaying account detials in profile
         $profileValuesToShow = [
@@ -10,6 +13,8 @@ class Users extends Users_base {
             'gender'
         ];
 
+        $this->activityModel = $this->model('Activity');
+        $this->memberModel = $this->model('Member');
         parent::__construct($profileValuesToShow);
     }
 
@@ -139,7 +144,11 @@ class Users extends Users_base {
     }
 
     public function getUserData() {
-        $data = parent::getUserData();
-        echo json_encode($data);
+        $users = parent::getUserData();
+        $members = $this->memberModel->getUserRelevantMemberships();
+        $activity = $this->activityModel->getMembersActivityById($_SESSION['user_id'], 'user_id');
+        // assign admin_id id to the user_id
+        $activity = changeKeyName($activity, 'admin_id', 'user_id');
+        echo json_encode($this->joinUserMembers($users, $members, $activity));
     }
 }
