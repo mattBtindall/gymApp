@@ -1,20 +1,12 @@
 <?php
-class Activitys extends Controller {
+class Activitys extends Activitys_base {
     private $activityModel;
     private $membersModel;
 
     public function __construct() {
         $this->activityModel = $this->model('Activity');
         $this->membersModel = $this->model('Member');
-    }
-
-    public function index($date = NULL) {
-        $date = $date ?? 'NOW()';
-        $data['activity'] = $this->activityModel->getMembersUserActivity($_SESSION['user_id'], $date);
-        foreach ($data['activity'] as &$userActivity) {
-            $userActivity = formatActivity($userActivity);
-        }
-        $this->view('/activity/index', $data);
+        parent::__construct('getMembersActivityAdmin');
     }
 
     public function logUser($user_id) {
