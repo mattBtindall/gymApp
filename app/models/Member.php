@@ -32,7 +32,7 @@ class Member {
 
     public function getUserRelevantMemberships() {
         $memberships = $this->getMembersById('user_id');
-        $memberships = $this->changeKeyName($memberships, 'admin_name', 'name');
+        $memberships = changeKeyName($memberships, 'admin_name', 'name');
         $userId = $memberships[0]['user_id'];
 
         // split memberships up into admin accounts
@@ -48,23 +48,15 @@ class Member {
         foreach ($membershipsByAdminId as $groupedMemberships) {
             $relevantMemberships[] = $this->getRelevantMemberships($groupedMemberships)[$userId];
         }
-        $relevantMemberships = $this->changeKeyName($relevantMemberships, 'admin_id', 'user_id'); // so when id is outputted in elements it's for the correct account
+        $relevantMemberships = changeKeyName($relevantMemberships, 'admin_id', 'user_id'); // so when id is outputted in elements it's for the correct account
         return $relevantMemberships;
     }
 
     public function getAllRelevantMemberships() {
         // have to change the name of the user_name key to name
         $memberships = $this->getMembersById('admin_id');
-        $memberships = $this->changeKeyName($memberships, 'user_name', 'name');
+        $memberships = changeKeyName($memberships, 'user_name', 'name');
         return $this->getRelevantMemberships($memberships);
-    }
-
-    private function changeKeyName($memberships, $oldKeyName, $newKeyName) {
-        foreach($memberships as &$membership) {
-            $membership[$newKeyName] = $membership[$oldKeyName];
-            unset($membership[$oldKeyName]);
-        }
-        return $memberships;
     }
 
     private function getRelevantMemberships($memberships) {
