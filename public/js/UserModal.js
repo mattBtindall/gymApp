@@ -280,6 +280,7 @@ export class UserModal extends Modal {
 
     resetAddMembershipTab() {
         const { addMembershipTab: inputs } = this.elements;
+        if (!inputs) return;
         inputs.expiryDate.parentNode.classList.remove('active');
         inputs.cost.readOnly = true;
         for (const key in inputs) {
