@@ -85,6 +85,8 @@ class Member {
     }
 
     public function getTermMembershipByUserId($user_id) {
+        $userId = AREA === 'Admin' ? $user_id : $_SESSION['user_id'];
+        $adminId = AREA === 'Admin' ? $_SESSION['user_id'] : $user_id;
         $this->db->query('SELECT start_date, expiry_date, memberships.created_at, memberships.id, revoked, display_name, memberships.cost
                           FROM memberships
                           INNER JOIN membership_terms
@@ -92,8 +94,8 @@ class Member {
                           WHERE memberships.user_id = :userId AND memberships.admin_id = :adminId
                           ORDER BY expiry_date DESC
         ');
-        $this->db->bind(':userId', $user_id);
-        $this->db->bind(':adminId', $_SESSION['user_id']);
+        $this->db->bind(':userId', $userId);
+        $this->db->bind(':adminId', $adminId);
         return $this->db->resultSet(PDO::FETCH_ASSOC);
     }
 

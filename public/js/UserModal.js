@@ -187,16 +187,6 @@ export class UserModal extends Modal {
         this.elements.id.value = user.id;
     }
 
-    setModalAdmin(user) {
-        isAdmin()
-            .then(admin => {
-                if (admin.isAdmin) {
-                    this.setActivityTab(user);
-                    this.setMembershipTab(user.id);
-                }
-            });
-    }
-
     setTerm(term) {
         const optionElement = document.createElement('option');
         optionElement.innerText = term['display_name'];
@@ -262,7 +252,8 @@ export class UserModal extends Modal {
 
     openModal(user) {
         modals.search.closeModal();
-        this.setModalAdmin(user)
+        this.setActivityTab(user);
+        this.setMembershipTab(user.id);
         this.setUserDetails(user);
 
         // adds delay in so users can't see the modal before data is loaded
