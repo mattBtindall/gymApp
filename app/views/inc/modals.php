@@ -54,8 +54,8 @@
 		<div class="d-flex gap-5 align-items-center">
 			<span class="user-modal__menu-item active" data-content-class-name="activity">Activity</span>
 			<span class="user-modal__menu-item" data-content-class-name="membership">Membership</span>
-			<span class="user-modal__menu-item" data-content-class-name="add-membership">Add Membership</span>
-			<button class="btn btn-secondary ms-3 log-btn">Log</button>
+			<span class="user-modal__menu-item <?= (AREA === 'User') ? 'd-none disabled' : ''; ?>" data-content-class-name="add-membership">Add Membership</span>
+			<button class="btn btn-secondary ms-3 log-btn <?= (AREA === 'User') ? 'd-none disabled' : ''; ?>">Log</button>
 		</div>
 	</div>
 	<div class="user-modal__content px-3 py-2">
