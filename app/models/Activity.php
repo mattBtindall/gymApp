@@ -17,6 +17,10 @@ class Activity {
         return array_filter($activity, fn($val) => $val['user_id'] == $user_id);
     }
 
+    public function getMembersActivityUser($user_id, $date = "NOW()") {
+
+    }
+
     public function getMembersActivityAdmin($admin_id, $date = "NOW()") {
         // $date = the date to get the activity for, this must be wrapped in single quotes e.g. "'2023-02-08'"
         $this->db->query("SELECT membership_status, activity.created_at, display_name as term_display_name, start_date as membership_start_date, expiry_date as membership_expiry_date, name, img_url, user_users.id as user_id
